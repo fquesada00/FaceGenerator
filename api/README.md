@@ -2,9 +2,9 @@
 Face Generator API built with Python using StyleGAN2.
 
 ## Setup
-1. Move this folder (`api`) to your home folder.
+1. Add the following lines to `~/.bashrc`, changing path as needed
 ```bash
-mv ../api $HOME/api
+export API_PATH=~/pf-2022-face-generator/api
 ```
 2. Install `virtualenv` to keep all your dependencies in one place.
 ```bash

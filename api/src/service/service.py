@@ -6,15 +6,16 @@ from PIL import Image
 import base64
 from io import BytesIO
 import re
+import os
 
-home_path = str(Path.home())
 
-database = GeneratorZsDb(home_path + '/api/src/persistance')
+API_PATH = os.getenv("API_PATH")
+
+database = GeneratorZsDb(API_PATH + '/src/persistance')
 
 
 class GeneratorService:
     def __init__(self):
-        self.home_path = str(Path.home())
         self.generator = Generator(network_pkl='gdrive:networks/stylegan2-ffhq-config-f.pkl')
 
     @staticmethod
