@@ -44,7 +44,7 @@
                 let formData = new FormData();
                 formData.append('amount', this.amount)
                 axios({
-                    url: 'http://pf-2021-generadorcaras.it.itba.edu.ar/api/faces',
+                    url: '/api/faces',
                     method: 'post',
                     data: formData,
                     headers: { "Content-Type": "multipart/form-data" },

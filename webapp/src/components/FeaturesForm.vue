@@ -289,7 +289,7 @@
                 formData.append('yawAmount', this.yawAmount)
 
                 axios({
-                    url: 'http://pf-2021-generadorcaras.it.itba.edu.ar/api/features',
+                    url: '/api/features',
                     method: 'post',
                     data: formData,
                     headers: { "Content-Type": "multipart/form-data" },

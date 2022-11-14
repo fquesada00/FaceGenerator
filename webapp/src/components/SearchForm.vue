@@ -60,7 +60,7 @@
         methods : {
             submit(){
                 axios({
-                    url: 'http://pf-2021-generadorcaras.it.itba.edu.ar/api/faces?id1='+this.id1+'&id2='+this.id2,
+                    url: '/api/faces?id1='+this.id1+'&id2='+this.id2,
                     method: 'get',
                 }).then((response) => {
                     console.log(response)

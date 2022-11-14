@@ -64,7 +64,7 @@
                 formData.append('id1', this.id1)
                 formData.append('id2', this.id2)
                 axios({
-                    url: 'http://pf-2021-generadorcaras.it.itba.edu.ar/api/interchange',
+                    url: '/api/interchange',
                     method: 'post',
                     data: formData,
                     headers: { "Content-Type": "multipart/form-data" },

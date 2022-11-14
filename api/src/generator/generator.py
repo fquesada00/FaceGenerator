@@ -4,8 +4,8 @@ from pathlib import Path
 import io
 from src.face_frame import face_frame_correction
 
-home_path = str(Path.home())
-sys.path.insert(0, home_path + "/api/src/stylegan2")
+API_PATH = os.getenv("API_PATH")
+sys.path.insert(0, API_PATH + "/src/stylegan2")
 
 import dnnlib
 from src.stylegan2 import pretrained_networks

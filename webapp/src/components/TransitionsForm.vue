@@ -76,7 +76,7 @@
                 formData.append('id2', this.id2)
                 formData.append('amount', this.amount)
                 axios({
-                    url: 'http://pf-2021-generadorcaras.it.itba.edu.ar/api/transition',
+                    url: '/api/transition',
                     method: 'post',
                     data: formData,
                     headers: { "Content-Type": "multipart/form-data" },

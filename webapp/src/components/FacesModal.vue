@@ -69,7 +69,7 @@ export default {
             let formData = new FormData();
             formData.append('z', this.zs[this.img_index])
             axios({
-                url: 'http://pf-2021-generadorcaras.it.itba.edu.ar/api/save',
+                url: '/api/save',
                 method: 'post',
                 data: formData,
                 headers: { "Content-Type": "multipart/form-data" },
