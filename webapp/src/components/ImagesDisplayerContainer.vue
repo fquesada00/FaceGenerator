@@ -1,8 +1,11 @@
 <template>
-  <v-container class="d-flex flex-wrap">
+  <v-container
+    class="d-flex flex-wrap"
+    style="justify-content: center; align-items: center"
+  >
     <div
       class="d-flex ma-2"
-      style="width: 20vh"
+      style="width: 10rem; height: 13rem"
       v-for="id in facesId"
       :key="id"
     >
@@ -12,6 +15,7 @@
 </template>
 
 <script>
+import axios from "axios";
 import ImageDisplayer from "./ImageDisplayer.vue";
 
 export default {
@@ -19,7 +23,22 @@ export default {
     ImageDisplayer,
   },
   data: () => {
-    return { facesId: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2] };
+    return { facesId: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12] };
+  },
+  methods: {
+    getImagesIds() {
+      axios
+        .get("/api/faces/ids")
+        .then((response) => {
+          this.facesId = response.data;
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    },
+  },
+  mounted() {
+    // this.getImagesIds(); // TODO: uncomment this line to get the ids from the server
   },
 };
 </script>
