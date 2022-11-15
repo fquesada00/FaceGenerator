@@ -1,10 +1,11 @@
 import sys
-from os import mkdir, path
+from os import mkdir, path, getenv
+import os
 from pathlib import Path
 import io
 from src.face_frame import face_frame_correction
 
-API_PATH = os.getenv("API_PATH")
+API_PATH = getenv("API_PATH")
 sys.path.insert(0, API_PATH + "/src/stylegan2")
 
 import dnnlib
