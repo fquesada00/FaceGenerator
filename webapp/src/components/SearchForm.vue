@@ -36,15 +36,34 @@
                     color="primary"
                     v-if="isLoading"
                 ></v-progress-circular>
+                <v-btn
+                color="primary"
+                class="mr-4"
+                type="submit"
+                :disabled="isLoading"
+                >
+                View all images
+                </v-btn>
+                <v-progress-circular
+                    indeterminate
+                    color="primary"
+                    v-if="isLoading"
+                ></v-progress-circular>
             </v-col>
         </v-row>
+        <ImagesDisplayerContainer />
     </v-container>
   </v-form>
 </template>
 
 <script>
-    import axios from 'axios'
+import ImagesDisplayerContainer from "./ImagesDisplayerContainer.vue";
+
+    import axios from 'axios';
     export default {
+        components: {
+            ImagesDisplayerContainer
+        },
         data: () => ({
         refCount: 0,
         isLoading: false,
