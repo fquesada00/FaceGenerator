@@ -1,6 +1,5 @@
 import sys
 from os import mkdir, path, getenv
-import os
 from pathlib import Path
 import io
 from src.face_frame import face_frame_correction
