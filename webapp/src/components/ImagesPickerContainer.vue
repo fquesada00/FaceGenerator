@@ -22,14 +22,18 @@
         >
           <div
             class="d-flex ma-2"
-            style="width: 10rem;"
+            style="width: 10rem"
             v-for="id in facesId"
             :key="id"
           >
-            <ImagePicker :faceId="id" @picked="picked" :isPicked="id === pickedId" />
+            <ImagePicker
+              :faceId="id"
+              @picked="picked"
+              :isPicked="id === pickedId"
+            />
           </div>
         </v-container>
-        <v-card-actions class="d-flex" style="justify-content: space-around;">
+        <v-card-actions class="d-flex" style="justify-content: space-around">
           <v-btn color="primary" @click="done">Done</v-btn>
           <v-btn color="primary" @click="closeModal">Close Dialog</v-btn>
         </v-card-actions>
@@ -41,7 +45,16 @@
 <script>
 import ImagePicker from "./ImagePicker.vue";
 export default {
-  props: ["showModal", "doneEventName"],
+  props: {
+    showModal: {
+      type: Boolean,
+      required: true,
+    },
+    doneEventName: {
+      type: String,
+      required: true,
+    },
+  },
   components: {
     ImagePicker,
   },
@@ -66,14 +79,15 @@ export default {
   },
   updated() {
     this.pickedId = -1;
+    this.doneEvent = this.doneEventName;
   },
   watch: {
     showModal(newValue, oldValue) {
       this.show = newValue;
     },
-    doneEventName(newValue, oldValue) {
-      this.doneEvent = newValue;
-    },
+    // doneEventName(newValue, oldValue) {
+    //   this.doneEvent = newValue;
+    // },
   },
 };
 </script>
