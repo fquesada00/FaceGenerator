@@ -80,6 +80,19 @@ export default {
     done() {
       this.$emit(this.doneEvent, this.pickedId);
     },
+    getImagesIds() {
+      axios
+        .get("/api/faces/ids")
+        .then((response) => {
+          this.facesId = response.data;
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    },
+  },
+  mounted() {
+    // this.getImagesIds(); // TODO: uncomment this line to get the ids from the server
   },
   updated() {
     this.pickedId = -1;
