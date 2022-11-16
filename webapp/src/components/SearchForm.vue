@@ -23,35 +23,35 @@
       </v-row>
       <v-row>
         <v-col>
-          <v-btn
-            color="primary"
-            class="mr-4"
-            type="submit"
-            :disabled="isLoading"
-          >
-            Get images
-          </v-btn>
-          <v-progress-circular
-            indeterminate
-            color="primary"
-            v-if="isLoading"
-          ></v-progress-circular>
-          <v-btn
-            color="primary"
-            class="mr-4"
-            :disabled="isLoading"
-            @click="toggleShowAllImages"
-          >
-            {{ showAllImages ? 'Hide' : 'Show'}} all images
-          </v-btn>
-          <v-progress-circular
-            indeterminate
-            color="primary"
-            v-if="isLoading"
-          ></v-progress-circular>
+          <v-row>
+            <v-btn
+              color="primary"
+              class="mr-4"
+              type="submit"
+              :disabled="isLoading"
+            >
+              Get images
+            </v-btn>
+            <v-progress-circular
+              indeterminate
+              color="primary"
+              v-if="isLoading"
+              class="mr-4"
+            ></v-progress-circular>
+          </v-row>
+          <v-row class="mt-8">
+            <v-btn
+              color="primary"
+              class="mr-4"
+              :disabled="isLoading"
+              @click="toggleShowAllImages"
+            >
+              {{ showAllImages ? "Hide" : "Show" }} all images
+            </v-btn>
+          </v-row>
         </v-col>
       </v-row>
-      <ImagesDisplayerContainer v-if="showAllImages"/>
+      <ImagesDisplayerContainer v-if="showAllImages" />
     </v-container>
   </v-form>
 </template>

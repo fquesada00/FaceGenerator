@@ -24,7 +24,7 @@
         justify-content: center;
       "
     >
-      <p class="font-weight-medium">ID {{ faceId }}</p>
+      <p class="font-weight-medium">ID: {{ faceId }}</p>
     </div>
   </v-card>
 </template>
