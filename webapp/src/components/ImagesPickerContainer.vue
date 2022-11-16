@@ -9,6 +9,7 @@
           position: relative;
           top: -4rem;
         "
+        v-click-outside="onClickOutside"
       >
         <v-container
           class="d-flex flex-wrap"
@@ -67,6 +68,9 @@ export default {
     };
   },
   methods: {
+    onClickOutside() {
+      this.closeModal();
+    },
     closeModal() {
       this.$emit("close");
     },
