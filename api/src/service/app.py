@@ -44,6 +44,11 @@ def generateFaces():
     jsonData = {'zs': zs, 'imgs_bytes': imgs_bytes}
     return json.dumps(jsonData, cls=NumpyArrayEncoder)     
 
+@app.route('/faces/ids', methods=['GET'])
+def getFacesIds():
+    ids, zs = service.get_ids()
+    return jsonify({'ids': ids})
+
 @app.route('/transition', methods=['POST'])
 def generateTransition():
     id1 = int(request.form['id1'])
