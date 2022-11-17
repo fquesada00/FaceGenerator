@@ -45,6 +45,8 @@
 
 <script>
 import ImagePicker from "./ImagePicker.vue";
+import axios from "axios";
+
 export default {
   props: {
     showModal: {
@@ -61,7 +63,7 @@ export default {
   },
   data: () => {
     return {
-      facesId: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
+      facesId: [],
       show: false,
       pickedId: -1,
       doneEvent: "",
@@ -84,7 +86,7 @@ export default {
       axios
         .get("/api/faces/ids")
         .then((response) => {
-          this.facesId = response.data;
+          this.facesId = response.data.ids;
         })
         .catch((error) => {
           console.log(error);
@@ -92,7 +94,7 @@ export default {
     },
   },
   mounted() {
-    // this.getImagesIds(); // TODO: uncomment this line to get the ids from the server
+    this.getImagesIds(); // TODO: uncomment this line to get the ids from the server
   },
   updated() {
     this.pickedId = -1;
