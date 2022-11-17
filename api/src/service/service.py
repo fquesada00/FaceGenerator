@@ -27,6 +27,16 @@ class GeneratorService:
             zs.append(z)
         return ids, zs
 
+    def get_image_by_id(self, face_id: int, decode_base64: bool = False):
+        image = self.generate_face(face_id)
+        imgs_bytes = self.generator.Image_to_bytes(image)
+        
+        if decode_base64:
+            base64_decoded = base64.b64decode(imgs_bytes)
+            return BytesIO(base64_decoded)
+        else:
+            return imgs_bytes
+
     def get_images_from_database(self, from_id, to_id):
         ids, zs = GeneratorService.get_ids()
         actual_ids = []

@@ -1,6 +1,6 @@
 from json_serializer import NumpyArrayEncoder
 import json
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, send_file
 from flask_cors import CORS
 import numpy as np
 
@@ -31,6 +31,11 @@ def getFaces():
     id2 = int(request.args.get('id2'))
     imgs_bytes, ids = service.get_images_from_database(id1, id2)
     return jsonify({'ids': ids, 'imgs_bytes': imgs_bytes})
+
+@app.route('/faces/<face_id>/image')
+def getFaceImageById(face_id):
+    img_bytes = service.get_image_by_id(face_id=int(face_id), decode_base64=True)
+    return send_file(img_bytes, mimetype='image/png', cache_timeout=86400)
 
 @app.route('/faces', methods=['POST'])
 def generateFaces():
