@@ -94,7 +94,7 @@ export default {
     },
   },
   mounted() {
-    this.getImagesIds(); // TODO: uncomment this line to get the ids from the server
+    this.getImagesIds();
   },
   updated() {
     this.pickedId = -1;
