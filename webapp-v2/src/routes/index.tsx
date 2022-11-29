@@ -1,11 +1,18 @@
 import { RouteObject } from "react-router-dom"
 
-import Home from "pages/Home"
+import Root from "pages/Root"
+import Landing from "components/Content/Landing"
 
 const routes: RouteObject[] = [
   {
     path: "/",
-    element: <Home />,
+    element: <Root />,
+    children: [
+      {
+        element: <Landing />,
+        index: true,
+      },
+    ],
   },
 ]
 

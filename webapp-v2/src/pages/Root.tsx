@@ -1,7 +1,7 @@
 import Dashboard from "components/Dashboard"
 
-const Home: React.FC = () => {
+const Root: React.FC = () => {
   return <Dashboard />
 }
 
-export default Home
+export default Root

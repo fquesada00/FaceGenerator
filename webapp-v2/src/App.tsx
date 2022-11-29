@@ -1,10 +1,15 @@
-import { useState } from "react"
+import { ThemeProvider } from "@emotion/react"
 import { RouterProvider } from "react-router-dom"
 
 import router from "router"
+import mdTheme from "theme"
 
 const App = () => {
-  return <RouterProvider router={router} />
+  return (
+    <ThemeProvider theme={mdTheme}>
+      <RouterProvider router={router} />
+    </ThemeProvider>
+  )
 }
 
 export default App
