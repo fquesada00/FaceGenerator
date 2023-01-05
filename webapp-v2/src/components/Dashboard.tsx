@@ -52,7 +52,7 @@ const Dashboard: React.FC<React.PropsWithChildren> = () => {
             noWrap
             sx={{ flexGrow: 1 }}
           >
-            Dashboard
+            Face Generator
           </Typography>
           <IconButton color="inherit">
             <Badge badgeContent={4} color="secondary">
