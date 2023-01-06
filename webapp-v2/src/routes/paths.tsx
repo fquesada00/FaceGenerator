@@ -5,7 +5,7 @@ const paths = {
   transitionFaces: 'transition',
   faceFromImage: 'from-image',
   faceFeaturesModification: 'modification',
-  interchangeFacesFeatures: 'interchange-features',
+  interchangeFacesFeatures: 'interchange',
   about: '/about',
 };
 
