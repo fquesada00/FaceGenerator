@@ -11,9 +11,10 @@ const DrawerButton = (props: DrawerButtonProps) => {
   const { icon, text, path } = props;
 
   const navigate = useNavigate();
+  const active = window.location.pathname === path;
 
   return (
-    <ListItemButton onClick={() => navigate(path)}>
+    <ListItemButton onClick={() => navigate(path)} style={{ backgroundColor: active ? "rgba(0, 0, 0, 0.2)" : "transparent" }}>
       <ListItemIcon>
         {icon}
       </ListItemIcon>
