@@ -1,15 +1,15 @@
-import { RouteObject } from "react-router-dom"
+import { Navigate, RouteObject } from "react-router-dom"
 
 import Root from "pages/Root"
-import Landing from "components/Content/Landing"
-import RandomFaces from "pages/RandomFaces"
+import Home from "components/Content/Home"
 import paths from "./paths"
-import SearchFaces from "pages/SearchFaces"
-import TransitionFaces from "pages/TransitionFaces"
-import FaceFromImage from "pages/FaceFromImage"
-import FaceFeaturesModification from "pages/FaceFeaturesModification"
-import InterchangeFacesFeatures from "pages/InterchangeFacesFeatures"
-import About from "pages/About"
+import SearchFaces from "components/Content/SearchFaces"
+import About from "components/Content/About"
+import RandomFaces from "components/Content/RandomFaces"
+import FaceFeaturesModification from "components/Content/FaceFeaturesModification"
+import FaceFromImage from "components/Content/FaceFromImage"
+import InterchangeFacesFeatures from "components/Content/InterchangeFacesFeatures"
+import TransitionFaces from "components/Content/TransitionFaces"
 
 const routes: RouteObject[] = [
   {
@@ -41,7 +41,7 @@ const routes: RouteObject[] = [
         element: <InterchangeFacesFeatures />,
       },
       {
-        element: <Landing />,
+        element: <Home />,
         index: true,
       },
     ],
@@ -58,13 +58,7 @@ const routes: RouteObject[] = [
   },
   {
     path: "*",
-    element: <Root />,
-    children: [
-      {
-        element: <Landing />,
-        index: true,
-      },
-    ],
+    element: <Navigate to={paths.home} replace/>,
   }
 ]
 

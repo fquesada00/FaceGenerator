@@ -1,0 +1,39 @@
+import { Grid, Typography } from "@mui/material";
+import { Link } from "react-router-dom";
+import paths from "routes/paths";
+import faces from "../../../../assets/faces.jpg";
+import FeatureListItem from "./components/FeatureListItem";
+
+const Home: React.FC = () => {
+  return (
+    <Grid container spacing={2}>
+      <Grid item xs={12} sm={12} md={6} lg={6} xl={6}>
+        <Typography variant="h4" sx={{ fontWeight: 'bold' }}>
+          Welcome to Face Generator
+        </Typography>
+        <Typography variant="subtitle1" sx={{ fontWeight: 'medium' }}>
+          This is a web application that allows you to generate faces using a GAN model.
+          More specifically, it uses a StyleGAN2 model trained on the ... dataset.
+          <br /><br />
+          Here is a list of the features that are currently available:
+        </Typography>
+        <ul>
+          <FeatureListItem title="Random faces" description="Generate an amount of random faces." path={paths.randomFaces} />
+          <FeatureListItem title="Search faces" description="Search for faces using an id. Also displays all generated images." path={paths.searchFaces} />
+          <FeatureListItem title="Transition faces" description="Generate an amount of faces (transitions) between two faces." path={paths.transitionFaces} />
+          <FeatureListItem title="Face from image" description="Generate a face from an image." path={paths.faceFromImage} />
+          <FeatureListItem title="Modify face features" description="Modify the features of a generated face." path={paths.faceFeaturesModification} />
+          <FeatureListItem title="Interchange features" description="Interchange the features of two faces." path={paths.interchangeFacesFeatures} />
+        </ul>
+        <Typography variant="subtitle1" sx={{ fontWeight: 'medium' }}>
+          You can find more information about the project in the <Link to={paths.about} ><strong>About</strong></Link> page.
+        </Typography>
+      </Grid>
+      <Grid item xs={12} sm={12} md={6} lg={6} xl={6} container direction="column" alignItems="center" justifyContent="center">
+        <img src={faces} alt="faces" style={{height: "25rem", width: "25rem"}}/>
+      </Grid>
+    </Grid>
+  );
+}
+
+export default Home;
