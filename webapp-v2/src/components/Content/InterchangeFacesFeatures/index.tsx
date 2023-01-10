@@ -43,7 +43,7 @@ const InterchangeFacesFeatures: React.FC = () => {
       </Typography>
       <form>
         <div className={clsx(inputsClasses.container)}>
-          <Grid container style={{ width: "25rem" }}>
+          <Grid container style={{ width: "25rem" }} rowSpacing={4}>
             <Grid item xs={12} sm={6} md={6} lg={6} xl={6}>
               <CustomIdInput setId={setFirstId} setErrorMessage={setFirstIdErrorMessage} errorMessage={firstIdErrorMessage} required label="First ID" />
               <div className={clsx(contentClasses.cta, "mt-2")}>
