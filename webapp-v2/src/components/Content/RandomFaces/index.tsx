@@ -1,11 +1,10 @@
 import { Button, Typography } from "@mui/material";
 import clsx from "clsx";
 import { useState } from "react";
-import AmountInput from "components/Inputs/AmountInput";
 import { MIN_FACES, MAX_FACES } from "components/utils";
 
 import inputsClasses from "components/Inputs/styles/Inputs.module.scss";
-import contentClasses from "../styles/Content.module.scss"
+import contentClasses from "components/Content/styles/Content.module.scss"
 import CustomAmountInput from "components/Inputs/custom/CustomAmountInput";
 
 const RandomFaces: React.FC = () => {
@@ -37,7 +36,7 @@ const RandomFaces: React.FC = () => {
       <form>
         <div className={clsx(inputsClasses.container)}>
           <CustomAmountInput setAmount={setAmount} setErrorMessage={setErrorMessage} errorMessage={errorMessage} />
-          <div className={clsx(contentClasses.cta)}>
+          <div className={clsx(contentClasses.cta, "mt-8")}>
             <Button variant="contained" color="primary" fullWidth onClick={onSubmit}>
               Generate
             </Button>

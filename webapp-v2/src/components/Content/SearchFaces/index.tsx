@@ -48,12 +48,12 @@ const SearchFaces: React.FC = () => {
               <CustomIdInput setId={setSecondId} setErrorMessage={setSecondIdErrorMessage} errorMessage={secondIdErrorMessage} label="Second ID" />
             </Grid>
           </Grid>
-          <div className={clsx(contentClasses.cta)}>
+          <div className={clsx(contentClasses.cta, "mt-8")}>
             <Button variant="contained" color="primary" fullWidth onClick={onSubmit}>
               Search
             </Button>
           </div>
-          <div className={clsx(contentClasses.cta, "mt-6")}>
+          <div className={clsx(contentClasses.cta, "mt-4")}>
             <Button variant="contained" color="primary" fullWidth onClick={() => setHideAll(!hideAll)}>
               {!hideAll ? "Hide" : "Show"} all
             </Button>

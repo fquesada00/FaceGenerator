@@ -1,13 +1,11 @@
 import { Typography, Grid, Button } from "@mui/material";
 import clsx from "clsx";
 import { useState } from "react";
-import AmountInput from "components/Inputs/AmountInput";
-import { MIN_FACES, MAX_FACES } from "components/utils";
 import CustomIdInput from "components/Inputs/custom/CustomIdInput";
+import CustomAmountInput from "components/Inputs/custom/CustomAmountInput";
 
 import inputsClasses from "components/Inputs/styles/Inputs.module.scss";
-import contentClasses from "../styles/Content.module.scss"
-import CustomAmountInput from "components/Inputs/custom/CustomAmountInput";
+import contentClasses from "components/Content/styles/Content.module.scss"
 
 const TransitionFaces: React.FC = () => {
   const [firstId, setFirstId] = useState<number>(0);
@@ -15,8 +13,6 @@ const TransitionFaces: React.FC = () => {
 
   const [secondId, setSecondId] = useState<number>(0);
   const [secondIdErrorMessage, setSecondIdErrorMessage] = useState<string>("");
-
-  const [hideAll, setHideAll] = useState<boolean>(true);
 
   const [amount, setAmount] = useState<number>(0);
   const [amountErrorMessage, setAmountErrorMessage] = useState<string>("");
@@ -47,7 +43,7 @@ const TransitionFaces: React.FC = () => {
   return (
     <div>
       <Typography variant="h5">
-        Lookup for the faces that you want to see.
+        Generate an amount of transitions between two faces.
         <br />
         The results will be displayed below.
       </Typography>
@@ -56,29 +52,29 @@ const TransitionFaces: React.FC = () => {
           <Grid container style={{ width: "25rem" }}>
             <Grid item xs={12} sm={6} md={6} lg={6} xl={6}>
               <CustomIdInput setId={setFirstId} setErrorMessage={setFirstIdErrorMessage} errorMessage={firstIdErrorMessage} required label="First ID" />
+              <div className={clsx(contentClasses.cta, "mt-2")}>
+                <Button variant="contained" color="primary" fullWidth onClick={() => { }}>
+                  Pick face
+                </Button>
+              </div>
             </Grid>
             <Grid item xs={12} sm={6} md={6} lg={6} xl={6}>
               <CustomIdInput setId={setSecondId} setErrorMessage={setSecondIdErrorMessage} errorMessage={secondIdErrorMessage} required label="Second ID" />
+              <div className={clsx(contentClasses.cta, "mt-2")}>
+                <Button variant="contained" color="primary" fullWidth onClick={() => { }}>
+                  Pick face
+                </Button>
+              </div>
             </Grid>
           </Grid>
-          <CustomAmountInput setAmount={setAmount} setErrorMessage={setAmountErrorMessage} errorMessage={amountErrorMessage} />
-          <div className={clsx(contentClasses.cta)}>
-            <Button variant="contained" color="primary" fullWidth onClick={onSubmit}>
-              Generate
-            </Button>
+          <div className="mt-8">
+            <CustomAmountInput setAmount={setAmount} setErrorMessage={setAmountErrorMessage} errorMessage={amountErrorMessage} />
+            <div className={clsx(contentClasses.cta, "mt-8")}>
+              <Button variant="contained" color="primary" fullWidth onClick={onSubmit}>
+                Generate
+              </Button>
+            </div>
           </div>
-          <div className={clsx(contentClasses.cta, "mt-6")}>
-            <Button variant="contained" color="primary" fullWidth onClick={() => setHideAll(!hideAll)}>
-              {!hideAll ? "Hide" : "Show"} all
-            </Button>
-          </div>
-          {
-            !hideAll
-            &&
-            <h1 className="text-3xl font-bold underline">
-              Hello world!
-            </h1>
-          }
         </div>
       </form>
     </div>
