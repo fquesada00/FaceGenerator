@@ -6,6 +6,7 @@ import { MIN_FACES, MAX_FACES } from "components/utils";
 
 import inputsClasses from "components/Inputs/styles/Inputs.module.scss";
 import contentClasses from "../styles/Content.module.scss"
+import CustomAmountInput from "components/Inputs/custom/CustomAmountInput";
 
 const RandomFaces: React.FC = () => {
   const [amount, setAmount] = useState<number>(0);
@@ -35,19 +36,7 @@ const RandomFaces: React.FC = () => {
       </Typography>
       <form>
         <div className={clsx(inputsClasses.container)}>
-          <div className={clsx(inputsClasses.field)}>
-            <AmountInput
-              onChange={(n) => {
-                if (isNaN(n)) {
-                  setAmount(0);
-                  return;
-                }
-
-                setAmount(n);
-              }}
-              min={MIN_FACES} max={MAX_FACES} setErrorMessage={setErrorMessage} errorMessage={errorMessage}
-            />
-          </div>
+          <CustomAmountInput setAmount={setAmount} setErrorMessage={setErrorMessage} errorMessage={errorMessage} />
           <div className={clsx(contentClasses.cta)}>
             <Button variant="contained" color="primary" fullWidth onClick={onSubmit}>
               Generate

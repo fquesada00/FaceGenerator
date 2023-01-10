@@ -4,7 +4,7 @@ import { useState } from "react";
 
 import inputsClasses from "components/Inputs/styles/Inputs.module.scss";
 import contentClasses from "../styles/Content.module.scss"
-import IdInput from "components/Inputs/IdInput";
+import CustomIdInput from "components/Inputs/custom/CustomIdInput";
 
 
 const SearchFaces: React.FC = () => {
@@ -31,25 +31,6 @@ const SearchFaces: React.FC = () => {
     // https://dummyimage.com/600x400/ff00ff/ededed&text=this+is+a+face
   }
 
-  const renderIdField = (setId: (n: number) => void, setErrorMessage: (s: string) => void, errorMessage: string, required: boolean = false, label?: string) => {
-    return (
-      <div className={clsx(inputsClasses.field)}>
-        <IdInput
-          onChange={(n) => {
-            if (isNaN(n)) {
-              setId(0);
-              return;
-            }
-
-            setId(n);
-          }}
-          label={label}
-          setErrorMessage={setErrorMessage} errorMessage={errorMessage} required={required}
-        />
-      </div>
-    );
-  }
-
   return (
     <div>
       <Typography variant="h5">
@@ -61,14 +42,10 @@ const SearchFaces: React.FC = () => {
         <div className={clsx(inputsClasses.container)}>
           <Grid container style={{ width: "25rem" }}>
             <Grid item xs={12} sm={6} md={6} lg={6} xl={6}>
-              {
-                renderIdField(setFirstId, setFirstIdErrorMessage, firstIdErrorMessage, true, "First ID")
-              }
+              <CustomIdInput setId={setFirstId} setErrorMessage={setFirstIdErrorMessage} errorMessage={firstIdErrorMessage} required label="First ID" />
             </Grid>
             <Grid item xs={12} sm={6} md={6} lg={6} xl={6}>
-              {
-                renderIdField(setSecondId, setSecondIdErrorMessage, secondIdErrorMessage, false, "Second ID")
-              }
+              <CustomIdInput setId={setSecondId} setErrorMessage={setSecondIdErrorMessage} errorMessage={secondIdErrorMessage} label="Second ID" />
             </Grid>
           </Grid>
           <div className={clsx(contentClasses.cta)}>
@@ -92,7 +69,6 @@ const SearchFaces: React.FC = () => {
       </form>
     </div>
   );
-
 }
 
 export default SearchFaces;
