@@ -24,6 +24,8 @@ const Dashboard: React.FC<React.PropsWithChildren> = () => {
     setOpen(!open)
   }
 
+
+
   return (
     <Box sx={{ display: "flex" }}>
       <CssBaseline />
@@ -33,18 +35,28 @@ const Dashboard: React.FC<React.PropsWithChildren> = () => {
             pr: "24px", // keep right padding when drawer closed
           }}
         >
-          <IconButton
-            edge="start"
-            color="inherit"
-            aria-label="open drawer"
-            onClick={toggleDrawer}
-            sx={{
-              marginRight: "36px",
-              ...(open && { display: "none" }),
-            }}
-          >
-            <MenuIcon />
-          </IconButton>
+          <Box sx={{
+            display: {
+              xs: "none",
+              sm: "block",
+              md: "block",
+              lg: "block",
+              xl: "block",
+            }
+            }}>
+            <IconButton
+              edge="start"
+              color="inherit"
+              aria-label="open drawer"
+              onClick={toggleDrawer}
+              sx={{
+                marginRight: "36px",
+                ...(open && { display: "none" }),
+              }}
+            >
+              <MenuIcon />
+            </IconButton>
+          </Box>
           <Typography
             component="h1"
             variant="h6"
