@@ -5,6 +5,7 @@ import { useState } from "react";
 import inputsClasses from "components/Inputs/styles/Inputs.module.scss";
 import contentClasses from "../styles/Content.module.scss"
 import CustomIdInput from "components/Inputs/custom/CustomIdInput";
+import CtaButton from "components/CtaButton";
 
 
 const SearchFaces: React.FC = () => {
@@ -43,31 +44,16 @@ const SearchFaces: React.FC = () => {
           <Grid container style={{ width: "25rem" }} rowSpacing={4}>
             <Grid item xs={12} sm={6} md={6} lg={6} xl={6}>
               <CustomIdInput setId={setFirstId} setErrorMessage={setFirstIdErrorMessage} errorMessage={firstIdErrorMessage} required label="First ID" />
-              <div className={clsx(contentClasses.cta, "mt-2")}>
-                <Button variant="contained" color="primary" fullWidth onClick={() => { }}>
-                  Pick face
-                </Button>
-              </div>
+              <CtaButton onSubmit={onSubmit} label="Pick face" className="mt-2" />
             </Grid>
             <Grid item xs={12} sm={6} md={6} lg={6} xl={6}>
               <CustomIdInput setId={setSecondId} setErrorMessage={setSecondIdErrorMessage} errorMessage={secondIdErrorMessage} label="Second ID" />
-              <div className={clsx(contentClasses.cta, "mt-2")}>
-                <Button variant="contained" color="primary" fullWidth onClick={() => { }}>
-                  Pick face
-                </Button>
-              </div>
+              <CtaButton onSubmit={onSubmit} label="Pick face" className="mt-2" />
+
             </Grid>
           </Grid>
-          <div className={clsx(contentClasses.cta, "mt-8")}>
-            <Button variant="contained" color="primary" fullWidth onClick={onSubmit}>
-              Search
-            </Button>
-          </div>
-          <div className={clsx(contentClasses.cta, "mt-4")}>
-            <Button variant="contained" color="primary" fullWidth onClick={() => setHideAll(!hideAll)}>
-              {!hideAll ? "Hide" : "Show"} all
-            </Button>
-          </div>
+          <CtaButton onSubmit={onSubmit} label="Search" className="mt-8" />
+          <CtaButton onSubmit={() => setHideAll(!hideAll)} label={`${!hideAll ? "Hide" : "Show"} all`} className="mt-4" />
           {
             !hideAll
             &&

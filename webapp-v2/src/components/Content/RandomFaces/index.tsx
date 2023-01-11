@@ -6,6 +6,7 @@ import { MIN_FACES, MAX_FACES } from "components/utils";
 import inputsClasses from "components/Inputs/styles/Inputs.module.scss";
 import contentClasses from "components/Content/styles/Content.module.scss"
 import CustomAmountInput from "components/Inputs/custom/CustomAmountInput";
+import CtaButton from "components/CtaButton";
 
 const RandomFaces: React.FC = () => {
   const [amount, setAmount] = useState<number>(0);
@@ -36,11 +37,7 @@ const RandomFaces: React.FC = () => {
       <form>
         <div className={clsx(inputsClasses.container)}>
           <CustomAmountInput setAmount={setAmount} setErrorMessage={setErrorMessage} errorMessage={errorMessage} />
-          <div className={clsx(contentClasses.cta, "mt-8")}>
-            <Button variant="contained" color="primary" fullWidth onClick={onSubmit}>
-              Generate
-            </Button>
-          </div>
+          <CtaButton onSubmit={onSubmit} label="Generate" className="mt-8"/>
         </div>
       </form>
     </div>

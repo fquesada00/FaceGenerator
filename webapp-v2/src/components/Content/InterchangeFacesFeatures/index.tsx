@@ -2,10 +2,9 @@ import { Typography, Grid, Button } from "@mui/material";
 import clsx from "clsx";
 import { useState } from "react";
 import CustomIdInput from "components/Inputs/custom/CustomIdInput";
-import CustomAmountInput from "components/Inputs/custom/CustomAmountInput";
 
 import inputsClasses from "components/Inputs/styles/Inputs.module.scss";
-import contentClasses from "components/Content/styles/Content.module.scss"
+import CtaButton from "components/CtaButton";
 
 const InterchangeFacesFeatures: React.FC = () => {
   const [firstId, setFirstId] = useState<number>(0);
@@ -46,26 +45,14 @@ const InterchangeFacesFeatures: React.FC = () => {
           <Grid container style={{ width: "25rem" }} rowSpacing={4}>
             <Grid item xs={12} sm={6} md={6} lg={6} xl={6}>
               <CustomIdInput setId={setFirstId} setErrorMessage={setFirstIdErrorMessage} errorMessage={firstIdErrorMessage} required label="First ID" />
-              <div className={clsx(contentClasses.cta, "mt-2")}>
-                <Button variant="contained" color="primary" fullWidth onClick={() => { }}>
-                  Pick face
-                </Button>
-              </div>
+              <CtaButton onSubmit={() => { }} label="Pick face" className="mt-2" />
             </Grid>
             <Grid item xs={12} sm={6} md={6} lg={6} xl={6}>
               <CustomIdInput setId={setSecondId} setErrorMessage={setSecondIdErrorMessage} errorMessage={secondIdErrorMessage} required label="Second ID" />
-              <div className={clsx(contentClasses.cta, "mt-2")}>
-                <Button variant="contained" color="primary" fullWidth onClick={() => { }}>
-                  Pick face
-                </Button>
-              </div>
+              <CtaButton onSubmit={() => { }} label="Pick face" className="mt-2" />
             </Grid>
           </Grid>
-          <div className={clsx(contentClasses.cta, "mt-8")}>
-            <Button variant="contained" color="primary" fullWidth onClick={onSubmit}>
-              Generate
-            </Button>
-          </div>
+          <CtaButton onSubmit={onSubmit} label="Generate" className="mt-8"/>
         </div>
       </form>
     </div>
