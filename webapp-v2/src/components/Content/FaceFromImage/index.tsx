@@ -7,6 +7,8 @@ import contentClasses from "components/Content/styles/Content.module.scss"
 import { useRef, useCallback, useState } from "react";
 import { Box } from "@mui/system";
 import CtaButton from "components/CtaButton";
+import ContentHeader from "components/ContentHeader";
+import paths from "routes/paths";
 
 const FaceFromImage: React.FC = () => {
 
@@ -50,9 +52,10 @@ const FaceFromImage: React.FC = () => {
 
   return (
     <div>
-      <Typography variant="h5">
-        Generate a face from an image.
-      </Typography>
+      <ContentHeader
+        title={paths.faceFromImage.title}
+        subtitle="Upload a face image to generate a face from it. The image should be in .jpg or .png format. The generated one is located in the latent space of the NN."
+      />
       <div className={clsx(inputsClasses.container)}>
         <Grid container>
           <Grid item xs={12} sm={12} md={6} lg={6} xl={6} container direction="column" alignItems="center" justifyContent="center">

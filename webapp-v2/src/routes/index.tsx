@@ -13,31 +13,31 @@ import TransitionFaces from "components/Content/TransitionFaces"
 
 const routes: RouteObject[] = [
   {
-    path: paths.home,
+    path: paths.home.path,
     element: <Root />,
     children: [
       {
-        path: paths.randomFaces,
+        path: paths.randomFaces.path,
         element: <RandomFaces />,
       },
       {
-        path: paths.searchFaces,
+        path: paths.searchFaces.path,
         element: <SearchFaces />,
       },
       {
-        path: paths.transitionFaces,
+        path: paths.transitionFaces.path,
         element: <TransitionFaces />,
       },
       {
-        path: paths.faceFromImage,
+        path: paths.faceFromImage.path,
         element: <FaceFromImage />,
       },
       {
-        path: paths.faceFeaturesModification,
+        path: paths.faceFeaturesModification.path,
         element: <FaceFeaturesModification />,
       },
       {
-        path: paths.interchangeFacesFeatures,
+        path: paths.interchangeFacesFeatures.path,
         element: <InterchangeFacesFeatures />,
       },
       {
@@ -47,7 +47,7 @@ const routes: RouteObject[] = [
     ],
   },
   {
-    path: paths.about,
+    path: paths.about.path,
     element: <Root />,
     children: [
       {
@@ -58,7 +58,7 @@ const routes: RouteObject[] = [
   },
   {
     path: "*",
-    element: <Navigate to={paths.home} replace/>,
+    element: <Navigate to={paths.home.path} replace/>,
   }
 ]
 

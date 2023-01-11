@@ -1,11 +1,13 @@
 import { Typography, Button, Grid } from "@mui/material";
 import clsx from "clsx";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 
 import inputsClasses from "components/Inputs/styles/Inputs.module.scss";
 import contentClasses from "../styles/Content.module.scss"
 import CustomIdInput from "components/Inputs/custom/CustomIdInput";
 import CtaButton from "components/CtaButton";
+import ContentHeader from "components/ContentHeader";
+import paths from "routes/paths";
 
 
 const SearchFaces: React.FC = () => {
@@ -16,6 +18,16 @@ const SearchFaces: React.FC = () => {
   const [secondIdErrorMessage, setSecondIdErrorMessage] = useState<string>("");
 
   const [hideAll, setHideAll] = useState<boolean>(true);
+
+  const renderSubtitle = useMemo(() => {
+    return (
+      <div>
+        Lookup for the faces that you want to see.
+        <br />
+        The results will be displayed below.
+      </div>
+    )
+  }, [])
 
   const onSubmit = () => {
     if (firstIdErrorMessage !== "" || secondIdErrorMessage !== "") {
@@ -34,11 +46,10 @@ const SearchFaces: React.FC = () => {
 
   return (
     <div>
-      <Typography variant="h5">
-        Lookup for the faces that you want to see.
-        <br />
-        The results will be displayed below.
-      </Typography>
+      <ContentHeader
+        title={paths.searchFaces.title}
+        subtitle={renderSubtitle}
+      />
       <form>
         <div className={clsx(inputsClasses.container)}>
           <Grid container style={{ width: "25rem" }} rowSpacing={4}>

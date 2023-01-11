@@ -1,12 +1,14 @@
 import { Typography, Grid, Button } from "@mui/material";
 import clsx from "clsx";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import CustomIdInput from "components/Inputs/custom/CustomIdInput";
 import CustomAmountInput from "components/Inputs/custom/CustomAmountInput";
 
 import inputsClasses from "components/Inputs/styles/Inputs.module.scss";
 import contentClasses from "components/Content/styles/Content.module.scss"
 import CtaButton from "components/CtaButton";
+import ContentHeader from "components/ContentHeader";
+import paths from "routes/paths";
 
 const TransitionFaces: React.FC = () => {
   const [firstId, setFirstId] = useState<number>(0);
@@ -17,6 +19,16 @@ const TransitionFaces: React.FC = () => {
 
   const [amount, setAmount] = useState<number>(0);
   const [amountErrorMessage, setAmountErrorMessage] = useState<string>("");
+
+  const renderSubtitle = useMemo(() => {
+    return (
+      <div>
+        Generate an amount of transitions between two faces.
+        <br />
+        The results will be displayed below.
+      </div>
+    )
+  }, [])
 
   const onSubmit = () => {
     if (amountErrorMessage !== "" || firstIdErrorMessage !== "" || secondIdErrorMessage !== "") {
@@ -43,11 +55,10 @@ const TransitionFaces: React.FC = () => {
 
   return (
     <div>
-      <Typography variant="h5">
-        Generate an amount of transitions between two faces.
-        <br />
-        The results will be displayed below.
-      </Typography>
+      <ContentHeader
+        title={paths.transitionFaces.title}
+        subtitle={renderSubtitle}
+      />
       <form>
         <div className={clsx(inputsClasses.container)}>
           <Grid container style={{ width: "25rem" }} rowSpacing={4}>

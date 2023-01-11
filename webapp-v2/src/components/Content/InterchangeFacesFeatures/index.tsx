@@ -1,10 +1,12 @@
 import { Typography, Grid, Button } from "@mui/material";
 import clsx from "clsx";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import CustomIdInput from "components/Inputs/custom/CustomIdInput";
 
 import inputsClasses from "components/Inputs/styles/Inputs.module.scss";
 import CtaButton from "components/CtaButton";
+import ContentHeader from "components/ContentHeader";
+import paths from "routes/paths";
 
 const InterchangeFacesFeatures: React.FC = () => {
   const [firstId, setFirstId] = useState<number>(0);
@@ -12,6 +14,16 @@ const InterchangeFacesFeatures: React.FC = () => {
 
   const [secondId, setSecondId] = useState<number>(0);
   const [secondIdErrorMessage, setSecondIdErrorMessage] = useState<string>("");
+
+  const renderSubtitle = useMemo(() => {
+    return (
+      <div>
+        Interchange the features (styles) of two faces.
+        <br />
+        The results will be displayed below.
+      </div>
+    )
+  }, [])
 
   const onSubmit = () => {
     if (firstIdErrorMessage !== "" || secondIdErrorMessage !== "") {
@@ -35,11 +47,10 @@ const InterchangeFacesFeatures: React.FC = () => {
 
   return (
     <div>
-      <Typography variant="h5">
-        Interchange the features (styles) of two faces.
-        <br />
-        The results will be displayed below.
-      </Typography>
+      <ContentHeader
+        title={paths.interchangeFacesFeatures.title}
+        subtitle={renderSubtitle}
+      />
       <form>
         <div className={clsx(inputsClasses.container)}>
           <Grid container style={{ width: "25rem" }} rowSpacing={4}>
@@ -52,7 +63,7 @@ const InterchangeFacesFeatures: React.FC = () => {
               <CtaButton onSubmit={() => { }} label="Pick face" className="mt-2" />
             </Grid>
           </Grid>
-          <CtaButton onSubmit={onSubmit} label="Generate" className="mt-8"/>
+          <CtaButton onSubmit={onSubmit} label="Generate" className="mt-8" />
         </div>
       </form>
     </div>

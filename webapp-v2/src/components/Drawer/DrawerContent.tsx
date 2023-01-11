@@ -13,14 +13,14 @@ import DrawerButton from "./DrawerButton";
 const DrawerContent = () => {
   return (
     <React.Fragment>
-      <DrawerButton icon={<HomeIcon />} text="Home" path={paths.home} />
-      <DrawerButton icon={<ShuffleIcon />} text="Random faces" path={`${paths.home}/${paths.randomFaces}`} />
-      <DrawerButton icon={<SearchIcon />} text="Search faces" path={`${paths.home}/${paths.searchFaces}`} />
-      <DrawerButton icon={<LayersIcon />} text="Transition faces" path={`${paths.home}/${paths.transitionFaces}`} />
-      <DrawerButton icon={<ImageSearchIcon />} text="Face from image" path={`${paths.home}/${paths.faceFromImage}`} />
-      <DrawerButton icon={<FaceRetouchingNaturalIcon />} text="Modify face features" path={`${paths.home}/${paths.faceFeaturesModification}`} />
-      <DrawerButton icon={<ImportExportIcon style={{ transform: "rotate(90deg)" }} />} text="Interchange features" path={`${paths.home}/${paths.interchangeFacesFeatures}`} />
-      <DrawerButton icon={<InfoIcon />} text="About" path={paths.about} />
+      <DrawerButton icon={<HomeIcon />} text="Home" path={paths.home.path} />
+      <DrawerButton icon={<ShuffleIcon />} text="Random faces" path={`${paths.home.path}/${paths.randomFaces.path}`} />
+      <DrawerButton icon={<SearchIcon />} text="Search faces" path={`${paths.home.path}/${paths.searchFaces.path}`} />
+      <DrawerButton icon={<LayersIcon />} text="Transition faces" path={`${paths.home.path}/${paths.transitionFaces.path}`} />
+      <DrawerButton icon={<ImageSearchIcon />} text="Face from image" path={`${paths.home.path}/${paths.faceFromImage.path}`} />
+      <DrawerButton icon={<FaceRetouchingNaturalIcon />} text="Modify face features" path={`${paths.home.path}/${paths.faceFeaturesModification.path}`} />
+      <DrawerButton icon={<ImportExportIcon style={{ transform: "rotate(90deg)" }} />} text="Interchange features" path={`${paths.home.path}/${paths.interchangeFacesFeatures.path}`} />
+      <DrawerButton icon={<InfoIcon />} text="About" path={paths.about.path} />
     </React.Fragment>
   )
 }
