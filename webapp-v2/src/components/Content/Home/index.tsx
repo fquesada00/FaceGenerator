@@ -27,11 +27,11 @@ const Home: React.FC = () => {
         </ul>
         <div className="mt-4">
           <Typography variant="subtitle1" sx={{ fontWeight: 'medium' }}>
-            You can find more information about the project in the
+            You can find more information about the project in the&nbsp; 
             <Link to={paths.about} className="underline text-blue-600 hover:text-blue-800 visited:text-purple-600">
-              <strong> About </strong>
+              <strong>About</strong>
             </Link>
-            page.
+            &nbsp;page.
           </Typography>
         </div>
       </Grid>
