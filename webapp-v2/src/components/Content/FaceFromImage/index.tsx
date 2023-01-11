@@ -55,7 +55,7 @@ const FaceFromImage: React.FC = () => {
       </Typography>
       <div className={clsx(inputsClasses.container)}>
         <Grid container>
-          <Grid item xs={12} sm={12} md={6} lg={6} xl={6}>
+          <Grid item xs={12} sm={12} md={6} lg={6} xl={6} container direction="column" alignItems="center" justifyContent="center">
             <Box
               className="rounded-lg border-stone-900" style={{ borderWidth: "0.25rem" }} onClick={onClickImage}
               sx={{
@@ -80,7 +80,7 @@ const FaceFromImage: React.FC = () => {
                 renderImagePicker()
               }
             </Box>
-              <CtaButton label="Generate" onSubmit={() => { }} className="mt-8"/>
+            <CtaButton label="Generate" onSubmit={() => { }} className="mt-8" />
           </Grid>
           <Grid item xs={12} sm={12} md={6} lg={6} xl={6}>
           </Grid>
