@@ -3,7 +3,7 @@ import ContentHeader from "components/ContentHeader";
 import { useMemo } from "react";
 import { Link } from "react-router-dom";
 import paths from "routes/paths";
-import faces from "../../../../assets/faces.jpg";
+import faces from "assets/faces.jpg";
 import FeatureListItem from "./components/FeatureListItem";
 
 const Home: React.FC = () => {

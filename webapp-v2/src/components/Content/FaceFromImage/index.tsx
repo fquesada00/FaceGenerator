@@ -1,6 +1,6 @@
 import { Grid, Typography } from "@mui/material";
 import clsx from "clsx";
-import AddSvg from "../../../../assets/add-svgrepo-com.svg";
+import AddSvg from "assets/add-svgrepo-com.svg";
 
 import inputsClasses from "components/Inputs/styles/Inputs.module.scss";
 import contentClasses from "components/Content/styles/Content.module.scss"
