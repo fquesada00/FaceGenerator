@@ -21,7 +21,7 @@ const getFaceImage = async (id: number) => {
 
 const generateTransitions = async (fromId: number, toId: number, amount: number) => {
   try {
-    const response = await api.post('/transitions', { fromId, toId, amount });
+    const response = await api.post('/faces/transitions', { fromId, toId, amount });
     return response;
   } catch (error) {
     throw new ApiError('Generate transitions', getErrorMessage(error));
