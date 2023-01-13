@@ -1,5 +1,5 @@
 import clsx from "clsx";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { MIN_FACES, MAX_FACES } from "components/utils";
 
 import inputsClasses from "components/Inputs/styles/Inputs.module.scss";
@@ -11,6 +11,7 @@ import { useMutation } from "react-query";
 import { generateFaces } from "services/api/FaceGeneratorApi";
 import ApiError from "services/api/Error";
 import { toastError } from "components/Toast";
+import Images from "components/Images";
 
 
 const RandomFaces: React.FC = () => {
@@ -18,9 +19,10 @@ const RandomFaces: React.FC = () => {
   const [errorMessage, setErrorMessage] = useState<string>("");
 
   const {
-    mutate, isLoading
+    mutate, isLoading, data: faces
   } = useMutation(generateFaces, {
     onSuccess: (data) => {
+      console.log(data);
     },
     onError: (error) => {
       if (error instanceof ApiError) {
@@ -39,6 +41,18 @@ const RandomFaces: React.FC = () => {
     )
   }, [])
 
+  const renderImages = useMemo(() => {
+    if (!faces) {
+      return null;
+    }
+
+    return (
+      <div className={clsx("mt-8")}>
+        <Images faces={faces} />
+      </div>
+    );
+  }, [faces])
+
   const onSubmit = () => {
     if (errorMessage !== "") {
       return;
@@ -49,10 +63,7 @@ const RandomFaces: React.FC = () => {
       return;
     }
 
-    // TODO: Generate faces logic
-    console.log(`Generating ${amount} faces`);
     mutate(amount);
-    // https://dummyimage.com/600x400/ff00ff/ededed&text=this+is+a+face
   }
 
   return (
@@ -65,6 +76,9 @@ const RandomFaces: React.FC = () => {
         <div className={clsx(inputsClasses.container)}>
           <CustomAmountInput setAmount={setAmount} setErrorMessage={setErrorMessage} errorMessage={errorMessage} />
           <CtaButton onSubmit={onSubmit} label="Generate" className="mt-8" loading={isLoading} />
+          {
+            !isLoading && renderImages
+          }
         </div>
       </form>
     </div>

@@ -1,11 +1,18 @@
 import api, { FACES_API_PREFIX } from '.';
 import ApiError, { getErrorMessage } from './Error';
-import { ApiResponse } from './models';
+import { ApiResponse, IApiFace } from './models';
+import datasource from './datasource';
 
-export const generateFaces = async (amount: number) => {
+const sleep = (ms: number) => {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+};
+
+export const generateFaces = async (amount: number): Promise<IApiFace[]> => {
   try {
-    const response = await api.post<ApiResponse>(`${FACES_API_PREFIX}`, { amount });
-    return response.result;
+    await sleep(2000);
+    // const response = await api.post<ApiResponse>(`${FACES_API_PREFIX}`, { amount });
+    // return response.result;
+    return datasource.faces;
   } catch (error) {
     throw new ApiError('Generate faces', getErrorMessage(error));
   }
