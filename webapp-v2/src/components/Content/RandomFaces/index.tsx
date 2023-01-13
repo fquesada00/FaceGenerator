@@ -11,7 +11,7 @@ import { useMutation } from "react-query";
 import { generateFaces } from "services/api/FaceGeneratorApi";
 import ApiError from "services/api/Error";
 import { toastError } from "components/Toast";
-import Images from "components/Images";
+import useRenderImages from "hooks/useRenderImages";
 
 
 const RandomFaces: React.FC = () => {
@@ -41,17 +41,7 @@ const RandomFaces: React.FC = () => {
     )
   }, [])
 
-  const renderImages = useMemo(() => {
-    if (!faces) {
-      return null;
-    }
-
-    return (
-      <div className={clsx("mt-8")}>
-        <Images faces={faces} />
-      </div>
-    );
-  }, [faces])
+  const { images: FacesImages } = useRenderImages({ faces });
 
   const onSubmit = () => {
     if (errorMessage !== "") {
@@ -77,7 +67,7 @@ const RandomFaces: React.FC = () => {
           <CustomAmountInput setAmount={setAmount} setErrorMessage={setErrorMessage} errorMessage={errorMessage} />
           <CtaButton onSubmit={onSubmit} label="Generate" className="mt-8" loading={isLoading} />
           {
-            !isLoading && renderImages
+            !isLoading && FacesImages
           }
         </div>
       </form>

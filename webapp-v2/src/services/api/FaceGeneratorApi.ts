@@ -18,6 +18,28 @@ export const generateFaces = async (amount: number): Promise<IApiFace[]> => {
   }
 };
 
+export const getAllFaces = async (): Promise<IApiFace[]> => {
+  try {
+    await sleep(2000);
+    // const response = await api.get<ApiResponse>(`${FACES_API_PREFIX}`);
+    // return response.result;
+    return datasource.faces;
+  } catch (error) {
+    throw new ApiError('Show all faces', getErrorMessage(error));
+  }
+};
+
+export const searchFacesBetweenIds = async ({ fromId, toId }: { fromId: number; toId: number }): Promise<IApiFace[]> => {
+  try {
+    await sleep(2000);
+    // const response = await api.get<ApiResponse>(`${FACES_API_PREFIX}/search`, { fromId, toId });
+    // return response.result;
+    return datasource.faces;
+  } catch (error) {
+    throw new ApiError('Search faces', getErrorMessage(error));
+  }
+};
+
 export const getFaceImage = async (id: number) => {
   try {
     const response = await api.get<ApiResponse>(`${FACES_API_PREFIX}/${id}/image`);

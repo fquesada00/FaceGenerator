@@ -3,11 +3,15 @@ import clsx from "clsx";
 import { useMemo, useState } from "react";
 
 import inputsClasses from "components/Inputs/styles/Inputs.module.scss";
-import contentClasses from "../styles/Content.module.scss"
 import CustomIdInput from "components/Inputs/custom/CustomIdInput";
 import CtaButton from "components/CtaButton";
 import ContentHeader from "components/ContentHeader";
 import paths from "routes/paths";
+import { useMutation } from "react-query";
+import { toastError } from "components/Toast";
+import ApiError from "services/api/Error";
+import { getAllFaces, searchFacesBetweenIds } from "services/api/FaceGeneratorApi";
+import useRenderImages from "hooks/useRenderImages";
 
 
 const SearchFaces: React.FC = () => {
@@ -19,6 +23,37 @@ const SearchFaces: React.FC = () => {
 
   const [hideAll, setHideAll] = useState<boolean>(true);
 
+  const {
+    mutate: mutateSearchFacesBetweenIds, isLoading: isLoadingSearch, data: searchFaces
+  } = useMutation(searchFacesBetweenIds, {
+    onSuccess: (data) => {
+      console.log(data);
+    },
+    onError: (error) => {
+      if (error instanceof ApiError) {
+        toastError(error.toString());
+      }
+    }
+  });
+
+  const { images: SearchFacesImages} = useRenderImages({ faces: searchFaces })
+
+  const {
+    mutate: mutateGetAllFaces, isLoading: isLoadingShowAll, data: allFaces
+  } = useMutation(getAllFaces, {
+    onSuccess: (data) => {
+      console.log(data);
+    },
+    onError: (error) => {
+      if (error instanceof ApiError) {
+        toastError(error.toString());
+      }
+    }
+  });
+
+  const { images: AllFacesImages} = useRenderImages({ faces: allFaces })
+
+  
   const renderSubtitle = useMemo(() => {
     return (
       <div>
@@ -29,19 +64,35 @@ const SearchFaces: React.FC = () => {
     )
   }, [])
 
+
   const onSubmit = () => {
+    let hasError = false;
     if (firstIdErrorMessage !== "" || secondIdErrorMessage !== "") {
       return;
     }
 
     if (firstId === 0) {
       setFirstIdErrorMessage("First ID is required");
+      hasError = true;
+    }
+
+    if (secondId === 0) {
+      setSecondIdErrorMessage("Second ID is required");
+      hasError = true;
+    }
+
+    if (hasError) {
       return;
     }
 
-    // TODO: Generate faces logic
-    console.log(`Generating ${firstId} faces`);
-    // https://dummyimage.com/600x400/ff00ff/ededed&text=this+is+a+face
+    mutateSearchFacesBetweenIds({ fromId: firstId, toId: secondId });
+  }
+
+  const onShowAll = () => {
+    if (hideAll) {
+      mutateGetAllFaces();
+    }
+    setHideAll(!hideAll);
   }
 
   return (
@@ -58,19 +109,17 @@ const SearchFaces: React.FC = () => {
               <CtaButton onSubmit={onSubmit} label="Pick face" className="mt-2" />
             </Grid>
             <Grid item xs={12} sm={6} md={6} lg={6} xl={6}>
-              <CustomIdInput setId={setSecondId} setErrorMessage={setSecondIdErrorMessage} errorMessage={secondIdErrorMessage} label="Second ID" />
+              <CustomIdInput setId={setSecondId} setErrorMessage={setSecondIdErrorMessage} errorMessage={secondIdErrorMessage} required label="Second ID" />
               <CtaButton onSubmit={onSubmit} label="Pick face" className="mt-2" />
-
             </Grid>
           </Grid>
-          <CtaButton onSubmit={onSubmit} label="Search" className="mt-8" />
-          <CtaButton onSubmit={() => setHideAll(!hideAll)} label={`${!hideAll ? "Hide" : "Show"} all`} className="mt-4" />
+          <CtaButton onSubmit={onSubmit} label="Search" className="mt-8"  loading={isLoadingSearch} />
           {
-            !hideAll
-            &&
-            <h1 className="text-3xl font-bold underline">
-              Hello world!
-            </h1>
+            !isLoadingSearch && searchFaces && SearchFacesImages
+          }
+          <CtaButton onSubmit={onShowAll} label={`${!hideAll ? "Hide" : "Show"} all`} className="mt-4" loading={isLoadingShowAll} />
+          {
+            !hideAll && !isLoadingShowAll && AllFacesImages
           }
         </div>
       </form>

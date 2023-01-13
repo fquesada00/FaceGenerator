@@ -14,9 +14,8 @@ const Images = (props: ImagesProps) => {
     <Grid container spacing={2} alignItems="center" justifyContent="center">
       {
         faces.map((face: IApiFace, index) => (
-          <Grid item>
+          <Grid item key={face.id}>
             <ImageTemplate
-              key={face.id}
               src={face.image}
               alt={`Face ${index + 1}`}
             />
