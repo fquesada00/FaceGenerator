@@ -17,6 +17,8 @@ import { Outlet } from "react-router-dom"
 import AppBar from "components/AppBar"
 import Drawer from "components/Drawer"
 import DrawerContent from "./Drawer/DrawerContent"
+import { ToastContainer } from "react-toastify"
+import { CustomToastContainer } from "./Toast"
 
 const Dashboard: React.FC<React.PropsWithChildren> = () => {
   const [open, setOpen] = useState(false)
@@ -43,7 +45,7 @@ const Dashboard: React.FC<React.PropsWithChildren> = () => {
               lg: "block",
               xl: "block",
             }
-            }}>
+          }}>
             <IconButton
               edge="start"
               color="inherit"
@@ -106,6 +108,7 @@ const Dashboard: React.FC<React.PropsWithChildren> = () => {
         <Toolbar />
         <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
           <Outlet />
+          <CustomToastContainer />
         </Container>
       </Box>
     </Box>

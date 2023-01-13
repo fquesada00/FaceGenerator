@@ -15,6 +15,10 @@ class ApiError extends Error {
   get detail() {
     return this._detail;
   }
+
+  toString() {
+    return `${this._title}: ${this._detail}`;
+  }
 }
 
 export const getErrorMessage = (error: unknown) => {
