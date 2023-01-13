@@ -49,10 +49,12 @@ export const getFaceImage = async (id: number) => {
   }
 };
 
-export const generateTransitions = async (fromId: number, toId: number, amount: number) => {
+export const generateTransitions = async ({ fromId, toId, amount }: { fromId: number; toId: number; amount: number }) => {
   try {
-    const response = await api.post<ApiResponse>(`${FACES_API_PREFIX}/transitions`, { fromId, toId, amount });
-    return response.result;
+    await sleep(2000);
+    // const response = await api.post<ApiResponse>(`${FACES_API_PREFIX}/transitions`, { fromId, toId, amount });
+    // return response.result;
+    return datasource.faces;
   } catch (error) {
     throw new ApiError('Generate transitions', getErrorMessage(error));
   }
@@ -69,10 +71,12 @@ export const generateFaceFromImage = async (image: File) => {
   }
 };
 
-export const interchangeFacesFeatures = async (firstId: number, secondId: number) => {
+export const interchangeFacesFeatures = async ({ firstId, secondId }: { firstId: number; secondId: number }) => {
   try {
-    const response = await api.post<ApiResponse>(`${FACES_API_PREFIX}/interchange`, { firstId, secondId });
-    return response.result;
+    await sleep(2000);
+    // const response = await api.post<ApiResponse>(`${FACES_API_PREFIX}/interchange`, { firstId, secondId });
+    // return response.result;
+    return datasource.faces;
   } catch (error) {
     throw new ApiError('Interchange faces features', getErrorMessage(error));
   }

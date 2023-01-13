@@ -9,6 +9,11 @@ import contentClasses from "components/Content/styles/Content.module.scss"
 import CtaButton from "components/CtaButton";
 import ContentHeader from "components/ContentHeader";
 import paths from "routes/paths";
+import { toastError } from "components/Toast";
+import useRenderImages from "hooks/useRenderImages";
+import { useMutation } from "react-query";
+import ApiError from "services/api/Error";
+import { generateTransitions, getAllFaces } from "services/api/FaceGeneratorApi";
 
 const TransitionFaces: React.FC = () => {
   const [firstId, setFirstId] = useState<number>(0);
@@ -19,6 +24,21 @@ const TransitionFaces: React.FC = () => {
 
   const [amount, setAmount] = useState<number>(0);
   const [amountErrorMessage, setAmountErrorMessage] = useState<string>("");
+
+  const {
+    mutate: mutateGenerateTransitions, isLoading: isLoadingTransitions, data: transitionFaces
+  } = useMutation(generateTransitions, {
+    onSuccess: (data) => {
+      console.log(data);
+    },
+    onError: (error) => {
+      if (error instanceof ApiError) {
+        toastError(error.toString());
+      }
+    }
+  });
+
+  const { images: TransitionFacesImages } = useRenderImages({ faces: transitionFaces })
 
   const renderSubtitle = useMemo(() => {
     return (
@@ -48,9 +68,7 @@ const TransitionFaces: React.FC = () => {
       return;
     }
 
-    // TODO: Generate faces logic
-    console.log(`Generating ${amount} faces`);
-    // https://dummyimage.com/600x400/ff00ff/ededed&text=this+is+a+face
+    mutateGenerateTransitions({ fromId: firstId, toId: secondId, amount });
   }
 
   return (
@@ -73,7 +91,10 @@ const TransitionFaces: React.FC = () => {
           </Grid>
           <div className="mt-8">
             <CustomAmountInput setAmount={setAmount} setErrorMessage={setAmountErrorMessage} errorMessage={amountErrorMessage} />
-            <CtaButton onSubmit={onSubmit} label="Generate" className="mt-8" />
+            <CtaButton onSubmit={onSubmit} label="Generate" className="mt-8" loading={isLoadingTransitions} />
+            {
+              !isLoadingTransitions && TransitionFacesImages
+            }
           </div>
         </div>
       </form>
