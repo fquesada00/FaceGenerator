@@ -2,7 +2,7 @@ import api from '.';
 import ApiError, { getErrorMessage } from './Error';
 import { ApiResponse } from './models';
 
-const generateFaces = async (amount: number) => {
+export const generateFaces = async (amount: number) => {
   try {
     const response = await api.post<ApiResponse>('/faces', { amount });
     return response.result;
@@ -11,7 +11,7 @@ const generateFaces = async (amount: number) => {
   }
 };
 
-const getFaceImage = async (id: number) => {
+export const getFaceImage = async (id: number) => {
   try {
     const response = await api.get<ApiResponse>(`/faces/${id}/image`);
     return response.result;
@@ -20,7 +20,7 @@ const getFaceImage = async (id: number) => {
   }
 };
 
-const generateTransitions = async (fromId: number, toId: number, amount: number) => {
+export const generateTransitions = async (fromId: number, toId: number, amount: number) => {
   try {
     const response = await api.post<ApiResponse>('/faces/transitions', { fromId, toId, amount });
     return response.result;
@@ -29,7 +29,7 @@ const generateTransitions = async (fromId: number, toId: number, amount: number)
   }
 };
 
-const generateFaceFromImage = async (image: File) => {
+export const generateFaceFromImage = async (image: File) => {
   try {
     const formData = new FormData();
     formData.append('image', image);
@@ -40,19 +40,11 @@ const generateFaceFromImage = async (image: File) => {
   }
 };
 
-const interchangeFacesFeatures = async (firstId: number, secondId: number) => {
+export const interchangeFacesFeatures = async (firstId: number, secondId: number) => {
   try {
     const response = await api.post<ApiResponse>('/faces/interchange', { firstId, secondId });
     return response.result;
   } catch (error) {
     throw new ApiError('Interchange faces features', getErrorMessage(error));
   }
-};
-
-module.exports = {
-  generateFaces,
-  getFaceImage,
-  generateTransitions,
-  generateFaceFromImage,
-  interchangeFacesFeatures
 };
