@@ -1,5 +1,8 @@
 import client from './Client';
 
+export const API_PREFIX = '/api';
+export const FACES_API_PREFIX = `${API_PREFIX}/faces`;
+
 const api = {
   get: async <T>(url: string) => {
     try {
