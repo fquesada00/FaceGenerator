@@ -14,6 +14,8 @@ const RandomFaces: React.FC = () => {
   const [amount, setAmount] = useState<number>(0);
   const [errorMessage, setErrorMessage] = useState<string>("");
 
+  
+
   const renderSubtitle = useMemo(() => {
     return (
       <div>

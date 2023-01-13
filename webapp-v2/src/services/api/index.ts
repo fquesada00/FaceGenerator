@@ -1,42 +1,42 @@
 import client from './Client';
 
 const api = {
-  get: async (url: string) => {
+  get: async <T>(url: string) => {
     try {
       const { data } = await client.get(url);
-      return data;
+      return data as T;
     } catch (error) {
       throw error;
     }
   },
-  post: async (url: string, body: any, headers: any = {}) => {
+  post: async <T>(url: string, body: any, headers: any = {}) => {
     try {
       const { data } = await client.post(url, body, headers);
-      return data;
+      return data as T;
     } catch (error) {
       throw error;
     }
   },
-  put: async (url: string, body: any) => {
+  put: async <T>(url: string, body: any) => {
     try {
       const { data } = await client.put(url, body);
-      return data;
+      return data as T;
     } catch (error) {
       throw error;
     }
   },
-  patch: async (url: string, body: any) => {
+  patch: async <T>(url: string, body: any) => {
     try {
       const { data } = await client.patch(url, body);
-      return data;
+      return data as T;
     } catch (error) {
       throw error;
     }
   },
-  delete: async (url: string) => {
+  delete: async <T>(url: string) => {
     try {
       const { data } = await client.delete(url);
-      return data;
+      return data as T;
     } catch (error) {
       throw error;
     }
