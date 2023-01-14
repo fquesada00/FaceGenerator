@@ -49,6 +49,8 @@ export const getFaceImage = async (id: number) => {
   }
 };
 
+export const buildImgSrc = (id: number) => `${FACES_API_PREFIX}/${id}/image`;
+
 export const generateTransitions = async ({ fromId, toId, amount }: { fromId: number; toId: number; amount: number }) => {
   try {
     await sleep(2000);
@@ -79,5 +81,14 @@ export const interchangeFacesFeatures = async ({ firstId, secondId }: { firstId:
     return datasource.faces;
   } catch (error) {
     throw new ApiError('Interchange faces features', getErrorMessage(error));
+  }
+};
+
+export const saveFace = async (id: number) => {
+  try {
+    await sleep(2000);
+    const response = await api.post<ApiResponse>(`${FACES_API_PREFIX}/${id}/save`);
+  } catch (error) {
+    throw new ApiError('Save face', getErrorMessage(error));
   }
 };

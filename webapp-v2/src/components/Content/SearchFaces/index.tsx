@@ -36,7 +36,7 @@ const SearchFaces: React.FC = () => {
     }
   });
 
-  const { images: SearchFacesImages} = useRenderImages({ faces: searchFaces })
+  const { images: SearchFacesImages} = useRenderImages({ faces: searchFaces, disableSave: true})
 
   const {
     mutate: mutateGetAllFaces, isLoading: isLoadingShowAll, data: allFaces
@@ -51,7 +51,7 @@ const SearchFaces: React.FC = () => {
     }
   });
 
-  const { images: AllFacesImages} = useRenderImages({ faces: allFaces })
+  const { images: AllFacesImages} = useRenderImages({ faces: allFaces, disableSave: true })
 
   
   const renderSubtitle = useMemo(() => {

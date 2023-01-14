@@ -12,7 +12,7 @@ const api = {
       throw error;
     }
   },
-  post: async <T>(url: string, body: any, headers: any = {}) => {
+  post: async <T>(url: string, body: any = {}, headers: any = {}) => {
     try {
       const { data } = await client.post(url, body, headers);
       return data as T;
