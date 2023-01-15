@@ -12,6 +12,7 @@ import { toastError } from "components/Toast";
 import ApiError from "services/api/Error";
 import { getAllFaces, searchFacesBetweenIds } from "services/api/FaceGeneratorApi";
 import useRenderImages from "hooks/useRenderImages";
+import PickImageButton from "components/CtaButton/custom/PickImageButton";
 
 
 const SearchFaces: React.FC = () => {
@@ -36,7 +37,7 @@ const SearchFaces: React.FC = () => {
     }
   });
 
-  const { images: SearchFacesImages} = useRenderImages({ faces: searchFaces, disableSave: true})
+  const { images: SearchFacesImages } = useRenderImages({ faces: searchFaces, disableSave: true })
 
   const {
     mutate: mutateGetAllFaces, isLoading: isLoadingShowAll, data: allFaces
@@ -51,9 +52,9 @@ const SearchFaces: React.FC = () => {
     }
   });
 
-  const { images: AllFacesImages} = useRenderImages({ faces: allFaces, disableSave: true })
+  const { images: AllFacesImages } = useRenderImages({ faces: allFaces, disableSave: true })
 
-  
+
   const renderSubtitle = useMemo(() => {
     return (
       <div>
@@ -66,24 +67,32 @@ const SearchFaces: React.FC = () => {
 
 
   const onSubmit = () => {
-    let hasError = false;
-    if (firstIdErrorMessage !== "" || secondIdErrorMessage !== "") {
+    if ((firstIdErrorMessage !== "" && firstId <= 0) || (secondIdErrorMessage !== "" && secondId <= 0)) {
       return;
     }
+
+    let hasError = false;
 
     if (firstId === 0) {
       setFirstIdErrorMessage("First ID is required");
       hasError = true;
+    } else {
+      setFirstIdErrorMessage("");
     }
 
     if (secondId === 0) {
       setSecondIdErrorMessage("Second ID is required");
       hasError = true;
+    } else {
+      setSecondIdErrorMessage("");
     }
 
     if (hasError) {
       return;
     }
+
+    setFirstIdErrorMessage("");
+    setSecondIdErrorMessage("");
 
     mutateSearchFacesBetweenIds({ fromId: firstId, toId: secondId });
   }
@@ -105,19 +114,19 @@ const SearchFaces: React.FC = () => {
         <div className={clsx(inputsClasses.container)}>
           <Grid container style={{ width: "25rem" }} rowSpacing={4}>
             <Grid item xs={12} sm={6} md={6} lg={6} xl={6}>
-              <CustomIdInput setId={setFirstId} setErrorMessage={setFirstIdErrorMessage} errorMessage={firstIdErrorMessage} required label="First ID" />
-              <CtaButton onSubmit={onSubmit} label="Pick face" className="mt-2" />
+              <CustomIdInput setId={setFirstId} setErrorMessage={setFirstIdErrorMessage} errorMessage={firstIdErrorMessage} required label="First ID" id={firstId} />
+              <PickImageButton onDone={(faceId) => setFirstId(faceId ?? 0)} pickedFaceId={firstId} />
             </Grid>
             <Grid item xs={12} sm={6} md={6} lg={6} xl={6}>
-              <CustomIdInput setId={setSecondId} setErrorMessage={setSecondIdErrorMessage} errorMessage={secondIdErrorMessage} required label="Second ID" />
-              <CtaButton onSubmit={onSubmit} label="Pick face" className="mt-2" />
+              <CustomIdInput setId={setSecondId} setErrorMessage={setSecondIdErrorMessage} errorMessage={secondIdErrorMessage} required label="Second ID" id={secondId} />
+              <PickImageButton onDone={(faceId) => setSecondId(faceId ?? 0)} pickedFaceId={secondId} />
             </Grid>
           </Grid>
-          <CtaButton onSubmit={onSubmit} label="Search" className="mt-8"  loading={isLoadingSearch} />
+          <CtaButton onClick={onSubmit} label="Search" className="mt-8" loading={isLoadingSearch} />
           {
             !isLoadingSearch && searchFaces && SearchFacesImages
           }
-          <CtaButton onSubmit={onShowAll} label={`${!hideAll ? "Hide" : "Show"} all`} className="mt-4" loading={isLoadingShowAll} />
+          <CtaButton onClick={onShowAll} label={`${!hideAll ? "Hide" : "Show"} all`} className="mt-4" loading={isLoadingShowAll} />
           {
             !hideAll && !isLoadingShowAll && AllFacesImages
           }

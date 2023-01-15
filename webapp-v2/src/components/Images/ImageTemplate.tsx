@@ -11,7 +11,7 @@ import { interchangeFacesFeatures, saveFace } from "services/api/FaceGeneratorAp
 type ImageTemplateProps = {
   src: string;
   alt: string;
-  faceId: number;
+  faceId?: number;
   className?: string;
   disableDownload?: boolean;
   disableSave?: boolean;
@@ -41,8 +41,13 @@ const ImageTemplate = (props: ImageTemplateProps) => {
   });
 
   const onSave = () => {
-    toastInfo(`Saving face with id ${faceId}...`);
-    mutateSaveFace(faceId);
+    if (faceId === undefined) {
+      toastError(`Saving Face: Face id is undefined`);
+      return;
+    }
+    
+    toastInfo(`Saving face with id ${faceId!}...`);
+    mutateSaveFace(faceId!);
   }
 
   return (

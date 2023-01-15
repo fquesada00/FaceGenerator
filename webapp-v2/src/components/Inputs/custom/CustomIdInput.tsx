@@ -9,14 +9,16 @@ type CustomIdInputProps = {
   errorMessage: string,
   required?: boolean,
   label?: string,
+  id: number,
 }
 
 const CustomIdInput = (props: CustomIdInputProps) => {
-  const { setId, setErrorMessage, errorMessage, required, label} = props;
+  const { setId, setErrorMessage, errorMessage, required, label, id } = props;
   
   return (
     <div className={clsx(inputsClasses.field)}>
       <IdInput
+        value={id}
         onChange={(n) => {
           if (isNaN(n)) {
             setId(0);

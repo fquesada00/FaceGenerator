@@ -1,4 +1,4 @@
-import { ThemeProvider } from "@emotion/react"
+import { ThemeProvider } from '@mui/material/styles';
 import { RouterProvider } from "react-router-dom"
 import { QueryClient, QueryClientProvider } from 'react-query';
 import router from "router"

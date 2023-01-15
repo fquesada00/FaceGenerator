@@ -7,10 +7,11 @@ type AmountInputProps = {
   max: number,
   setErrorMessage: (s: string) => void,
   errorMessage?: string,
+  value?: number,
 }
 
 const AmountInput = (props: AmountInputProps) => {
-  const { onChange, min, max, setErrorMessage, errorMessage } = props;
+  const { onChange, min, max, setErrorMessage, errorMessage, value } = props;
 
   const [errorText, setErrorText] = useState<string>("");
 
@@ -22,6 +23,7 @@ const AmountInput = (props: AmountInputProps) => {
 
   return (
     <NumericInput
+      value={value === 0 ? undefined : value}
       label="Amount"
       onChange={(n) => {
         if (n < min || n > max) {

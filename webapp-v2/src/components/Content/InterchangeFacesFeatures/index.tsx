@@ -12,6 +12,7 @@ import useRenderImages from "hooks/useRenderImages";
 import { useMutation } from "react-query";
 import ApiError from "services/api/Error";
 import { interchangeFacesFeatures } from "services/api/FaceGeneratorApi";
+import PickImageButton from "components/CtaButton/custom/PickImageButton";
 
 const InterchangeFacesFeatures: React.FC = () => {
   const [firstId, setFirstId] = useState<number>(0);
@@ -34,7 +35,7 @@ const InterchangeFacesFeatures: React.FC = () => {
   });
 
   const { images: InterchangedFacesImages } = useRenderImages({ faces: interchangedFaces })
-  
+
   const renderSubtitle = useMemo(() => {
     return (
       <div>
@@ -46,7 +47,7 @@ const InterchangeFacesFeatures: React.FC = () => {
   }, [])
 
   const onSubmit = () => {
-    if (firstIdErrorMessage !== "" || secondIdErrorMessage !== "") {
+    if ((firstIdErrorMessage !== "" && firstId <= 0) || (secondIdErrorMessage !== "" && secondId <= 0)) {
       return;
     }
 
@@ -55,18 +56,23 @@ const InterchangeFacesFeatures: React.FC = () => {
     if (firstId === 0) {
       setFirstIdErrorMessage("First ID is required");
       hasError = true;
+    } else {
+      setFirstIdErrorMessage("");
     }
 
     if (secondId === 0) {
       setSecondIdErrorMessage("Second ID is required");
       hasError = true;
+    } else {
+      setSecondIdErrorMessage("");
     }
 
     if (hasError) {
       return;
     }
 
-
+    setFirstIdErrorMessage("");
+    setSecondIdErrorMessage("");
     mutateInterchangeFacesFeatures({ firstId, secondId });
   }
 
@@ -80,15 +86,15 @@ const InterchangeFacesFeatures: React.FC = () => {
         <div className={clsx(inputsClasses.container)}>
           <Grid container style={{ width: "25rem" }} rowSpacing={4}>
             <Grid item xs={12} sm={6} md={6} lg={6} xl={6}>
-              <CustomIdInput setId={setFirstId} setErrorMessage={setFirstIdErrorMessage} errorMessage={firstIdErrorMessage} required label="First ID" />
-              <CtaButton onSubmit={() => { }} label="Pick face" className="mt-2" />
+              <CustomIdInput setId={setFirstId} setErrorMessage={setFirstIdErrorMessage} errorMessage={firstIdErrorMessage} required label="First ID" id={firstId} />
+              <PickImageButton onDone={(faceId) => setFirstId(faceId ?? 0)} pickedFaceId={firstId} />
             </Grid>
             <Grid item xs={12} sm={6} md={6} lg={6} xl={6}>
-              <CustomIdInput setId={setSecondId} setErrorMessage={setSecondIdErrorMessage} errorMessage={secondIdErrorMessage} required label="Second ID" />
-              <CtaButton onSubmit={() => { }} label="Pick face" className="mt-2" />
+              <CustomIdInput setId={setSecondId} setErrorMessage={setSecondIdErrorMessage} errorMessage={secondIdErrorMessage} required label="Second ID" id={secondId} />
+              <PickImageButton onDone={(faceId) => setSecondId(faceId ?? 0)} pickedFaceId={secondId} />
             </Grid>
           </Grid>
-          <CtaButton onSubmit={onSubmit} label="Generate" className="mt-8" loading={isLoadingInterchange} />
+          <CtaButton onClick={onSubmit} label="Generate" className="mt-8" loading={isLoadingInterchange} />
           {
             !isLoadingInterchange && InterchangedFacesImages
           }

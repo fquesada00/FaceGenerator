@@ -8,14 +8,16 @@ type CustomAmountInputProps = {
   setAmount: (n: number) => void,
   setErrorMessage: (s: string) => void,
   errorMessage: string,
+  amount: number,
 }
 
 const CustomAmountInput = (props: CustomAmountInputProps) => {
-  const { setAmount, setErrorMessage, errorMessage } = props;
+  const { setAmount, setErrorMessage, errorMessage, amount } = props;
 
   return (
     <div className={clsx(inputsClasses.field)}>
       <AmountInput
+        value={amount}
         onChange={(n) => {
           if (isNaN(n)) {
             setAmount(0);

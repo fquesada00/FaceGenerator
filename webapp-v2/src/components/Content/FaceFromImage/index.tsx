@@ -83,7 +83,7 @@ const FaceFromImage: React.FC = () => {
                 renderImagePicker()
               }
             </Box>
-            <CtaButton label="Generate" onSubmit={() => { }} className="mt-8" />
+            <CtaButton label="Generate" onClick={() => { }} className="mt-8" />
           </Grid>
           <Grid item xs={12} sm={12} md={6} lg={6} xl={6}>
           </Grid>

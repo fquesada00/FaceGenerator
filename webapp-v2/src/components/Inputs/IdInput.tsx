@@ -7,22 +7,22 @@ type IdInputProps = {
   errorMessage?: string,
   required?: boolean,
   label?: string,
+  value?: number,
 }
 
 const IdInput = (props: IdInputProps) => {
-  const { onChange, setErrorMessage, errorMessage, required, label} = props;
+  const { onChange, setErrorMessage, errorMessage, required, label, value } = props;
 
   const [errorText, setErrorText] = useState<string>("");
 
   useEffect(() => {
-    if (errorMessage) {
-      setErrorText(errorMessage);
-    }
+    setErrorText(errorMessage ?? "");
   }, [errorMessage]);
 
   return (
     <NumericInput
       label={label ?? "ID"}
+      value={value === 0 ? undefined : value}
       onChange={(n) => {
         if (n < 1) {
           const errorMessage = `Must be greater than 0`;

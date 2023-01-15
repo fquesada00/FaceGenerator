@@ -1,5 +1,4 @@
 import { TextField } from "@mui/material";
-import { useState } from "react";
 
 type NumericInputProps = {
   label: string,
@@ -9,27 +8,25 @@ type NumericInputProps = {
   helperText?: string,
   min?: number,
   max?: number,
+  value?: number,
 }
 
 const NumericInput = (props: NumericInputProps) => {
-  const { label, onChange, required, error, helperText, min, max } = props;
+  const { label, onChange, required, error, helperText, min, max, value } = props;
 
-  const [value, setValue] = useState<number>(-1);
   return (
     <TextField
       fullWidth
       label={label}
       type="number"
-      value={value === -1 ? "" : value}
+      value={!value ? "" : value}
       onChange={(e) => {
         const newValue = parseInt(e.target.value);
         if (isNaN(newValue)) {
-          setValue(-1);
           onChange(newValue);
           return;
         }
 
-        setValue(newValue);
         onChange(newValue);
       }}
       required={required}

@@ -14,6 +14,7 @@ import useRenderImages from "hooks/useRenderImages";
 import { useMutation } from "react-query";
 import ApiError from "services/api/Error";
 import { generateTransitions, getAllFaces } from "services/api/FaceGeneratorApi";
+import PickImageButton from "components/CtaButton/custom/PickImageButton";
 
 const TransitionFaces: React.FC = () => {
   const [firstId, setFirstId] = useState<number>(0);
@@ -51,23 +52,40 @@ const TransitionFaces: React.FC = () => {
   }, [])
 
   const onSubmit = () => {
-    if (amountErrorMessage !== "" || firstIdErrorMessage !== "" || secondIdErrorMessage !== "") {
+    if (amountErrorMessage !== "" || (firstIdErrorMessage !== "" && firstId <= 0) || (secondIdErrorMessage !== "" && secondId <= 0)) {
       return;
     }
 
+    let hasError = false;
+
     if (firstId === 0) {
       setFirstIdErrorMessage("First ID is required");
+      hasError = true;
+    } else {
+      setFirstIdErrorMessage("");
     }
 
     if (secondId === 0) {
       setSecondIdErrorMessage("Second ID is required");
+      hasError = true;
+    } else {
+      setSecondIdErrorMessage("");
     }
 
     if (amount === 0) {
       setAmountErrorMessage("Amount is required");
+      hasError = true;
+    } else {
+      setAmountErrorMessage("");
+    }
+
+    if (hasError) {
       return;
     }
 
+    setFirstIdErrorMessage("");
+    setSecondIdErrorMessage("");
+    setAmountErrorMessage("");
     mutateGenerateTransitions({ fromId: firstId, toId: secondId, amount });
   }
 
@@ -81,17 +99,17 @@ const TransitionFaces: React.FC = () => {
         <div className={clsx(inputsClasses.container)}>
           <Grid container style={{ width: "25rem" }} rowSpacing={4}>
             <Grid item xs={12} sm={6} md={6} lg={6} xl={6}>
-              <CustomIdInput setId={setFirstId} setErrorMessage={setFirstIdErrorMessage} errorMessage={firstIdErrorMessage} required label="First ID" />
-              <CtaButton onSubmit={() => { }} label="Pick face" className="mt-2" />
+              <CustomIdInput setId={setFirstId} setErrorMessage={setFirstIdErrorMessage} errorMessage={firstIdErrorMessage} required label="First ID" id={firstId} />
+              <PickImageButton onDone={(faceId) => setFirstId(faceId ?? 0)} pickedFaceId={firstId} />
             </Grid>
             <Grid item xs={12} sm={6} md={6} lg={6} xl={6}>
-              <CustomIdInput setId={setSecondId} setErrorMessage={setSecondIdErrorMessage} errorMessage={secondIdErrorMessage} required label="Second ID" />
-              <CtaButton onSubmit={() => { }} label="Pick face" className="mt-2" />
+              <CustomIdInput setId={setSecondId} setErrorMessage={setSecondIdErrorMessage} errorMessage={secondIdErrorMessage} required label="Second ID" id={secondId} />
+              <PickImageButton onDone={(faceId) => setSecondId(faceId ?? 0)} pickedFaceId={secondId} />
             </Grid>
           </Grid>
           <div className="mt-8">
-            <CustomAmountInput setAmount={setAmount} setErrorMessage={setAmountErrorMessage} errorMessage={amountErrorMessage} />
-            <CtaButton onSubmit={onSubmit} label="Generate" className="mt-8" loading={isLoadingTransitions} />
+            <CustomAmountInput setAmount={setAmount} setErrorMessage={setAmountErrorMessage} errorMessage={amountErrorMessage} amount={amount} />
+            <CtaButton onClick={onSubmit} label="Generate" className="mt-8" loading={isLoadingTransitions} />
             {
               !isLoadingTransitions && TransitionFacesImages
             }

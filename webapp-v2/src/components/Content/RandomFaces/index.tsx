@@ -64,8 +64,8 @@ const RandomFaces: React.FC = () => {
       />
       <form>
         <div className={clsx(inputsClasses.container)}>
-          <CustomAmountInput setAmount={setAmount} setErrorMessage={setErrorMessage} errorMessage={errorMessage} />
-          <CtaButton onSubmit={onSubmit} label="Generate" className="mt-8" loading={isLoading} />
+          <CustomAmountInput setAmount={setAmount} setErrorMessage={setErrorMessage} errorMessage={errorMessage} amount={amount} />
+          <CtaButton onClick={onSubmit} label="Generate" className="mt-8" loading={isLoading} />
           {
             !isLoading && FacesImages
           }
