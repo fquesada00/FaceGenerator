@@ -1,6 +1,6 @@
 import api, { FACES_API_PREFIX } from '.';
 import ApiError, { getErrorMessage } from './Error';
-import { ApiResponse, IApiFace } from './models';
+import { ApiResponse, IApiFace, IApiFaceFeatures } from './models';
 import datasource from './datasource';
 
 const sleep = (ms: number) => {
@@ -92,3 +92,14 @@ export const saveFace = async (id: number) => {
     throw new ApiError('Save face', getErrorMessage(error));
   }
 };
+
+export const modifyFaceFeatures = async ({ id, faceFeatures }: { id: number, faceFeatures: IApiFaceFeatures }): Promise<IApiFace> => {
+  try {
+    await sleep(2000);
+    // const response = await api.put<ApiResponse>(`${FACES_API_PREFIX}/${id}`, face);
+    // return response.result;
+    return datasource.faces[0];
+  } catch (error) {
+    throw new ApiError('Modify face', getErrorMessage(error));
+  }
+}

@@ -1,6 +1,6 @@
 import clsx from "clsx";
 import { useEffect, useMemo, useState } from "react";
-import { MIN_FACES, MAX_FACES } from "components/utils";
+import { MIN_FACES, MAX_FACES } from "constants";
 
 import inputsClasses from "components/Inputs/styles/Inputs.module.scss";
 import CustomAmountInput from "components/Inputs/custom/CustomAmountInput";

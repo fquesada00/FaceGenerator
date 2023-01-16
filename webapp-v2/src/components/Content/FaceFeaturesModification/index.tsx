@@ -1,7 +1,207 @@
+import ContentHeader from "components/ContentHeader";
+import { useMemo, useState } from "react";
+import paths from "routes/paths";
+import inputsClasses from "components/Inputs/styles/Inputs.module.scss";
+import clsx from "clsx";
+import PickImageButton from "components/CtaButton/custom/PickImageButton";
+import CustomIdInput from "components/Inputs/custom/CustomIdInput";
+import { toastError } from "components/Toast";
+import { useMutation } from "react-query";
+import ApiError from "services/api/Error";
+import { modifyFaceFeatures } from "services/api/FaceGeneratorApi";
+import FeatureModificationSection from "./components/FeatureModificationSection";
+import CtaButton from "components/CtaButton";
+import useAgeInput from "./hooks/useAgeInput";
+import { Box } from "@mui/material";
+import useSlider from "./hooks/useSlider";
+import MaleIcon from '@mui/icons-material/Male';
+import FemaleIcon from '@mui/icons-material/Female';
+import { IApiFaceFeatures } from "services/api/models";
+
 const FaceFeaturesModification: React.FC = () => {
+  const [id, setId] = useState<number>(0);
+  const [idErrorMessage, setIdErrorMessage] = useState<string>("");
+
+  // General section
+  const { AgeInput, age } = useAgeInput();
+  const { CustomSlider: GenderSlider, value: gender } = useSlider({ title: 'Gender', LeftIcon: <FemaleIcon />, RightIcon: <MaleIcon /> });
+
+  // Face orientation section
+  const { CustomSlider: FaceVerticalOrientationSlider, value: faceVerticalOrientation } = useSlider({ title: 'Vertical' });
+  const { CustomSlider: FaceHorizontalOrientationSlider, value: faceHorizontalOrientation } = useSlider({ title: 'Horizontal' });
+
+  // Face eyes section
+  const { CustomSlider: EyesDistanceSlider, value: eyesDistanceValue } = useSlider({ title: 'Distance' });
+  const { CustomSlider: EyesToEyeBrowsDistanceSlider, value: eyesToEyeBrowsDistanceValue } = useSlider({ title: 'Distance to Eye Brows' });
+  const { CustomSlider: EyesRatioSlider, value: eyesRatioValue } = useSlider({ title: 'Ratio' });
+  const { CustomSlider: EyesOpenSlider, value: eyesOpenValue } = useSlider({ title: 'Open' });
+  const { CustomSlider: EyesRollSlider, value: eyesRollValue } = useSlider({ title: 'Roll' });
+
+  // Face mouth section
+  const { CustomSlider: MouthLipRatioSlider, value: mouthLipRatioValue } = useSlider({ title: 'Lip Ratio' });
+  const { CustomSlider: MouthOpenSlider, value: mouthOpenValue } = useSlider({ title: 'Open' });
+  const { CustomSlider: MouthRatioSlider, value: mouthRatioValue } = useSlider({ title: 'Ratio' });
+  const { CustomSlider: MouthSmileSlider, value: mouthSmileValue } = useSlider({ title: 'Smile' });
+
+  // Face nose section
+  const { CustomSlider: NoseToMouthDistanceSlider, value: noseToMouthDistanceValue } = useSlider({ title: 'Distance to Mouth' });
+  const { CustomSlider: NoseRatioSlider, value: noseRatioValue } = useSlider({ title: 'Ratio' });
+  const { CustomSlider: NoseTipHeightSlider, value: noseTipHeightValue } = useSlider({ title: 'Tip Height' });
+
+  const faceFeatures: IApiFaceFeatures = {
+    age,
+    gender,
+    orientation: {
+      vertical: faceVerticalOrientation,
+      horizontal: faceHorizontalOrientation
+    },
+    eyes: {
+      distance: eyesDistanceValue,
+      distanceToEyeBrows: eyesToEyeBrowsDistanceValue,
+      ratio: eyesRatioValue,
+      open: eyesOpenValue,
+      roll: eyesRollValue
+    },
+    mouth: {
+      lipRatio: mouthLipRatioValue,
+      open: mouthOpenValue,
+      ratio: mouthRatioValue,
+      smile: mouthSmileValue
+    },
+    nose: {
+      distanceToMouth: noseToMouthDistanceValue,
+      ratio: noseRatioValue,
+      tip: noseTipHeightValue,
+    }
+  };
+
+
+
+  const renderSubtitle = useMemo(() => {
+    return (
+      <div>
+        Change the face features of any of the saved faces.
+        <br />
+        The results will be displayed below.
+      </div>
+    )
+  }, []);
+
+  const {
+    mutate: mutateModifyFaceFeatures, isLoading: isLoadingModifyFace, data: modifiedFace
+  } = useMutation(modifyFaceFeatures, {
+    onSuccess: (data) => {
+      console.log(data);
+    },
+    onError: (error) => {
+      if (error instanceof ApiError) {
+        toastError(error.toString());
+      }
+    }
+  });
+
+  const onSubmit = () => {
+    if (idErrorMessage !== "" && id <= 0) {
+      return;
+    }
+
+    let hasError = false;
+
+    if (id === 0) {
+      setIdErrorMessage("ID is required");
+      hasError = true;
+    } else {
+      setIdErrorMessage("");
+    }
+
+
+    if (hasError) {
+      return;
+    }
+
+    setIdErrorMessage("");
+
+    const faceFeatures: IApiFaceFeatures = {
+      age,
+      gender,
+      orientation: {
+        vertical: faceVerticalOrientation,
+        horizontal: faceHorizontalOrientation
+      },
+      eyes: {
+        distance: eyesDistanceValue,
+        distanceToEyeBrows: eyesToEyeBrowsDistanceValue,
+        ratio: eyesRatioValue,
+        open: eyesOpenValue,
+        roll: eyesRollValue
+      },
+      mouth: {
+        lipRatio: mouthLipRatioValue,
+        open: mouthOpenValue,
+        ratio: mouthRatioValue,
+        smile: mouthSmileValue
+      },
+      nose: {
+        distanceToMouth: noseToMouthDistanceValue,
+        ratio: noseRatioValue,
+        tip: noseTipHeightValue,
+      }
+    };
+
+    mutateModifyFaceFeatures({ id, faceFeatures });
+  };
+
   return (
     <div>
-      Face Features Modification
+      <ContentHeader
+        title={paths.faceFeaturesModification.title}
+        subtitle={renderSubtitle}
+      />
+      <form>
+        <div className={clsx(inputsClasses.container)}>
+          <CustomIdInput setId={setId} setErrorMessage={setIdErrorMessage} errorMessage={idErrorMessage} required id={id} />
+          <PickImageButton onDone={(faceId) => setId(faceId ?? 0)} pickedFaceId={id} />
+          <Box
+            sx={{
+              width: {
+                xs: "100%",
+                sm: "100%",
+                md: "100%",
+                lg: "50%",
+                xl: "50%",
+              }
+            }}
+          >
+            <FeatureModificationSection title="General">
+              {AgeInput}
+              {GenderSlider}
+            </FeatureModificationSection>
+            <FeatureModificationSection title="Face orientation">
+              {FaceVerticalOrientationSlider}
+              {FaceHorizontalOrientationSlider}
+            </FeatureModificationSection>
+            <FeatureModificationSection title="Eyes">
+              {EyesDistanceSlider}
+              {EyesToEyeBrowsDistanceSlider}
+              {EyesRatioSlider}
+              {EyesOpenSlider}
+              {EyesRollSlider}
+            </FeatureModificationSection>
+            <FeatureModificationSection title="Mouth">
+              {MouthLipRatioSlider}
+              {MouthOpenSlider}
+              {MouthRatioSlider}
+              {MouthSmileSlider}
+            </FeatureModificationSection>
+            <FeatureModificationSection title="Nose">
+              {NoseToMouthDistanceSlider}
+              {NoseRatioSlider}
+              {NoseTipHeightSlider}
+            </FeatureModificationSection>
+          </Box>
+          <CtaButton onClick={onSubmit} label="Generate" className="mt-8" loading={isLoadingModifyFace} />
+        </div>
+      </form>
     </div>
   );
 }
