@@ -12,7 +12,7 @@ import { modifyFaceFeatures } from "services/api/FaceGeneratorApi";
 import FeatureModificationSection from "./components/FeatureModificationSection";
 import CtaButton from "components/CtaButton";
 import useAgeInput from "./hooks/useAgeInput";
-import { Box } from "@mui/material";
+import { Box, Grid } from "@mui/material";
 import useSlider from "./hooks/useSlider";
 import MaleIcon from '@mui/icons-material/Male';
 import FemaleIcon from '@mui/icons-material/Female';
@@ -46,7 +46,7 @@ const FaceFeaturesModification: React.FC = () => {
   // Face nose section
   const { CustomSlider: NoseToMouthDistanceSlider, value: noseToMouthDistanceValue } = useSlider({ title: 'Distance to Mouth' });
   const { CustomSlider: NoseRatioSlider, value: noseRatioValue } = useSlider({ title: 'Ratio' });
-  const { CustomSlider: NoseTipHeightSlider, value: noseTipHeightValue } = useSlider({ title: 'Tip Height' });
+  const { CustomSlider: NoseTipHeightSlider, value: noseTipHeightValue } = useSlider({ title: 'Tip' });
 
   const faceFeatures: IApiFaceFeatures = {
     age,
@@ -161,44 +161,44 @@ const FaceFeaturesModification: React.FC = () => {
         <div className={clsx(inputsClasses.container)}>
           <CustomIdInput setId={setId} setErrorMessage={setIdErrorMessage} errorMessage={idErrorMessage} required id={id} />
           <PickImageButton onDone={(faceId) => setId(faceId ?? 0)} pickedFaceId={id} />
-          <Box
-            sx={{
-              width: {
-                xs: "100%",
-                sm: "100%",
-                md: "100%",
-                lg: "50%",
-                xl: "50%",
-              }
-            }}
-          >
-            <FeatureModificationSection title="General">
-              {AgeInput}
-              {GenderSlider}
-            </FeatureModificationSection>
-            <FeatureModificationSection title="Face orientation">
-              {FaceVerticalOrientationSlider}
-              {FaceHorizontalOrientationSlider}
-            </FeatureModificationSection>
-            <FeatureModificationSection title="Eyes">
-              {EyesDistanceSlider}
-              {EyesToEyeBrowsDistanceSlider}
-              {EyesRatioSlider}
-              {EyesOpenSlider}
-              {EyesRollSlider}
-            </FeatureModificationSection>
-            <FeatureModificationSection title="Mouth">
-              {MouthLipRatioSlider}
-              {MouthOpenSlider}
-              {MouthRatioSlider}
-              {MouthSmileSlider}
-            </FeatureModificationSection>
-            <FeatureModificationSection title="Nose">
-              {NoseToMouthDistanceSlider}
-              {NoseRatioSlider}
-              {NoseTipHeightSlider}
-            </FeatureModificationSection>
-          </Box>
+          <Grid container spacing={2}>
+            <Grid item xs={12} sm={12} md={6} lg={6} xl={6}>
+              <FeatureModificationSection title="General">
+                {AgeInput}
+                {GenderSlider}
+              </FeatureModificationSection>
+            </Grid>
+            <Grid item xs={12} sm={12} md={6} lg={6} xl={6}>
+              <FeatureModificationSection title="Face orientation">
+                {FaceVerticalOrientationSlider}
+                {FaceHorizontalOrientationSlider}
+              </FeatureModificationSection>
+            </Grid>
+            <Grid item xs={12} sm={12} md={6} lg={6} xl={6}>
+              <FeatureModificationSection title="Eyes">
+                {EyesDistanceSlider}
+                {EyesToEyeBrowsDistanceSlider}
+                {EyesRatioSlider}
+                {EyesOpenSlider}
+                {EyesRollSlider}
+              </FeatureModificationSection>
+            </Grid>
+            <Grid item xs={12} sm={12} md={6} lg={6} xl={6}>
+              <FeatureModificationSection title="Mouth">
+                {MouthLipRatioSlider}
+                {MouthOpenSlider}
+                {MouthRatioSlider}
+                {MouthSmileSlider}
+              </FeatureModificationSection>
+            </Grid>
+            <Grid item xs={12} sm={12} md={6} lg={6} xl={6}>
+              <FeatureModificationSection title="Nose">
+                {NoseToMouthDistanceSlider}
+                {NoseRatioSlider}
+                {NoseTipHeightSlider}
+              </FeatureModificationSection>
+            </Grid>
+          </Grid>
           <CtaButton onClick={onSubmit} label="Generate" className="mt-8" loading={isLoadingModifyFace} />
         </div>
       </form>
