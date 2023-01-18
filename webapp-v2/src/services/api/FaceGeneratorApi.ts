@@ -62,12 +62,14 @@ export const generateTransitions = async ({ fromId, toId, amount }: { fromId: nu
   }
 };
 
-export const generateFaceFromImage = async (image: File) => {
+export const generateFaceFromImage = async (image: File): Promise<IApiFace> => {
   try {
+    await sleep(2000);
     const formData = new FormData();
     formData.append('image', image);
-    const response = await api.post<ApiResponse>(`${FACES_API_PREFIX}/image`, formData, { 'Content-Type': 'multipart/form-data' });
-    return response.result;
+    // const response = await api.post<ApiResponse>(`${FACES_API_PREFIX}/image`, formData, { 'Content-Type': 'multipart/form-data' });
+    // return response.result;
+    return datasource.faces[0];
   } catch (error) {
     throw new ApiError('Generate face from image', getErrorMessage(error));
   }

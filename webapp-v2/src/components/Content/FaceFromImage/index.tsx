@@ -9,11 +9,30 @@ import { Box } from "@mui/system";
 import CtaButton from "components/CtaButton";
 import ContentHeader from "components/ContentHeader";
 import paths from "routes/paths";
+import ImagePlaceholder from "components/Images/ImagePlaceholder";
+import { useMutation } from "react-query";
+import { generateFaceFromImage } from "services/api/FaceGeneratorApi";
+import { toastError } from "components/Toast";
+import ApiError from "services/api/Error";
+import ImageTemplate from "components/Images/ImageTemplate";
 
 const FaceFromImage: React.FC = () => {
 
   const inputRef = useRef<HTMLInputElement | null>(null);
   const [imageFile, setImageFile] = useState<File | null>(null);
+
+  const {
+    mutate: mutateGenerateFaceFromImage, isLoading: isLoadingFaceFromImage, data: faceFromImage
+  } = useMutation(generateFaceFromImage, {
+    onSuccess: (data) => {
+      console.log(data);
+    },
+    onError: (error) => {
+      if (error instanceof ApiError) {
+        toastError(error.toString());
+      }
+    }
+  });
 
   const onClickImage = () => {
     inputRef?.current?.click();
@@ -26,6 +45,14 @@ const FaceFromImage: React.FC = () => {
 
     const file = inputRef?.current?.files?.[0] || null;
     setImageFile(file);
+  }
+
+  const onGenerateFaceFromImage = () => {
+    if (!imageFile) {
+      return;
+    }
+
+    mutateGenerateFaceFromImage(imageFile);
   }
 
   const renderImagePicker = useCallback(() => {
@@ -83,9 +110,10 @@ const FaceFromImage: React.FC = () => {
                 renderImagePicker()
               }
             </Box>
-            <CtaButton label="Generate" onClick={() => { }} className="mt-8" />
+            <CtaButton label="Generate" onClick={onGenerateFaceFromImage} className="mt-8" loading={isLoadingFaceFromImage}/>
           </Grid>
-          <Grid item xs={12} sm={12} md={6} lg={6} xl={6}>
+          <Grid item xs={12} sm={12} md={6} lg={6} xl={6} container direction="column" alignItems="center" justifyContent="center">
+            <ImageTemplate src={faceFromImage?.image} alt="Generated face" placeholderText="Your generated face will appear here" />
           </Grid>
         </Grid>
       </div>
