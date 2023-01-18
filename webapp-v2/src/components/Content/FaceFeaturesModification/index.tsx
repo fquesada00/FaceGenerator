@@ -17,6 +17,7 @@ import useSlider from "./hooks/useSlider";
 import MaleIcon from '@mui/icons-material/Male';
 import FemaleIcon from '@mui/icons-material/Female';
 import { IApiFaceFeatures } from "services/api/models";
+import ImageTemplate from "components/Images/ImageTemplate";
 
 const FaceFeaturesModification: React.FC = () => {
   const [id, setId] = useState<number>(0);
@@ -51,7 +52,7 @@ const FaceFeaturesModification: React.FC = () => {
   const renderSubtitle = useMemo(() => {
     return (
       <div>
-        Change the face features of any of the saved faces.
+        Change the face features of any of the saved faces. The features are grouped by sections. You can change the value of each feature by using the slider or by typing the value in the input field.
         <br />
         The results will be displayed below.
       </div>
@@ -171,6 +172,9 @@ const FaceFeaturesModification: React.FC = () => {
             </Grid>
           </Grid>
           <CtaButton onClick={onSubmit} label="Generate" className="mt-8" loading={isLoadingModifyFace} />
+          <div className="mt-8">
+          <ImageTemplate src={modifiedFace?.image} alt="Modified face" placeholderText="Your modified face will be displayed here" />
+          </div>
         </div>
       </form>
     </div>

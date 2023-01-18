@@ -80,7 +80,7 @@ export const interchangeFacesFeatures = async ({ firstId, secondId }: { firstId:
     await sleep(2000);
     // const response = await api.post<ApiResponse>(`${FACES_API_PREFIX}/interchange`, { firstId, secondId });
     // return response.result;
-    return datasource.faces;
+    return datasource.faces.slice(0, 2);
   } catch (error) {
     throw new ApiError('Interchange faces features', getErrorMessage(error));
   }
