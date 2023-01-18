@@ -133,19 +133,19 @@ const FaceFeaturesModification: React.FC = () => {
           <CustomIdInput setId={setId} setErrorMessage={setIdErrorMessage} errorMessage={idErrorMessage} required id={id} />
           <PickImageButton onDone={(faceId) => setId(faceId ?? 0)} pickedFaceId={id} />
           <Grid container spacing={2}>
-            <Grid item xs={12} sm={12} md={6} lg={6} xl={6}>
+            <Grid item xs={12} sm={6} md={6} lg={6} xl={6}>
               <FeatureModificationSection title="General">
                 {AgeInput}
                 {GenderSlider}
               </FeatureModificationSection>
             </Grid>
-            <Grid item xs={12} sm={12} md={6} lg={6} xl={6}>
+            <Grid item xs={12} sm={6} md={6} lg={6} xl={6}>
               <FeatureModificationSection title="Face orientation">
                 {FaceVerticalOrientationSlider}
                 {FaceHorizontalOrientationSlider}
               </FeatureModificationSection>
             </Grid>
-            <Grid item xs={12} sm={12} md={6} lg={6} xl={6}>
+            <Grid item xs={12} sm={6} md={6} lg={6} xl={6}>
               <FeatureModificationSection title="Eyes">
                 {EyesDistanceSlider}
                 {EyesToEyeBrowsDistanceSlider}
@@ -154,7 +154,7 @@ const FaceFeaturesModification: React.FC = () => {
                 {EyesRollSlider}
               </FeatureModificationSection>
             </Grid>
-            <Grid item xs={12} sm={12} md={6} lg={6} xl={6}>
+            <Grid item xs={12} sm={6} md={6} lg={6} xl={6}>
               <FeatureModificationSection title="Mouth">
                 {MouthLipRatioSlider}
                 {MouthOpenSlider}
@@ -162,7 +162,7 @@ const FaceFeaturesModification: React.FC = () => {
                 {MouthSmileSlider}
               </FeatureModificationSection>
             </Grid>
-            <Grid item xs={12} sm={12} md={6} lg={6} xl={6}>
+            <Grid item xs={12} sm={6} md={6} lg={6} xl={6}>
               <FeatureModificationSection title="Nose">
                 {NoseToMouthDistanceSlider}
                 {NoseRatioSlider}
