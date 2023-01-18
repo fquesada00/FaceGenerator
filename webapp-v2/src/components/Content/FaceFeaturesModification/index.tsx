@@ -48,35 +48,6 @@ const FaceFeaturesModification: React.FC = () => {
   const { CustomSlider: NoseRatioSlider, value: noseRatioValue } = useSlider({ title: 'Ratio' });
   const { CustomSlider: NoseTipHeightSlider, value: noseTipHeightValue } = useSlider({ title: 'Tip' });
 
-  const faceFeatures: IApiFaceFeatures = {
-    age,
-    gender,
-    orientation: {
-      vertical: faceVerticalOrientation,
-      horizontal: faceHorizontalOrientation
-    },
-    eyes: {
-      distance: eyesDistanceValue,
-      distanceToEyeBrows: eyesToEyeBrowsDistanceValue,
-      ratio: eyesRatioValue,
-      open: eyesOpenValue,
-      roll: eyesRollValue
-    },
-    mouth: {
-      lipRatio: mouthLipRatioValue,
-      open: mouthOpenValue,
-      ratio: mouthRatioValue,
-      smile: mouthSmileValue
-    },
-    nose: {
-      distanceToMouth: noseToMouthDistanceValue,
-      ratio: noseRatioValue,
-      tip: noseTipHeightValue,
-    }
-  };
-
-
-
   const renderSubtitle = useMemo(() => {
     return (
       <div>
