@@ -1,4 +1,4 @@
-import { Grid, Typography } from "@mui/material";
+import { Card, Grid, Typography } from "@mui/material";
 import { Children } from "react";
 
 type FeatureModificationSectionProps = {
@@ -11,7 +11,7 @@ const FeatureModificationSection = (props: FeatureModificationSectionProps) => {
   const { title, subtitle, children } = props;
 
   return (
-    <div className="mt-8">
+    <Card className="mt-8 w-full p-2">
       <Typography variant="h5" component="h2">
         {title}
       </Typography>
@@ -31,7 +31,7 @@ const FeatureModificationSection = (props: FeatureModificationSectionProps) => {
           })
         }
       </Grid>
-    </div>
+    </Card>
   );
 };
 

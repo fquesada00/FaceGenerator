@@ -34,7 +34,7 @@ const useSlider = (props: useSliderProps) => {
 
   const CustomSlider = useMemo(() => {
     return (
-      <div className="w-48 m-4">
+      <div className="w-48 m-2">
         <Typography gutterBottom sx={{ textAlign: 'center' }}>
           {title}
         </Typography>
