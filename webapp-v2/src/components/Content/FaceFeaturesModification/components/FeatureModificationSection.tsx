@@ -24,7 +24,7 @@ const FeatureModificationSection = (props: FeatureModificationSectionProps) => {
         {
           Children.map(children, (child) => {
             return (
-              <Grid item xs={12} sm={12} md={6} lg={6} xl={6}>
+              <Grid item xs={12} sm={12} md={6} lg={6} xl={6} className="justify-center flex items-center">
                 {child}
               </Grid>
             );
