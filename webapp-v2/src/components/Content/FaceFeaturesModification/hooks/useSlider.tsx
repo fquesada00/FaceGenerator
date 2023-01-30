@@ -16,7 +16,8 @@ type useSliderProps = {
 };
 
 const useSlider = (props: useSliderProps) => {
-  const { min = MIN_FEATURE_SLIDER_VALUE,
+  const { 
+    min = MIN_FEATURE_SLIDER_VALUE,
     middle = MIDDLE_FEATURE_SLIDER_VALUE,
     max = MAX_FEATURE_SLIDER_VALUE,
     step = STEP_FEATURE_SLIDER_VALUE,

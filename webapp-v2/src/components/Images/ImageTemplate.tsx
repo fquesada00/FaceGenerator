@@ -14,13 +14,19 @@ type ImageTemplateProps = {
   alt: string;
   faceId?: number;
   className?: string;
+  imgHeightClassName?: string;
+  cardHeightClassName?: string;
+  cardWidthClassName?: string;
   disableDownload?: boolean;
   disableSave?: boolean;
   placeholderText?: string;
 };
 
 const ImageTemplate = (props: ImageTemplateProps) => {
-  const { src, alt, faceId, className, disableDownload, disableSave, placeholderText } = props;
+  const {
+    src, alt, faceId, className, disableDownload, disableSave,
+    placeholderText, imgHeightClassName, cardHeightClassName, cardWidthClassName
+  } = props;
 
   const downloadRef = useRef<HTMLAnchorElement | null>(null);
 
@@ -61,7 +67,7 @@ const ImageTemplate = (props: ImageTemplateProps) => {
 
     return (
       <Fragment>
-        <img src={src} alt={alt} className={clsx('w-full', 'h-40')} loading="lazy" style={{ objectFit: "cover" }} />
+        <img src={src} alt={alt} className={clsx('w-full', imgHeightClassName ?? 'h-40')} loading="lazy" style={{ objectFit: "cover" }} />
         <CardActions className="flex content-center justify-center space-x-6" >
           <Typography gutterBottom variant="h6" component="span">
             ID {faceId}
@@ -82,10 +88,10 @@ const ImageTemplate = (props: ImageTemplateProps) => {
         </CardActions>
       </Fragment>
     );
-  }, [src, alt, faceId, disableDownload, disableSave, onDownload, onSave, placeholderText]);
+  }, [src, alt, faceId, disableDownload, disableSave, onDownload, onSave, placeholderText, imgHeightClassName]);
 
   return (
-    <Card className={clsx('w-48', 'h-52', className)}>
+    <Card className={clsx(cardWidthClassName ?? 'w-48', cardHeightClassName ?? 'h-52', className)}>
       {CardContentComponent}
     </Card>
   );

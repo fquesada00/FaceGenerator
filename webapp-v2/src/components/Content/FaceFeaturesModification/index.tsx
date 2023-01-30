@@ -172,8 +172,34 @@ const FaceFeaturesModification: React.FC = () => {
             </Grid>
           </Grid>
           <CtaButton onClick={onSubmit} label="Generate" className="mt-8" loading={isLoadingModifyFace} />
-          <div className="mt-8">
-          <ImageTemplate src={modifiedFace?.image} alt="Modified face" placeholderText="Your modified face will be displayed here" />
+          <div className="mt-8 justify-center flex items-center w-full">
+            <Box
+              sx={{
+                width: {
+                  xs: "14rem",
+                  sm: "18rem",
+                  md: "22rem",
+                  lg: "24rem",
+                  xl: "28rem",
+                },
+                height: {
+                  xs: "14rem",
+                  sm: "18rem",
+                  md: "22rem",
+                  lg: "24rem",
+                  xl: "28rem",
+                }
+              }}
+            >
+              <ImageTemplate
+                src={modifiedFace?.image}
+                alt="Modified face"
+                placeholderText="Your modified face will be displayed here"
+                cardHeightClassName="h-full"
+                cardWidthClassName="w-full"
+                imgHeightClassName="h-5/6"
+              />
+            </Box>
           </div>
         </div>
       </form>

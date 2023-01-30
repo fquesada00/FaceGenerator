@@ -110,10 +110,36 @@ const FaceFromImage: React.FC = () => {
                 renderImagePicker()
               }
             </Box>
-            <CtaButton label="Generate" onClick={onGenerateFaceFromImage} className="mt-8" loading={isLoadingFaceFromImage}/>
+            <CtaButton label="Generate" onClick={onGenerateFaceFromImage} className="mt-8" loading={isLoadingFaceFromImage} />
           </Grid>
-          <Grid item xs={12} sm={12} md={6} lg={6} xl={6} container direction="column" alignItems="center" justifyContent="center">
-            <ImageTemplate src={faceFromImage?.image} alt="Generated face" placeholderText="Your generated face will appear here" />
+          <Grid item xs={12} sm={12} md={6} lg={6} xl={6} container direction="column" alignItems="center" >
+          <Box
+              sx={{
+                width: {
+                  xs: "14rem",
+                  sm: "18rem",
+                  md: "22rem",
+                  lg: "24rem",
+                  xl: "28rem",
+                },
+                height: {
+                  xs: "14rem",
+                  sm: "18rem",
+                  md: "22rem",
+                  lg: "24rem",
+                  xl: "28rem",
+                }
+              }}
+            >
+            <ImageTemplate
+              src={faceFromImage?.image}
+              alt="Generated face"
+              placeholderText="Your generated face will appear here"
+              cardHeightClassName="h-full"
+              cardWidthClassName="w-full"
+              imgHeightClassName="h-5/6"
+            />
+            </Box>
           </Grid>
         </Grid>
       </div>
