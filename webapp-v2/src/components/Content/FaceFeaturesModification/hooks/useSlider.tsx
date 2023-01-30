@@ -1,4 +1,3 @@
-import { VolumeDown, VolumeUp } from "@mui/icons-material";
 import { Stack, Slider, Typography } from "@mui/material";
 import { MAX_FEATURE_SLIDER_VALUE, MIDDLE_FEATURE_SLIDER_VALUE, MIN_FEATURE_SLIDER_VALUE, STEP_FEATURE_SLIDER_VALUE } from "constants";
 import { useMemo, useState } from "react";
