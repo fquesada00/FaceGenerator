@@ -1,2 +1,2 @@
 #!/bin/bash
-$API_PATH/venv/bin/gunicorn --bind 0.0.0.0:5000 --workers 1 --timeout 4800 face_generator:app
+$API_PATH/venv/bin/uvicorn --port 5000 --reload --workers 1 face_generator:app

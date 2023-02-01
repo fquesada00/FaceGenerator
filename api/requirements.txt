@@ -5,9 +5,9 @@ Pillow==6.2.1
 requests==2.22.0
 keras==2.3.1
 tqdm
-Flask==2.0.3
-flask-cors
-gunicorn==19.9.0
+uvicorn==0.16.0
+fastapi==0.83.0
 dlib
 opencv-python
 torchvision
+python-multipart==0.0.5

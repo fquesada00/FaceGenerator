@@ -11,7 +11,7 @@ def adapt_array(arr):
 def convert_array(text):
     out = io.BytesIO(text)
     out.seek(0)
-    return np.load(out)
+    return np.load(out, allow_pickle=True)
 
 class GeneratorZsDb:
     def __init__(self, path: str):
