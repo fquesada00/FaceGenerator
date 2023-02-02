@@ -4,10 +4,11 @@ numpy==1.14.5
 Pillow==6.2.1
 requests==2.22.0
 keras==2.3.1
-tqdm
+tqdm==4.64.1
 uvicorn==0.16.0
 fastapi==0.83.0
-dlib
-opencv-python
-torchvision
+dlib==19.24.0
+opencv-python==4.6.0.66
+torchvision==0.11.2
 python-multipart==0.0.5
+PyGreSQL==5.2.4
