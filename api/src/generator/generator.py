@@ -20,7 +20,7 @@ from tqdm import tqdm
 import pickle
 from src.generator.align_face import align_face
 
-
+@Pyro4.expose
 class Generator:
 
     def __init__(self, network_pkl='gdrive:networks/stylegan2-ffhq-config-f.pkl'):

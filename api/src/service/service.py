@@ -7,6 +7,8 @@ import base64
 from io import BytesIO
 import re
 import os
+import Pyro4
+
 
 
 API_PATH = os.getenv("API_PATH")
@@ -16,7 +18,8 @@ database = GeneratorDB()
 
 class GeneratorService:
     def __init__(self):
-        self.generator = Generator(network_pkl='gdrive:networks/stylegan2-ffhq-config-f.pkl')
+        #self.generator = Generator(network_pkl='gdrive:networks/stylegan2-ffhq-config-f.pkl')
+        self.generator = Pyro4.Proxy("PYRONAME:facegenerator.generator")
 
     #database methods
     @staticmethod

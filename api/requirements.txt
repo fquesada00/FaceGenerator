@@ -12,3 +12,4 @@ opencv-python==4.6.0.66
 torchvision==0.11.2
 python-multipart==0.0.5
 PyGreSQL==5.2.4
+Pyro4==4.82
