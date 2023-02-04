@@ -62,6 +62,10 @@ class Generator:
         images = self.Gs.run(z, None, **self.Gs_kwargs)
         return images[0]
 
+    def generate_image_from_w(self, w):
+        images = self.Gs.components.synthesis.run(w, **self.Gs_kwargs)
+        return images[0]
+
     def linear_interpolate(self, code1, code2, alpha):
         return code1 * alpha + code2 * (1 - alpha)
 
@@ -132,10 +136,10 @@ class Generator:
         
     def change_features(self, z, features_amounts_dict: dict):
         z = self.unravel(z)
-        modified_latent_code = np.array(z)
+        modified_latent_code = self.Gs.components.mapping.run(z, None)
         for feature_name, amount in features_amounts_dict.items():
             modified_latent_code += self.latent_vectors[feature_name] * amount
-        image = self.generate_image_from_z(modified_latent_code)
+        image = self.generate_image_from_w(modified_latent_code)
         latent_img = Image.fromarray(image).resize((self.result_size, self.result_size))
         return latent_img, self.flatten(modified_latent_code)
 
