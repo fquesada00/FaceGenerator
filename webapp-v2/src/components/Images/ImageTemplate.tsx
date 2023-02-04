@@ -2,12 +2,13 @@ import { Card, CardActions, IconButton, Typography } from "@mui/material";
 import DownloadIcon from '@mui/icons-material/Download';
 import SaveIcon from '@mui/icons-material/Save';
 import clsx from "clsx";
-import { Fragment, useMemo, useRef } from "react";
+import { Fragment, useMemo, useRef, useState } from "react";
 import { toastError, toastInfo } from "components/Toast";
 import { useMutation } from "react-query";
 import ApiError from "services/api/Error";
 import { saveFace } from "services/api/FaceGeneratorApi";
 import ImagePlaceholder from "./ImagePlaceholder";
+import AddMetadataSteps from "./AddMetadataSteps";
 
 type ImageTemplateProps = {
   src?: string;
@@ -29,6 +30,7 @@ const ImageTemplate = (props: ImageTemplateProps) => {
   } = props;
 
   const downloadRef = useRef<HTMLAnchorElement | null>(null);
+  const [openMetadataSteps, setOpenMetadataSteps] = useState(false);
 
   const onDownload = () => {
     // TODO: https://developer.chrome.com/blog/chrome-65-deprecations/#block_cross-origin_wzxhzdk5a_download
@@ -54,8 +56,17 @@ const ImageTemplate = (props: ImageTemplateProps) => {
       return;
     }
 
+    setOpenMetadataSteps(true);
+  }
+
+  const onMetadataStepsDone = () => {
+    setOpenMetadataSteps(false);
     toastInfo(`Saving face with id ${faceId!}...`);
     mutateSaveFace(faceId!);
+  }
+
+  const onMetadataStepsCancel = () => {
+    setOpenMetadataSteps(false);
   }
 
   const CardContentComponent = useMemo(() => {
@@ -91,9 +102,14 @@ const ImageTemplate = (props: ImageTemplateProps) => {
   }, [src, alt, faceId, disableDownload, disableSave, onDownload, onSave, placeholderText, imgHeightClassName]);
 
   return (
-    <Card className={clsx(cardWidthClassName ?? 'w-48', cardHeightClassName ?? 'h-52', className)}>
-      {CardContentComponent}
-    </Card>
+    <Fragment>
+      <Card className={clsx(cardWidthClassName ?? 'w-48', cardHeightClassName ?? 'h-52', className)}>
+        {CardContentComponent}
+      </Card>
+      {
+        openMetadataSteps && <AddMetadataSteps open={openMetadataSteps} onDone={onMetadataStepsDone} onCancel={onMetadataStepsCancel}/>
+      }
+    </Fragment>
   );
 };
 
