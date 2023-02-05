@@ -1,6 +1,6 @@
 import api, { FACES_API_PREFIX } from '.';
 import ApiError, { getErrorMessage } from './Error';
-import { ApiResponse, IApiFace, IApiFaceFeatures } from './models';
+import { ApiResponse, IApiFace, IApiFaceFeatures, IApiFaceFilters } from './models';
 import datasource from './datasource';
 
 const sleep = (ms: number) => {
@@ -18,10 +18,12 @@ export const generateFaces = async (amount: number): Promise<IApiFace[]> => {
   }
 };
 
-export const getAllFaces = async (): Promise<IApiFace[]> => {
+export const getAllFaces = async (filters: IApiFaceFilters): Promise<IApiFace[]> => {
   try {
     await sleep(2000);
-    // const response = await api.get<ApiResponse>(`${FACES_API_PREFIX}`);
+    // const response = await api.get<ApiResponse>(`${FACES_API_PREFIX}`, {
+    //   query: filters,
+    // });
     // return response.result;
     return datasource.faces;
   } catch (error) {
@@ -29,7 +31,7 @@ export const getAllFaces = async (): Promise<IApiFace[]> => {
   }
 };
 
-export const searchFacesBetweenIds = async ({ fromId, toId }: { fromId: number; toId: number }): Promise<IApiFace[]> => {
+export const searchFaces = async (filters: IApiFaceFilters): Promise<IApiFace[]> => {
   try {
     await sleep(2000);
     // const response = await api.get<ApiResponse>(`${FACES_API_PREFIX}/search`, { fromId, toId });
@@ -86,10 +88,12 @@ export const interchangeFacesFeatures = async ({ firstId, secondId }: { firstId:
   }
 };
 
-export const saveFace = async (id: number) => {
+export const saveFace = async ({ id, metadata }: { id: number; metadata: Record<string, any> }) => {
   try {
     await sleep(2000);
-    const response = await api.post<ApiResponse>(`${FACES_API_PREFIX}/${id}/save`);
+    const response = await api.post<ApiResponse>(`${FACES_API_PREFIX}/${id}/save`, {
+      body: JSON.stringify(metadata),
+    });
   } catch (error) {
     throw new ApiError('Save face', getErrorMessage(error));
   }
@@ -105,3 +109,14 @@ export const modifyFaceFeatures = async ({ id, faceFeatures }: { id: number, fac
     throw new ApiError('Modify face', getErrorMessage(error));
   }
 }
+
+export const getAllTags = async (): Promise<string[]> => {
+  try {
+    await sleep(2000);
+    // const response = await api.get<ApiResponse>(`${FACES_API_PREFIX}/tags`);
+    // return response.result;
+    return datasource.tags;
+  } catch (error) {
+    throw new ApiError('Get all tags', getErrorMessage(error));
+  }
+};
