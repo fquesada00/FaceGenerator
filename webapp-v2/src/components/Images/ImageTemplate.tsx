@@ -72,6 +72,10 @@ const ImageTemplate = (props: ImageTemplateProps) => {
     setOpenMetadataSteps(false);
   }
 
+  const isBase64 = (src: string) => {
+    return !src.startsWith('http');
+  }
+
   const CardContentComponent = useMemo(() => {
     if (!src) {
       return (
@@ -81,7 +85,7 @@ const ImageTemplate = (props: ImageTemplateProps) => {
 
     return (
       <Fragment>
-        <img src={src} alt={alt} className={clsx('w-full', imgHeightClassName ?? 'h-40')} loading="lazy" style={{ objectFit: "cover" }} />
+        <img src={(isBase64(src)? 'data:image/png;base64, ' :'') + src} alt={alt} className={clsx('w-full', imgHeightClassName ?? 'h-40')} loading="lazy" style={{ objectFit: "cover" }} />
         <CardActions className="flex content-center justify-center space-x-6" >
           <Typography gutterBottom variant="h6" component="span">
             ID {faceId}
