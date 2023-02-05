@@ -33,6 +33,7 @@ const AddMetadataSteps = (props: AddMetadataStepsProps) => {
         ...data,
       }
     });
+    
     setStep(newStep);
   };
 
@@ -79,7 +80,7 @@ const AddMetadataSteps = (props: AddMetadataStepsProps) => {
             </Button>
           )}
           {step === TOTAL_STEPS - 1 && (
-            <Button onClick={() => onDone(metadata)}>
+            <Button onClick={() => onDone({ ...metadata, ...data })}>
               Done
             </Button>
           )}

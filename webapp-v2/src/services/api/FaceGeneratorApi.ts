@@ -89,7 +89,9 @@ export const interchangeFacesFeatures = async ({ firstId, secondId }: { firstId:
 export const saveFace = async ({ id, metadata }: { id: number; metadata: Record<string, any> }) => {
   try {
     await sleep(2000);
-    const response = await api.post<ApiResponse>(`${FACES_API_PREFIX}/${id}/save`);
+    const response = await api.post<ApiResponse>(`${FACES_API_PREFIX}/${id}/save`, {
+      body: JSON.stringify(metadata),
+    });
   } catch (error) {
     throw new ApiError('Save face', getErrorMessage(error));
   }

@@ -62,6 +62,7 @@ const ImageTemplate = (props: ImageTemplateProps) => {
   const onMetadataStepsDone = (metadata: Record<string, any>) => {
     setOpenMetadataSteps(false);
     toastInfo(`Saving face with id ${faceId!}...`);
+    console.log(metadata);
     mutateSaveFace({
       id: faceId!,
       metadata,
