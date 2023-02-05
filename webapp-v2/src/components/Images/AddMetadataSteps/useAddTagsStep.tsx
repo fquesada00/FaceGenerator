@@ -19,7 +19,8 @@ const useAddTagsSteps = (props: MetadataStepProps) => {
   const { content: Autocomplete, value: selectedTags } = useAutocompleteChipsInput({
     options: tags,
     value: [],
-    label: "Tags"
+    label: "Tags",
+    allowUserInput: false
   });
 
   const title = useMemo(() => {

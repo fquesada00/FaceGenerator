@@ -10,10 +10,11 @@ type AutocompleteChipsInputProps = {
   value: string[];
   onChange?: (value: string[]) => void;
   label: string;
+  allowUserInput?: boolean;
 };
 
 const useAutocompleteChipsInput = (props: AutocompleteChipsInputProps) => {
-  const { options, value, onChange, label } = props;
+  const { options, value, onChange, label, allowUserInput = true } = props;
 
   const [selectedTags, setSelectedTags] = useState<string[]>(value);
 
@@ -27,7 +28,7 @@ const useAutocompleteChipsInput = (props: AutocompleteChipsInputProps) => {
       <Autocomplete
         multiple
         options={options ?? []}
-        freeSolo
+        freeSolo={allowUserInput}
         disableCloseOnSelect
         renderOption={(props, option, { selected }) => (
           <li {...props}>

@@ -31,7 +31,7 @@ export const getAllFaces = async (filters: IApiFaceFilters): Promise<IApiFace[]>
   }
 };
 
-export const searchFacesBetweenIds = async ({ fromId, toId }: { fromId: number; toId: number }): Promise<IApiFace[]> => {
+export const searchFaces = async (filters: IApiFaceFilters): Promise<IApiFace[]> => {
   try {
     await sleep(2000);
     // const response = await api.get<ApiResponse>(`${FACES_API_PREFIX}/search`, { fromId, toId });
