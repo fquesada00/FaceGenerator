@@ -34,3 +34,7 @@ export interface IApiFaceFeatures {
     tip?: number;
   };
 };
+
+export interface IApiFaceFilters {
+  tags?: string[];
+};

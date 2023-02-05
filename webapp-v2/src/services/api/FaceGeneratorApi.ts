@@ -1,6 +1,6 @@
 import api, { FACES_API_PREFIX } from '.';
 import ApiError, { getErrorMessage } from './Error';
-import { ApiResponse, IApiFace, IApiFaceFeatures } from './models';
+import { ApiResponse, IApiFace, IApiFaceFeatures, IApiFaceFilters } from './models';
 import datasource from './datasource';
 
 const sleep = (ms: number) => {
@@ -9,17 +9,15 @@ const sleep = (ms: number) => {
 
 export const generateFaces = async (amount: number): Promise<IApiFace[]> => {
   try {
-    //await sleep(2000);
-    const response = await api.get<ApiResponse>(`${FACES_API_PREFIX}/generate`, {query:{ 'amount':amount }});
+    const response = await api.get<ApiResponse>(`${FACES_API_PREFIX}/generate`, {query:{ amount }});
     return response.result;
   } catch (error) {
     throw new ApiError('Generate faces', getErrorMessage(error));
   }
 };
 
-export const getAllFaces = async (): Promise<IApiFace[]> => {
+export const getAllFaces = async (filters: IApiFaceFilters): Promise<IApiFace[]> => {
   try {
-    //await sleep(2000);
     const response = await api.get<ApiResponse>(`${FACES_API_PREFIX}`);
     return response.result;
   } catch (error) {
@@ -27,12 +25,13 @@ export const getAllFaces = async (): Promise<IApiFace[]> => {
   }
 };
 
-export const searchFacesBetweenIds = async ({ fromId, toId }: { fromId: number; toId: number }): Promise<IApiFace[]> => {
+export const searchFaces = async (filters: IApiFaceFilters): Promise<IApiFace[]> => {
   try {
-    //await sleep(2000);
-     const response = await api.get<ApiResponse>(`${FACES_API_PREFIX}`, { query:{"from_id":fromId, "to_id":toId} });
+    //filters to query param
+    const query = new URLSearchParams();
+    query.append('tags', JSON.stringify(filters['tags']));
+     const response = await api.get<ApiResponse>(`${FACES_API_PREFIX}`, { query });
      return response.result;
-    return datasource.faces;
   } catch (error) {
     throw new ApiError('Search faces', getErrorMessage(error));
   }
@@ -47,14 +46,11 @@ export const getFaceImage = async (id: number) => {
   }
 };
 
-//TODO remove export const buildImgSrc = (id: number) => `${FACES_API_PREFIX}/${id}/image`;
 
 export const generateTransitions = async ({ fromId, toId, amount }: { fromId: number; toId: number; amount: number }) => {
   try {
-    //await sleep(2000);
      const response = await api.get<ApiResponse>(`${FACES_API_PREFIX}/transition`, { query:{'from_id':fromId, 'to_id':toId, 'amount':amount }});
      return response.result;
-    return datasource.faces;
   } catch (error) {
     throw new ApiError('Generate transitions', getErrorMessage(error));
   }
@@ -88,10 +84,11 @@ export const interchangeFacesFeatures = async ({ firstId, secondId }: { firstId:
   }
 };
 
-export const saveFace = async (id: number) => {
+export const saveFace = async ({ id, metadata }: { id: number; metadata: Record<string, any> }) => {
   try {
-    //await sleep(2000);
-    const response = await api.post<ApiResponse>(`${FACES_API_PREFIX}/${id}`, {body: []});
+    const response = await api.post<ApiResponse>(`${FACES_API_PREFIX}/${id}`, {
+      body: JSON.stringify(metadata),
+    });
   } catch (error) {
     throw new ApiError('Save face', getErrorMessage(error));
   }
@@ -107,3 +104,14 @@ export const modifyFaceFeatures = async ({ id, faceFeatures }: { id: number, fac
     throw new ApiError('Modify face', getErrorMessage(error));
   }
 }
+
+export const getAllTags = async (): Promise<string[]> => {
+  try {
+    await sleep(2000);
+    // const response = await api.get<ApiResponse>(`${FACES_API_PREFIX}/tags`);
+    // return response.result;
+    return datasource.tags;
+  } catch (error) {
+    throw new ApiError('Get all tags', getErrorMessage(error));
+  }
+};

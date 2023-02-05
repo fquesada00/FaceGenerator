@@ -1,14 +1,14 @@
-import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from "@mui/material";
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle } from "@mui/material";
 import CircularProgress from "@mui/material/CircularProgress";
 import clsx from "clsx";
 import ImagePicker from "components/ImagePicker";
 import { toastError } from "components/Toast";
-import { getFaceById } from "components/utils";
+import useAutocompleteTags from "hooks/useAutocompleteTags";
 import { Fragment, useEffect, useMemo, useState } from "react";
 import { useMutation } from "react-query";
 import ApiError from "services/api/Error";
 import { getAllFaces } from "services/api/FaceGeneratorApi";
-import { IApiFace } from "services/api/models";
+import { IApiFaceFilters } from "services/api/models";
 import CtaButton from "..";
 
 type PickImageButtonProps = {
@@ -23,6 +23,11 @@ const PickImageButton = (props: PickImageButtonProps) => {
   const { onPick, onDone, onClose, className, pickedFaceId = null } = props;
 
   const [open, setOpen] = useState(false);
+
+  const { Autocomplete, selectedTags, isLoadingTags } = useAutocompleteTags({
+    label: "Search tags",
+    allowUserInput: false,
+  });
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -65,9 +70,11 @@ const PickImageButton = (props: PickImageButtonProps) => {
 
   useEffect(() => {
     if (open) {
-      mutateGetAllFaces();
+      mutateGetAllFaces({
+        tags: selectedTags
+      } as IApiFaceFilters);
     }
-  }, [open]);
+  }, [open, selectedTags]);
 
   useEffect(() => {
     setSelectedFaceId(pickedFaceId);
@@ -93,8 +100,15 @@ const PickImageButton = (props: PickImageButtonProps) => {
       >
         <DialogTitle>Pick a face</DialogTitle>
         <DialogContent style={{ padding: '0.1rem' }}>
+          <div className="flex mb-4 justify-center">
+            <div className="w-11/12 ">
+              {
+                !isLoadingAllFaces && !isLoadingTags && Autocomplete
+              }
+            </div>
+          </div>
           {
-            !isLoadingAllFaces && MemoizedImagePicker
+            !isLoadingAllFaces && !isLoadingTags && MemoizedImagePicker
           }
           {
             isLoadingAllFaces &&
