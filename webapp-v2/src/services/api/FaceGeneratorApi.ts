@@ -1,6 +1,6 @@
 import api, { FACES_API_PREFIX } from '.';
 import ApiError, { getErrorMessage } from './Error';
-import { ApiResponse, IApiFace, IApiFaceFeatures } from './models';
+import { ApiResponse, IApiFace, IApiFaceFeatures, IApiFaceFilters } from './models';
 import datasource from './datasource';
 
 const sleep = (ms: number) => {
@@ -18,10 +18,12 @@ export const generateFaces = async (amount: number): Promise<IApiFace[]> => {
   }
 };
 
-export const getAllFaces = async (): Promise<IApiFace[]> => {
+export const getAllFaces = async (filters: IApiFaceFilters): Promise<IApiFace[]> => {
   try {
     await sleep(2000);
-    // const response = await api.get<ApiResponse>(`${FACES_API_PREFIX}`);
+    // const response = await api.get<ApiResponse>(`${FACES_API_PREFIX}`, {
+    //   query: filters,
+    // });
     // return response.result;
     return datasource.faces;
   } catch (error) {

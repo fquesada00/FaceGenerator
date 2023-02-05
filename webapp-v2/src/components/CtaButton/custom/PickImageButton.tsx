@@ -2,13 +2,14 @@ import { Button, Dialog, DialogActions, DialogContent, DialogContentText, Dialog
 import CircularProgress from "@mui/material/CircularProgress";
 import clsx from "clsx";
 import ImagePicker from "components/ImagePicker";
+import useAutocompleteChipsInput from "components/Inputs/useAutocompleteChipsInput";
 import { toastError } from "components/Toast";
 import { getFaceById } from "components/utils";
 import { Fragment, useEffect, useMemo, useState } from "react";
-import { useMutation } from "react-query";
+import { useMutation, useQuery } from "react-query";
 import ApiError from "services/api/Error";
-import { getAllFaces } from "services/api/FaceGeneratorApi";
-import { IApiFace } from "services/api/models";
+import { getAllFaces, getAllTags } from "services/api/FaceGeneratorApi";
+import { IApiFace, IApiFaceFilters } from "services/api/models";
 import CtaButton from "..";
 
 type PickImageButtonProps = {
@@ -23,6 +24,19 @@ const PickImageButton = (props: PickImageButtonProps) => {
   const { onPick, onDone, onClose, className, pickedFaceId = null } = props;
 
   const [open, setOpen] = useState(false);
+
+  const { isLoading: isLoadingTags, data: tags } = useQuery('tags', getAllTags, {
+    onError: (error) => {
+      if (error instanceof ApiError) {
+        toastError(error.toString());
+      }
+    }
+  });
+  const { content: Autocomplete, value: selectedTags } = useAutocompleteChipsInput({
+    options: tags,
+    value: [],
+    label: "Filter tags"
+  });
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -65,9 +79,11 @@ const PickImageButton = (props: PickImageButtonProps) => {
 
   useEffect(() => {
     if (open) {
-      mutateGetAllFaces();
+      mutateGetAllFaces({
+        tags: selectedTags
+      } as IApiFaceFilters);
     }
-  }, [open]);
+  }, [open, selectedTags]);
 
   useEffect(() => {
     setSelectedFaceId(pickedFaceId);
@@ -93,8 +109,15 @@ const PickImageButton = (props: PickImageButtonProps) => {
       >
         <DialogTitle>Pick a face</DialogTitle>
         <DialogContent style={{ padding: '0.1rem' }}>
+          <div className="flex mb-4 justify-center">
+            <div className="w-11/12 ">
+              {
+                !isLoadingAllFaces && !isLoadingTags && Autocomplete
+              }
+            </div>
+          </div>
           {
-            !isLoadingAllFaces && MemoizedImagePicker
+            !isLoadingAllFaces && !isLoadingTags && MemoizedImagePicker
           }
           {
             isLoadingAllFaces &&
