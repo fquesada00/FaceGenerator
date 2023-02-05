@@ -110,7 +110,7 @@ const FaceFromImage: React.FC = () => {
                 renderImagePicker()
               }
             </Box>
-            <CtaButton label="Generate" onClick={onGenerateFaceFromImage} className="mt-8" loading={isLoadingFaceFromImage} />
+            <CtaButton label="Generate" onClick={onGenerateFaceFromImage} className="mt-8 mb-8" loading={isLoadingFaceFromImage} />
           </Grid>
           <Grid item xs={12} sm={12} md={6} lg={6} xl={6} container direction="column" alignItems="center" >
           <Box
