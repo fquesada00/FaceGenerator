@@ -22,7 +22,6 @@ import base64
 from tqdm import tqdm
 import pickle
 from src.generator.align_face import align_face    
-import threading
 from src.face_image import FaceImage
 
 @Pyro4.expose
@@ -37,7 +36,7 @@ class Generator:
         self.Gs, self.noise_vars, self.Gs_kwargs = self.load_model()
 
     def flatten(self, z):
-        return list(np.ravel(z))
+        return np.ravel(z).tolist()
 
     def unravel(self, z):
         return np.reshape(z, (1, *self.Gs.input_shape[1:]))
@@ -62,6 +61,11 @@ class Generator:
         image = Image.fromarray(random_image)
         return FaceImage.from_image(image), self.flatten(z)
 
+    def generate_image_from_latent_vector(self, latent_vector):
+        image = self.generate_image_from_z(latent_vector)
+        image = Image.fromarray(image)
+        return FaceImage.from_image(image)
+
     def generate_image_from_z(self, z):
         z = self.unravel(z)
         images = self.Gs.run(z, None, **self.Gs_kwargs)
@@ -74,9 +78,10 @@ class Generator:
     def linear_interpolate(self, code1, code2, alpha):
         return code1 * alpha + code2 * (1 - alpha)
 
-    def img_to_latent(self, img: Image):
+    def img_to_latent(self, img: FaceImage):
+        img = img.to_image()
+        img = img.convert('RGB')
         aligned_imgs_path = Path('aligned_imgs')
-
         if not aligned_imgs_path.exists():
             aligned_imgs_path.mkdir()
         img_name = 'image0000'

@@ -65,10 +65,6 @@ async def validation_exception_handler(request: Request, exc: RequestValidationE
 def generateFaces(amount: int = 1):
     return {"result":service.generate_random_images(amount)}
 
-@app.post('/faces', response_model=int)
-def saveFaces(_id: str, tags: List[str]):
-    id = service.save_image(_id, tags)
-    return {'result':id}
 
 @app.get('/faces', response_model=ApiResponse[List[Face]])
 def getFaces(from_id : Union[int, None] = None, to_id: Union[int,None] = None) :
@@ -83,14 +79,23 @@ def generateTransition(from_id: int, to_id: int, amount: int) :
 def interchangeFaces(id1: int, id2: int) :
     return {'result':service.mix_styles(id1, id2)}
 
-@app.get('/faces/{id}', response_class=ImageResponse)
-def getFace(id: int):
-    image = service.get_image_by_id(id)
-    return ImageResponse(content=image)
 
 @app.post('/faces/image', response_model=ApiResponse[List[Face]])
 def generateFaceFromImage(image: UploadFile = File()) :
     return {'result':service.img_to_latent(image.file.read())}
+
+@app.get('/faces/{id}', response_class=ImageResponse)
+def getFace(id: int, response: Response):
+    #response.headers['Cache-Control'] = 
+    image = service.get_image_by_id(id)
+    return ImageResponse(content=image, headers={'Cache-Control': 'max-age=86400'})
+
+
+@app.post('/faces/{face_id}', response_model=ApiResponse[int])
+def saveFaces(face_id: str, tags: Union[List[str], None]):
+    id = service.save_image(face_id, tags)
+    return {'result':id}
+
 
 @app.put('/faces/{id}', response_model=ApiResponse[Face])
 def updateFace(id:int,modifiers: Modifiers):
