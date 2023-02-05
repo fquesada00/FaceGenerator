@@ -30,7 +30,7 @@ export const getAllFaces = async (): Promise<IApiFace[]> => {
 export const searchFacesBetweenIds = async ({ fromId, toId }: { fromId: number; toId: number }): Promise<IApiFace[]> => {
   try {
     //await sleep(2000);
-     const response = await api.get<ApiResponse>(`${FACES_API_PREFIX}/search`, { fromId, toId });
+     const response = await api.get<ApiResponse>(`${FACES_API_PREFIX}`, { query:{"from_id":fromId, "to_id":toId} });
      return response.result;
     return datasource.faces;
   } catch (error) {
@@ -40,19 +40,19 @@ export const searchFacesBetweenIds = async ({ fromId, toId }: { fromId: number; 
 
 export const getFaceImage = async (id: number) => {
   try {
-    const response = await api.get<ApiResponse>(`${FACES_API_PREFIX}/${id}/image`);
+    const response = await api.get<ApiResponse>(`${FACES_API_PREFIX}/${id}`);
     return response.result;
   } catch (error) {
     throw new ApiError('Get face', getErrorMessage(error));
   }
 };
 
-export const buildImgSrc = (id: number) => `${FACES_API_PREFIX}/${id}/image`;
+//TODO remove export const buildImgSrc = (id: number) => `${FACES_API_PREFIX}/${id}/image`;
 
 export const generateTransitions = async ({ fromId, toId, amount }: { fromId: number; toId: number; amount: number }) => {
   try {
     //await sleep(2000);
-     const response = await api.post<ApiResponse>(`${FACES_API_PREFIX}/transitions`, { fromId, toId, amount });
+     const response = await api.get<ApiResponse>(`${FACES_API_PREFIX}/transition`, { query:{'from_id':fromId, 'to_id':toId, 'amount':amount }});
      return response.result;
     return datasource.faces;
   } catch (error) {
@@ -62,11 +62,15 @@ export const generateTransitions = async ({ fromId, toId, amount }: { fromId: nu
 
 export const generateFaceFromImage = async (image: File): Promise<IApiFace> => {
   try {
+    console.log(image);
     //await sleep(2000);
+    //send image file
     const formData = new FormData();
     formData.append('image', image);
-     const response = await api.post<ApiResponse>(`${FACES_API_PREFIX}/image`, formData, { 'Content-Type': 'multipart/form-data' });
-     return response.result;
+    //const response = await api.post<ApiResponse>(`${FACES_API_PREFIX}/image`,  { body:formData, headers:{ 'Content-Type': 'multipart/form-data' }});
+    const response = await api.post<ApiResponse>(`http://localhost:5000/faces/image`,  { body:formData, headers:{ 'Content-Type': 'multipart/form-data' }});
+
+    return response.result;
     return datasource.faces[0];
   } catch (error) {
     throw new ApiError('Generate face from image', getErrorMessage(error));
@@ -76,7 +80,7 @@ export const generateFaceFromImage = async (image: File): Promise<IApiFace> => {
 export const interchangeFacesFeatures = async ({ firstId, secondId }: { firstId: number; secondId: number }) => {
   try {
     //await sleep(2000);
-     const response = await api.post<ApiResponse>(`${FACES_API_PREFIX}/interchange`, { firstId, secondId });
+     const response = await api.get<ApiResponse>(`${FACES_API_PREFIX}/interchange`, { query:{ 'id1':firstId, 'id2':secondId }});
      return response.result;
     return datasource.faces.slice(0, 2);
   } catch (error) {
@@ -87,7 +91,7 @@ export const interchangeFacesFeatures = async ({ firstId, secondId }: { firstId:
 export const saveFace = async (id: number) => {
   try {
     //await sleep(2000);
-    const response = await api.post<ApiResponse>(`${FACES_API_PREFIX}/${id}/save`);
+    const response = await api.post<ApiResponse>(`${FACES_API_PREFIX}/${id}`, {body: []});
   } catch (error) {
     throw new ApiError('Save face', getErrorMessage(error));
   }
@@ -96,7 +100,7 @@ export const saveFace = async (id: number) => {
 export const modifyFaceFeatures = async ({ id, faceFeatures }: { id: number, faceFeatures: IApiFaceFeatures }): Promise<IApiFace> => {
   try {
     //await sleep(2000);
-     const response = await api.put<ApiResponse>(`${FACES_API_PREFIX}/${id}`, face);
+     const response = await api.put<ApiResponse>(`${FACES_API_PREFIX}/${id}`, {body:faceFeatures});
      return response.result;
     return datasource.faces[0];
   } catch (error) {
