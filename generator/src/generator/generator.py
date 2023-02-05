@@ -4,8 +4,8 @@ from pathlib import Path
 import io
 from src.face_frame import face_frame_correction
 
-API_PATH = getenv("API_PATH")
-sys.path.insert(0, API_PATH + "/src/stylegan2")
+PROJECT_PATH = getenv("PROJECT_PATH")
+sys.path.insert(0, PROJECT_PATH + "/generator/src/stylegan2")
 
 import dnnlib
 from src.stylegan2 import pretrained_networks
@@ -18,7 +18,7 @@ from PIL import Image
 import base64
 from tqdm import tqdm
 import pickle
-from src.generator.align_face import align_face
+from src.generator.align_face import align_face    
 
 @Pyro4.expose
 class Generator:

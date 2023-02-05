@@ -1,8 +1,11 @@
 import sys
 from os import listdir, getenv
 import io
+import Pyro4
 
-API_PATH = getenv("API_PATH")
+from src.face_image import FaceImage
+
+API_PATH = getenv("API_PATH","~/ITBA/FaceGenerator/api")
 sys.path.insert(0, API_PATH + "/src/stylegan2")
 
 
@@ -24,8 +27,9 @@ def get_image(seed):
     #select random file
     file = np.random.RandomState(seed).randint(0,len(files))
     file = files[int(file)]
-    return Image.open(dir + file)
+    return FaceImage.from_image(Image.open(dir + file))
 
+@Pyro4.expose
 class Generator:
 
     def __init__(self, network_pkl='gdrive:networks/stylegan2-ffhq-config-f.pkl'):
@@ -71,7 +75,7 @@ class Generator:
 
 
 
-    def Image_to_bytes(self, img):
+    def Image_to_bytes(self, img: Image):
         byte_arr = io.BytesIO()
         img.save(byte_arr, format='PNG') # convert the PIL image to byte array
         encoded_img = base64.encodebytes(byte_arr.getvalue()).decode('ascii') # encode as base64

@@ -40,7 +40,7 @@ class Modifiers(BaseModel):
     yaw: int = 0
    
 print("Starting up parent", os.getpid())
-services = {}
+service = GeneratorService()
 # #run init on each worker
 # @app.on_event("startup")
 # async def startup_event():
@@ -62,36 +62,36 @@ def getService() -> GeneratorService:
 @app.get('/faces/generate', response_model=List[Face])
 def generateFaces(amount: int = 1) -> List[Face]:
     print(os.getpid())
-    return getService().generate_random_images(amount)
+    return service.generate_random_images(amount)
 
 @app.post('/faces', response_model=int)
 def saveFaces(z: List[float], tags: List[str]):
-    id = getService().save_image(z, tags)
+    id = service.save_image(z, tags)
     return id
 
 @app.get('/faces', response_model=List[Face])
 def getFaces(from_id : Union[int, None] = None, to_id: Union[int,None] = None) -> List[Face]:
 
-    return getService().get_images_from_database(from_id, to_id)
+    return service.get_images_from_database(from_id, to_id)
 
 @app.get('/faces/transition', response_model=List[Face])
 def generateTransition(from_id: int, to_id: int, amount: int) -> List[Face]:
-    return getService().generate_transition(from_id, to_id, amount)
+    return service.generate_transition(from_id, to_id, amount)
 
 @app.get('/faces/interchange', response_model=List[Face])
 def interchangeFaces(id1: int, id2: int) -> List[Face]:
-    return getService().mix_styles(id1, id2)
+    return service.mix_styles(id1, id2)
 
 @app.get('/faces/{id}', response_class=ImageResponse)
 def getFace(id: int):
-    image = getService().get_image_by_id(id)
+    image = service.get_image_by_id(id)
     return ImageResponse(content=image)
 
 @app.post('/faces/image', response_model=List[Face])
 def generateFaceFromImage(image: UploadFile = File()) -> List[Face]:
-    return getService().img_to_latent(image.file.read())
+    return service.img_to_latent(image.file.read())
 
 @app.put('/faces/{id}', response_model=Face)
 def updateFace(id:int,modifiers: Modifiers) -> Face:
-    return getService().change_features(id, vars(modifiers))
+    return service.change_features(id, vars(modifiers))
 

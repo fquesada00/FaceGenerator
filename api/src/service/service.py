@@ -1,5 +1,6 @@
+from src.face_image import FaceImage
 from src.service.database import GeneratorDB
-from src.generator.generator import Generator
+from src.generator.mockGenerator import Generator
 from pathlib import Path
 import numpy as np
 from PIL import Image
@@ -8,6 +9,7 @@ from io import BytesIO
 import re
 import os
 import Pyro4
+from Pyro4.util import SerializerBase
 
 
 
@@ -15,11 +17,24 @@ API_PATH = os.getenv("API_PATH")
 
 database = GeneratorDB()
 
+def face_image_deserializer(classname,raw: dict):
+    data = raw['data']['data']
+    return FaceImage(data)
+    
+def face_image_serializer(image: FaceImage):
+    return {
+        "__class__": "face_image",
+        "data": image.data,
+    }
+SerializerBase.register_class_to_dict(FaceImage, face_image_serializer)
+SerializerBase.register_dict_to_class('face_image', face_image_deserializer )
+
 
 class GeneratorService:
     def __init__(self):
-        #self.generator = Generator(network_pkl='gdrive:networks/stylegan2-ffhq-config-f.pkl')
+        #self.generator = Generator()
         self.generator = Pyro4.Proxy("PYRONAME:facegenerator.generator")
+        print("Generator service initialized")
 
     #database methods
     @staticmethod
@@ -35,14 +50,12 @@ class GeneratorService:
     def image_to_bytes(image: Image):
         byte_arr = BytesIO()
         image.save(byte_arr, format='PNG')
-        return byte_arr.getvalue()
+        encoded_img = base64.encodebytes(byte_arr.getvalue()).decode('ascii') # encode as base64<   
+        return encoded_img
 
     def get_image_by_id(self, face_id: int):
         image: Image = self.generate_face(face_id)
         return GeneratorService.image_to_bytes(image)
-
-
-
 
  
 
@@ -80,10 +93,11 @@ class GeneratorService:
         images = []
         for i in range(qty):
             seed = np.random.randint(30000)
-            image, z = self.generator.generate_random_image(seed)
+            face_image, z = self.generator.generate_random_image(seed)
+            image = face_image.to_image()
             face = {
                 'z': z,
-                'img': self.generator.Image_to_bytes(image)
+                'img': self.image_to_bytes(image)
             }
             images.append(face)
         return images
