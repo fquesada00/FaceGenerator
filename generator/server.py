@@ -6,9 +6,20 @@ os.environ["PYRO_LOGFILE"] = "pyro.log"
 os.environ["PYRO_LOGLEVEL"] = "DEBUG"
 
 import Pyro4
+import Pyro4.naming as naming
 from Pyro4.util import SerializerBase
 
 Pyro4.config.SERVERTYPE = "multiplex"
+
+import threading as th
+
+
+#start ns in a separate thread
+def start_ns():
+    naming.startNSloop()
+
+ns_thread = th.Thread(target=start_ns)
+ns_thread.start()
 
 daemon = Pyro4.Daemon()                # make a Pyro daemon
 ns = Pyro4.locateNS()                  # find the name server
@@ -29,4 +40,5 @@ SerializerBase.register_class_to_dict(FaceImage, face_image_serializer)
 SerializerBase.register_dict_to_class('face_image', face_image_deserializer )
 
 print("Ready.")
+
 daemon.requestLoop()            

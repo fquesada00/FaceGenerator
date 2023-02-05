@@ -1,18 +1,26 @@
-from fastapi import FastAPI, Response, File, UploadFile
-from typing import List, Union
+from fastapi import FastAPI, Response, File, UploadFile, Request, status
+from fastapi.exceptions import RequestValidationError
+from fastapi.encoders import jsonable_encoder
+from fastapi.responses import JSONResponse
+from typing import List, Union, Generic, TypeVar
 import logging
 from pydantic import BaseModel
+from pydantic.generics import GenericModel
 import os
 from src.service.service import GeneratorService
 
-app = FastAPI()
-
-
 
 #models
+T = TypeVar('T')
+class ApiResponse(GenericModel, Generic[T]):
+    result: T
+
+class Error(BaseModel):
+    error: str
+
 class Face(BaseModel):
     z: List[float]
-    img: str
+    image: str
     id: Union[int, None]
 
 
@@ -39,59 +47,52 @@ class Modifiers(BaseModel):
     smile: int = 0
     yaw: int = 0
    
-print("Starting up parent", os.getpid())
 service = GeneratorService()
-# #run init on each worker
-# @app.on_event("startup")
-# async def startup_event():
-#     print("Starting up", os.getpid())
-#     s = GeneratorService()
-#     services[os.getpid()] = s
 
-#getService = lambda: services[os.getpid()]
+app = FastAPI(responses={422: {"model": Error}})
 
-def getService() -> GeneratorService:
-    if os.getpid() not in services:
-        print("Starting up", os.getpid())
-        s = GeneratorService()
-        services[os.getpid()] = s
-    return services[os.getpid()]
+@app.exception_handler(RequestValidationError)
+async def validation_exception_handler(request: Request, exc: RequestValidationError):
+    return JSONResponse(
+        status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+        content=jsonable_encoder({"error": exc.errors()}),
+    )
+
 
 
 #routes
-@app.get('/faces/generate', response_model=List[Face])
-def generateFaces(amount: int = 1) -> List[Face]:
-    print(os.getpid())
-    return service.generate_random_images(amount)
+@app.get('/faces/generate', response_model=ApiResponse[List[Face]])
+def generateFaces(amount: int = 1):
+    return {"result":service.generate_random_images(amount)}
 
 @app.post('/faces', response_model=int)
-def saveFaces(z: List[float], tags: List[str]):
-    id = service.save_image(z, tags)
-    return id
+def saveFaces(_id: str, tags: List[str]):
+    id = service.save_image(_id, tags)
+    return {'result':id}
 
-@app.get('/faces', response_model=List[Face])
-def getFaces(from_id : Union[int, None] = None, to_id: Union[int,None] = None) -> List[Face]:
+@app.get('/faces', response_model=ApiResponse[List[Face]])
+def getFaces(from_id : Union[int, None] = None, to_id: Union[int,None] = None) :
 
-    return service.get_images_from_database(from_id, to_id)
+    return {'result':service.get_images_from_database(from_id, to_id)}
 
-@app.get('/faces/transition', response_model=List[Face])
-def generateTransition(from_id: int, to_id: int, amount: int) -> List[Face]:
-    return service.generate_transition(from_id, to_id, amount)
+@app.get('/faces/transition', response_model=ApiResponse[List[Face]])
+def generateTransition(from_id: int, to_id: int, amount: int) :
+    return {'result':service.generate_transition(from_id, to_id, amount)}
 
-@app.get('/faces/interchange', response_model=List[Face])
-def interchangeFaces(id1: int, id2: int) -> List[Face]:
-    return service.mix_styles(id1, id2)
+@app.get('/faces/interchange', response_model=ApiResponse[List[Face]])
+def interchangeFaces(id1: int, id2: int) :
+    return {'result':service.mix_styles(id1, id2)}
 
 @app.get('/faces/{id}', response_class=ImageResponse)
 def getFace(id: int):
     image = service.get_image_by_id(id)
     return ImageResponse(content=image)
 
-@app.post('/faces/image', response_model=List[Face])
-def generateFaceFromImage(image: UploadFile = File()) -> List[Face]:
-    return service.img_to_latent(image.file.read())
+@app.post('/faces/image', response_model=ApiResponse[List[Face]])
+def generateFaceFromImage(image: UploadFile = File()) :
+    return {'result':service.img_to_latent(image.file.read())}
 
-@app.put('/faces/{id}', response_model=Face)
-def updateFace(id:int,modifiers: Modifiers) -> Face:
-    return service.change_features(id, vars(modifiers))
+@app.put('/faces/{id}', response_model=ApiResponse[Face])
+def updateFace(id:int,modifiers: Modifiers):
+    return {'result':service.change_features(id, vars(modifiers))}
 

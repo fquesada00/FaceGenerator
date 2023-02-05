@@ -11,6 +11,13 @@ import Pyro4
 from Pyro4.util import SerializerBase
 
 
+#TODO REMOVE
+cache = {}
+
+def add_to_cache(z):
+    n = len(cache)
+    cache[n] = z
+    return n
 
 API_PATH = os.getenv("PROJECT_PATH") + "/api"
 
@@ -65,7 +72,7 @@ class GeneratorService:
             image = self.generator.generate_image_from_z(value['z'])
             image = Image.fromarray(image)
             face = {
-                'img': self.generator.Image_to_bytes(image),
+                'image': self.generator.Image_to_bytes(image),
                 'id': value['id'],
                 'z': value['z']
             }
@@ -73,8 +80,10 @@ class GeneratorService:
         return faces
 
 
-    def save_image(self, z, tags=None):
+    def save_image(self, id, tags=None):
         print("Saving image...")
+        #decode base64 id
+        z = cache[id]
         return database.insert_z(z, tags)
 
 
@@ -96,7 +105,8 @@ class GeneratorService:
             image = face_image.to_image()
             face = {
                 'z': z,
-                'img': self.image_to_bytes(image)
+                'id': add_to_cache(z),
+                'image': self.image_to_bytes(image)
             }
             images.append(face)
         return images
@@ -115,7 +125,7 @@ class GeneratorService:
         for img,z in zip(imgs,zs):
             face = {
                 'z': z,
-                'img': self.generator.Image_to_bytes(img)
+                'image': self.generator.Image_to_bytes(img)
             }
             faces.append(face)
         return faces
@@ -128,7 +138,7 @@ class GeneratorService:
         for img,z in zip(imgs,zs):
             face = {
                 'z': z,
-                'img': self.generator.Image_to_bytes(img)
+                'image': self.generator.Image_to_bytes(img)
             }
             faces.append(face)
         return faces
@@ -143,7 +153,7 @@ class GeneratorService:
         for img,z in zip(imgs,zs):
             face = {
                 'z': z,
-                'img': self.generator.Image_to_bytes(img)
+                'image': self.generator.Image_to_bytes(img)
             }
             faces.append(face)
         return faces
@@ -154,7 +164,7 @@ class GeneratorService:
         new_img, new_z = self.generator.change_features(z, features)
         return {
             'z': new_z,
-            'img': self.generator.Image_to_bytes(new_img)
+            'image': self.generator.Image_to_bytes(new_img)
         }
 
     def mix_styles(self, id1, id2):
@@ -165,7 +175,7 @@ class GeneratorService:
         for img,z in zip(imgs,zs):
             face = {
                 'z': z,
-                'img': self.generator.Image_to_bytes(img)
+                'image': self.generator.Image_to_bytes(img)
             }
             faces.append(face)
         return faces
