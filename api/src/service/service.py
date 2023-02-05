@@ -1,6 +1,5 @@
 from src.face_image import FaceImage
 from src.service.database import GeneratorDB
-from src.generator.mockGenerator import Generator
 from pathlib import Path
 import numpy as np
 from PIL import Image
@@ -13,7 +12,7 @@ from Pyro4.util import SerializerBase
 
 
 
-API_PATH = os.getenv("API_PATH")
+API_PATH = os.getenv("PROJECT_PATH") + "/api"
 
 database = GeneratorDB()
 

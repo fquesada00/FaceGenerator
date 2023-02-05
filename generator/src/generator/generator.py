@@ -12,13 +12,18 @@ from src.stylegan2 import pretrained_networks
 from dnnlib import tflib
 from src.stylegan2 import dataset_tool
 from src.stylegan2 import epoching_custom_run_projector
-
+import os
+os.environ["PYRO_LOGFILE"] = "pyro.log"
+os.environ["PYRO_LOGLEVEL"] = "DEBUG"
+import Pyro4
 import numpy as np
 from PIL import Image
 import base64
 from tqdm import tqdm
 import pickle
 from src.generator.align_face import align_face    
+import threading
+from src.face_image import FaceImage
 
 @Pyro4.expose
 class Generator:
@@ -55,7 +60,7 @@ class Generator:
         z = np.random.RandomState(rand_seed).randn(1, *self.Gs.input_shape[1:]) # [minibatch, component]
         random_image = self.generate_image_from_z(z)
         image = Image.fromarray(random_image)
-        return image, self.flatten(z)
+        return FaceImage.from_image(image), self.flatten(z)
 
     def generate_image_from_z(self, z):
         z = self.unravel(z)
@@ -130,6 +135,7 @@ class Generator:
             interpolated_latent_code = self.linear_interpolate(z2, z1, alpha)
             image = self.generate_image_from_z(interpolated_latent_code)
             interp_latent_image = Image.fromarray(image).resize((self.result_size, self.result_size))
+            interp_latent_image = FaceImage.from_image(interp_latent_image)
             all_imgs.append(interp_latent_image)
             all_zs.append(self.flatten(interpolated_latent_code))
         return all_imgs, all_zs
@@ -141,6 +147,7 @@ class Generator:
             modified_latent_code += self.latent_vectors[feature_name] * amount
         image = self.generate_image_from_w(modified_latent_code)
         latent_img = Image.fromarray(image).resize((self.result_size, self.result_size))
+        latent_img = FaceImage.from_image(latent_img)
         return latent_img, self.flatten(modified_latent_code)
 
     def mix_styles(self, z1, z2):
@@ -152,12 +159,6 @@ class Generator:
         z2[0][6:] = z1_copy[0][6:]
         image1 = Image.fromarray(self.generate_image_from_z(z1)).resize((self.result_size, self.result_size))
         image2 = Image.fromarray(self.generate_image_from_z(z2)).resize((self.result_size, self.result_size))
+        image1 = FaceImage.from_image(image1)
+        image2 = FaceImage.from_image(image2)
         return [image1, image2], [self.flatten(z1), self.flatten(z2)]
-
-
-
-    def Image_to_bytes(self, img):
-        byte_arr = io.BytesIO()
-        img.save(byte_arr, format='PNG') # convert the PIL image to byte array
-        encoded_img = base64.encodebytes(byte_arr.getvalue()).decode('ascii') # encode as base64
-        return encoded_img

@@ -5,8 +5,8 @@ import Pyro4
 
 from src.face_image import FaceImage
 
-API_PATH = getenv("API_PATH","~/ITBA/FaceGenerator/api")
-sys.path.insert(0, API_PATH + "/src/stylegan2")
+PROJECT_PATH = getenv("PROJECT_PATH")
+sys.path.insert(0, PROJECT_PATH + "/generator/src/stylegan2")
 
 
 import numpy as np
@@ -22,7 +22,7 @@ def get_image(seed):
 
     seed = int(seed)
     #list all mock images
-    dir = API_PATH + '/src/generator/mock/'
+    dir = PROJECT_PATH + '/generator/src/generator/mock/'
     files = listdir(dir)
     #select random file
     file = np.random.RandomState(seed).randint(0,len(files))
