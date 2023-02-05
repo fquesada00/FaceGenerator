@@ -52,6 +52,31 @@ const datasource = {
       id: 13,
       image: 'https://dummyimage.com/600x400/ff00ff/ededed&text=id+13'
     },
+  ],
+  tags: [
+    'female',
+    'male',
+    'young',
+    'old',
+    'smiling',
+    'serious',
+    'happy',
+    'sad',
+    'angry',
+    'surprised',
+    'disgusted',
+    'afraid',
+    'neutral',
+    'beard',
+    'mustache',
+    'glasses',
+    'hat',
+    'hair',
+    'blond',
+    'brown',
+    'black',
+    'red',
+    'white',
   ]
 };
 

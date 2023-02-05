@@ -7,7 +7,7 @@ export interface MetadataStepProps {
 }
 
 export type AddMetadataStepsProps = {
-  onDone: () => void;
+  onDone: (metadata: Record<string, any>) => void;
   onCancel: () => void;
   open: boolean;
 };
@@ -18,31 +18,42 @@ const AddMetadataSteps = (props: AddMetadataStepsProps) => {
   const { onDone, onCancel, open } = props;
 
   const [step, setStep] = useState(0);
+  const [metadata, setMetadata] = useState<Record<string, any>>({
+    tags: [],
+  });
 
   const onStepChange = (newStep: number) => {
     if (newStep < 0 || newStep >= TOTAL_STEPS) {
       return;
     }
 
+    setMetadata((prevMetadata) => {
+      return {
+        ...prevMetadata,
+        ...data,
+      }
+    });
     setStep(newStep);
   };
 
-  const { title: addTagsTitle, content: addTagsContent } = useAddTagsStep({ step });
+  const { title: addTagsTitle, content: addTagsContent, data: addTagsData } = useAddTagsStep({ step });
 
-  const { title, content } = useMemo(() => {
+  const { title, content, data } = useMemo(() => {
     switch (step) {
       case 0:
         return {
           title: addTagsTitle,
           content: addTagsContent,
+          data: addTagsData,
         };
       default:
         return {
           title: addTagsTitle,
           content: addTagsContent,
+          data: addTagsData,
         };
     }
-  }, [step]);
+  }, [step, addTagsTitle, addTagsContent, addTagsData]);
 
   return (
     <Dialog open={open} onClose={onCancel} fullWidth maxWidth="sm">
@@ -68,7 +79,7 @@ const AddMetadataSteps = (props: AddMetadataStepsProps) => {
             </Button>
           )}
           {step === TOTAL_STEPS - 1 && (
-            <Button onClick={onDone}>
+            <Button onClick={() => onDone(metadata)}>
               Done
             </Button>
           )}

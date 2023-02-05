@@ -86,7 +86,7 @@ export const interchangeFacesFeatures = async ({ firstId, secondId }: { firstId:
   }
 };
 
-export const saveFace = async (id: number) => {
+export const saveFace = async ({ id, metadata }: { id: number; metadata: Record<string, any> }) => {
   try {
     await sleep(2000);
     const response = await api.post<ApiResponse>(`${FACES_API_PREFIX}/${id}/save`);
@@ -105,3 +105,14 @@ export const modifyFaceFeatures = async ({ id, faceFeatures }: { id: number, fac
     throw new ApiError('Modify face', getErrorMessage(error));
   }
 }
+
+export const getAllTags = async (): Promise<string[]> => {
+  try {
+    await sleep(2000);
+    // const response = await api.get<ApiResponse>(`${FACES_API_PREFIX}/tags`);
+    // return response.result;
+    return datasource.tags;
+  } catch (error) {
+    throw new ApiError('Get all tags', getErrorMessage(error));
+  }
+};

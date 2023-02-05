@@ -59,10 +59,13 @@ const ImageTemplate = (props: ImageTemplateProps) => {
     setOpenMetadataSteps(true);
   }
 
-  const onMetadataStepsDone = () => {
+  const onMetadataStepsDone = (metadata: Record<string, any>) => {
     setOpenMetadataSteps(false);
     toastInfo(`Saving face with id ${faceId!}...`);
-    mutateSaveFace(faceId!);
+    mutateSaveFace({
+      id: faceId!,
+      metadata,
+    });
   }
 
   const onMetadataStepsCancel = () => {
