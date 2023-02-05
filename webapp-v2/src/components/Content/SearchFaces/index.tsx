@@ -1,19 +1,15 @@
-import { Typography, Button, Grid } from "@mui/material";
 import clsx from "clsx";
 import { useMemo, useState } from "react";
-
 import inputsClasses from "components/Inputs/styles/Inputs.module.scss";
-import CustomIdInput from "components/Inputs/custom/CustomIdInput";
 import CtaButton from "components/CtaButton";
 import ContentHeader from "components/ContentHeader";
 import paths from "routes/paths";
-import { useMutation, useQuery } from "react-query";
+import { useMutation } from "react-query";
 import { toastError } from "components/Toast";
 import ApiError from "services/api/Error";
-import { getAllFaces, getAllTags, searchFaces } from "services/api/FaceGeneratorApi";
+import { getAllFaces, searchFaces } from "services/api/FaceGeneratorApi";
 import useRenderImages from "hooks/useRenderImages";
-import PickImageButton from "components/CtaButton/custom/PickImageButton";
-import useAutocompleteChipsInput from "components/Inputs/useAutocompleteChipsInput";
+import useAutocompleteTags from "hooks/useAutocompleteTags";
 
 
 const SearchFaces: React.FC = () => {
@@ -66,17 +62,9 @@ const SearchFaces: React.FC = () => {
     setHideAll(!hideAll);
   }
 
-  const { isLoading: loadingTags, data: tags } = useQuery('tags', getAllTags, {
-    onError: (error) => {
-      if (error instanceof ApiError) {
-        toastError(error.toString());
-      }
-    }
-  });
-  const { content: Autocomplete, value: selectedTags } = useAutocompleteChipsInput({
-    options: tags,
+  const { Autocomplete, selectedTags } = useAutocompleteTags({
     label: "Search tags",
-    value: [],
+    allowUserInput: false,
   });
 
   const onSubmit = () => {

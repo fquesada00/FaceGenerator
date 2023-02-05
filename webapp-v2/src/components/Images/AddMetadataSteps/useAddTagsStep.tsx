@@ -1,26 +1,11 @@
 import { useMemo } from "react";
 import { MetadataStepProps } from ".";
 import { CircularProgress } from "@mui/material";
-import { useQuery } from 'react-query';
-import { getAllTags } from 'services/api/FaceGeneratorApi';
-import { toastError } from 'components/Toast';
-import ApiError from 'services/api/Error';
-import useAutocompleteChipsInput from 'components/Inputs/useAutocompleteChipsInput';
+import useAutocompleteTags from "hooks/useAutocompleteTags";
 
 const useAddTagsSteps = (props: MetadataStepProps) => {
-  const { isLoading: loadingTags, data: tags } = useQuery('tags', getAllTags, {
-    onError: (error) => {
-      if (error instanceof ApiError) {
-        toastError(error.toString());
-      }
-    }
-  });
-
-  const { content: Autocomplete, value: selectedTags } = useAutocompleteChipsInput({
-    options: tags,
-    value: [],
-    label: "Tags",
-    allowUserInput: false
+  const { Autocomplete, selectedTags, isLoadingTags } = useAutocompleteTags({
+    label: "Search tags",
   });
 
   const title = useMemo(() => {
@@ -32,7 +17,7 @@ const useAddTagsSteps = (props: MetadataStepProps) => {
   }, []);
 
   const content = useMemo(() => {
-    if (loadingTags) {
+    if (isLoadingTags) {
       return (
         <div className="justify-center items-center flex w-full" style={{ height: "5rem" }}>
           <CircularProgress />
@@ -45,7 +30,7 @@ const useAddTagsSteps = (props: MetadataStepProps) => {
         {Autocomplete}
       </div>
     );
-  }, [selectedTags, tags, loadingTags]);
+  }, [Autocomplete, isLoadingTags]);
 
   return {
     title,

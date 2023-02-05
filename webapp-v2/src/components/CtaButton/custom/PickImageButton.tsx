@@ -1,15 +1,14 @@
-import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from "@mui/material";
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle } from "@mui/material";
 import CircularProgress from "@mui/material/CircularProgress";
 import clsx from "clsx";
 import ImagePicker from "components/ImagePicker";
-import useAutocompleteChipsInput from "components/Inputs/useAutocompleteChipsInput";
 import { toastError } from "components/Toast";
-import { getFaceById } from "components/utils";
+import useAutocompleteTags from "hooks/useAutocompleteTags";
 import { Fragment, useEffect, useMemo, useState } from "react";
-import { useMutation, useQuery } from "react-query";
+import { useMutation } from "react-query";
 import ApiError from "services/api/Error";
-import { getAllFaces, getAllTags } from "services/api/FaceGeneratorApi";
-import { IApiFace, IApiFaceFilters } from "services/api/models";
+import { getAllFaces } from "services/api/FaceGeneratorApi";
+import { IApiFaceFilters } from "services/api/models";
 import CtaButton from "..";
 
 type PickImageButtonProps = {
@@ -25,17 +24,9 @@ const PickImageButton = (props: PickImageButtonProps) => {
 
   const [open, setOpen] = useState(false);
 
-  const { isLoading: isLoadingTags, data: tags } = useQuery('tags', getAllTags, {
-    onError: (error) => {
-      if (error instanceof ApiError) {
-        toastError(error.toString());
-      }
-    }
-  });
-  const { content: Autocomplete, value: selectedTags } = useAutocompleteChipsInput({
-    options: tags,
-    value: [],
-    label: "Filter tags"
+  const { Autocomplete, selectedTags, isLoadingTags } = useAutocompleteTags({
+    label: "Search tags",
+    allowUserInput: false,
   });
 
   const handleClickOpen = () => {
