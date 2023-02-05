@@ -6,7 +6,7 @@ export const FACES_API_PREFIX = `${API_PREFIX}/faces`;
 type ApiMethodParams = {
   query?: {[key: string]: any};
   body?: any;
-  headers?: any;
+  headers?: {[key: string]: any};
 };
 
 const api = {
