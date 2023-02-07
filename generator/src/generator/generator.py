@@ -4,23 +4,27 @@ from pathlib import Path
 import io
 from src.face_frame import face_frame_correction
 
-API_PATH = getenv("API_PATH")
-sys.path.insert(0, API_PATH + "/src/stylegan2")
+PROJECT_PATH = getenv("PROJECT_PATH")
+sys.path.insert(0, PROJECT_PATH + "/generator/src/stylegan2")
 
 import dnnlib
 from src.stylegan2 import pretrained_networks
 from dnnlib import tflib
 from src.stylegan2 import dataset_tool
 from src.stylegan2 import epoching_custom_run_projector
-
+import os
+os.environ["PYRO_LOGFILE"] = "pyro.log"
+os.environ["PYRO_LOGLEVEL"] = "DEBUG"
+import Pyro4
 import numpy as np
 from PIL import Image
 import base64
 from tqdm import tqdm
 import pickle
-from src.generator.align_face import align_face
+from src.generator.align_face import align_face    
+from src.face_image import FaceImage
 
-
+@Pyro4.expose
 class Generator:
 
     def __init__(self, network_pkl='gdrive:networks/stylegan2-ffhq-config-f.pkl'):
@@ -30,6 +34,12 @@ class Generator:
         self.latent_vectors = self.get_control_latent_vectors('src/generator/stylegan2directions')
 
         self.Gs, self.noise_vars, self.Gs_kwargs = self.load_model()
+
+    def flatten(self, z):
+        return np.ravel(z).tolist()
+
+    def unravel(self, z):
+        return np.reshape(z, (1, *self.Gs.input_shape[1:]))
 
     def load_model(self):
         _G, _D, Gs = pretrained_networks.load_networks(self.network_pkl)
@@ -46,22 +56,32 @@ class Generator:
 
     def generate_random_image(self, rand_seed):
         '''returns the image and its latent code'''
-        src_latents = np.stack(np.random.RandomState(seed).randn(self.Gs.input_shape[1]) for seed in [rand_seed])
-        z = self.Gs.components.mapping.run(src_latents, None)
+        z = np.random.RandomState(rand_seed).randn(1, *self.Gs.input_shape[1:]) # [minibatch, component]
         random_image = self.generate_image_from_z(z)
         image = Image.fromarray(random_image)
-        return image, z
+        return FaceImage.from_image(image), self.flatten(z)
+
+    def generate_image_from_latent_vector(self, latent_vector):
+        image = self.generate_image_from_z(latent_vector)
+        image = Image.fromarray(image)
+        return FaceImage.from_image(image)
 
     def generate_image_from_z(self, z):
-        images = self.Gs.components.synthesis.run(z, **self.Gs_kwargs)
+        z = self.unravel(z)
+        images = self.Gs.run(z, None, **self.Gs_kwargs)
+        return images[0]
+
+    def generate_image_from_w(self, w):
+        images = self.Gs.components.synthesis.run(w, **self.Gs_kwargs)
         return images[0]
 
     def linear_interpolate(self, code1, code2, alpha):
         return code1 * alpha + code2 * (1 - alpha)
 
-    def img_to_latent(self, img: Image):
+    def img_to_latent(self, img: FaceImage):
+        img = img.to_image()
+        img = img.convert('RGB')
         aligned_imgs_path = Path('aligned_imgs')
-
         if not aligned_imgs_path.exists():
             aligned_imgs_path.mkdir()
         img_name = 'image0000'
@@ -84,7 +104,9 @@ class Generator:
 
         zs, images = face_frame_correction(target_image, latent_code, self.Gs, self.Gs_kwargs)
         
-        return images, zs
+        _zs = [self.flatten(z) for z in zs]
+
+        return images, _zs
 
     def get_final_latents(self):
         all_results = list(Path('results/').iterdir())
@@ -104,6 +126,9 @@ class Generator:
         return all_final_latents[0]
 
     def generate_transition(self, z1, z2, num_interps=50):
+        z1 = self.unravel(z1)
+        z2 = self.unravel(z2)
+
         step_size = 1.0/num_interps
     
         all_imgs = []
@@ -115,31 +140,30 @@ class Generator:
             interpolated_latent_code = self.linear_interpolate(z2, z1, alpha)
             image = self.generate_image_from_z(interpolated_latent_code)
             interp_latent_image = Image.fromarray(image).resize((self.result_size, self.result_size))
+            interp_latent_image = FaceImage.from_image(interp_latent_image)
             all_imgs.append(interp_latent_image)
-            all_zs.append(interpolated_latent_code)
+            all_zs.append(self.flatten(interpolated_latent_code))
         return all_imgs, all_zs
         
     def change_features(self, z, features_amounts_dict: dict):
-        modified_latent_code = np.array(z)
+        z = self.unravel(z)
+        modified_latent_code = self.Gs.components.mapping.run(z, None)
         for feature_name, amount in features_amounts_dict.items():
             modified_latent_code += self.latent_vectors[feature_name] * amount
-        image = self.generate_image_from_z(modified_latent_code)
+        image = self.generate_image_from_w(modified_latent_code)
         latent_img = Image.fromarray(image).resize((self.result_size, self.result_size))
-        return latent_img, modified_latent_code
+        latent_img = FaceImage.from_image(latent_img)
+        return latent_img, self.flatten(modified_latent_code)
 
     def mix_styles(self, z1, z2):
+        z1 = self.unravel(z1)
+        z2 = self.unravel(z2)
         z1_copy = z1.copy()
         z2_copy = z2.copy()
         z1[0][6:] = z2_copy[0][6:]
         z2[0][6:] = z1_copy[0][6:]
         image1 = Image.fromarray(self.generate_image_from_z(z1)).resize((self.result_size, self.result_size))
         image2 = Image.fromarray(self.generate_image_from_z(z2)).resize((self.result_size, self.result_size))
-        return [image1, image2], [z1, z2]
-
-
-
-    def Image_to_bytes(self, img):
-        byte_arr = io.BytesIO()
-        img.save(byte_arr, format='PNG') # convert the PIL image to byte array
-        encoded_img = base64.encodebytes(byte_arr.getvalue()).decode('ascii') # encode as base64
-        return encoded_img
+        image1 = FaceImage.from_image(image1)
+        image2 = FaceImage.from_image(image2)
+        return [image1, image2], [self.flatten(z1), self.flatten(z2)]
