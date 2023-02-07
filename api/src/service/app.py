@@ -1,4 +1,4 @@
-from fastapi import FastAPI, Response, File, UploadFile, Request, status
+from fastapi import FastAPI, Response, File, UploadFile, Request, status, Query
 from fastapi.exceptions import RequestValidationError
 from fastapi.encoders import jsonable_encoder
 from fastapi.responses import JSONResponse
@@ -67,9 +67,9 @@ def generateFaces(amount: int = 1):
 
 
 @app.get('/faces', response_model=ApiResponse[List[Face]])
-def getFaces(from_id : Union[int, None] = None, to_id: Union[int,None] = None) :
+def getFaces(tags: List[str] = Query(None)) :
 
-    return {'result':service.get_images_from_database(from_id, to_id)}
+    return {'result':service.get_images_from_database(tags)}
 
 @app.get('/faces/transition', response_model=ApiResponse[List[Face]])
 def generateTransition(from_id: int, to_id: int, amount: int) :
@@ -84,16 +84,19 @@ def interchangeFaces(id1: int, id2: int) :
 def generateFaceFromImage(image: UploadFile = File()) :
     return {'result':service.img_to_latent(image.file.read())}
 
+
 @app.get('/faces/{id}', response_class=ImageResponse)
 def getFace(id: int, response: Response):
     #response.headers['Cache-Control'] = 
     image = service.get_image_by_id(id)
     return ImageResponse(content=image, headers={'Cache-Control': 'max-age=86400'})
 
-
+class SaveRequest(BaseModel):
+    tags: Union[List[str], None]
 @app.post('/faces/{face_id}', response_model=ApiResponse[int])
-def saveFaces(face_id: str, tags: Union[List[str], None]):
-    id = service.save_image(face_id, tags)
+def saveFaces(face_id: str, body:SaveRequest):
+    print("saving face")
+    id = service.save_image(face_id, body.tags)
     return {'result':id}
 
 
@@ -101,3 +104,6 @@ def saveFaces(face_id: str, tags: Union[List[str], None]):
 def updateFace(id:int,modifiers: Modifiers):
     return {'result':service.change_features(id, vars(modifiers))}
 
+@app.get('/tags', response_model=ApiResponse[List[str]])
+def getTags():
+    return {'result': service.get_tags()}

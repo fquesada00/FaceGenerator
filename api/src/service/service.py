@@ -69,8 +69,8 @@ class GeneratorService:
 
  
 
-    def get_images_from_database(self, from_id=None, to_id=None):
-        values = database.fetch(from_id = from_id, to_id = to_id, with_tags=False)
+    def get_images_from_database(self, tags=None):
+        values = database.fetch(tags)
         faces = []
         for value in values:
             #image = self.generator.generate_image_from_latent_vector(value['z'])
@@ -90,6 +90,8 @@ class GeneratorService:
         z = self.cache[int(id)]
         return database.insert_z(z, tags)
 
+    def get_tags(self):
+        return database.get_tags()
 
     #generator methods   
    

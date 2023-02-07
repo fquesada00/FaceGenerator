@@ -16,13 +16,18 @@ create or replace function insert_image(_z float[], _tags text[])
     end;
 $$ LANGUAGE plpgsql;
 
+-- create view tags
+create or replace view tags as select distinct unnest(tags) as tags from images;  
 
 
 -- search function, tags converted to lower case
 create or replace function search_image(_tags text[])
-    returns integer array
+    returns table ( 
+    	id int,
+    	z float[],
+    	tags text[])
     as $$
     begin
-        return array(select id from images where lower(_tags::text)::text[]  && images.tags );
+        return query (select * from images where lower(_tags::text)::text[]  <@ images.tags );
     end;
 $$ LANGUAGE plpgsql;

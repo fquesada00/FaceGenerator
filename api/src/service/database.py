@@ -23,27 +23,11 @@ class GeneratorDB:
     def insert_z(self, z:np.ndarray, tags: list):
         return self.db.query_formatted('select insert_image(%s,%s)', (z, tags)).getresult()[0][0]
 
-    def fetch(self, from_id: int = None, to_id: int = None, with_tags: bool = False):
-        
-        filters = []
-        args = []
-        if from_id is not None:
-            filters.append('id >= %s')
-            args.append(from_id)
-        if to_id is not None:
-            filters.append('id <= %s')
-            args.append(to_id)
+    def fetch(self, tags: list = None):
+        if tags == None:
+            return self.db.query('select * from search_image(array[]::text[])').dictresult()
 
-        if len(filters) > 0:
-            filters = 'WHERE ' + ' AND '.join(filters)
-        else:
-            filters = ''
-
-        if with_tags:
-            query = 'SELECT id, z, tags FROM images ' + filters
-        else:
-            query = 'SELECT id, z FROM images ' + filters
-        return self.db.query_formatted(query, args).dictresult()
+        return self.db.query_formatted('select * from search_image(%s)', (tags,)).dictresult()
   
     def fetch_z_by_id(self, id: int):
         return self.db.query_formatted('SELECT z FROM images WHERE id = %s', (id,)).getresult()[0][0]
@@ -54,3 +38,7 @@ class GeneratorDB:
         self.db.query('SELECT * FROM images')
 
         return self.db.getresult()
+
+    def get_tags(self):
+        res = self.db.query('select * from tags').getresult()
+        return [r[0] for r in res]
