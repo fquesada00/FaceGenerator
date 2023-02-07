@@ -1,4 +1,4 @@
-import api, { FACES_API_PREFIX } from '.';
+import api, { FACES_API_PREFIX, API_PREFIX } from '.';
 import ApiError, { getErrorMessage } from './Error';
 import { ApiResponse, IApiFace, IApiFaceFeatures, IApiFaceFilters } from './models';
 import datasource from './datasource';
@@ -29,7 +29,7 @@ export const searchFaces = async (filters: IApiFaceFilters): Promise<IApiFace[]>
   try {
     //filters to query param
     const query = new URLSearchParams();
-    query.append('tags', JSON.stringify(filters['tags']));
+    filters.tags?.forEach((tag) => query.append('tags', tag));
      const response = await api.get<ApiResponse>(`${FACES_API_PREFIX}`, { query });
      return response.result;
   } catch (error) {
@@ -107,10 +107,8 @@ export const modifyFaceFeatures = async ({ id, faceFeatures }: { id: number, fac
 
 export const getAllTags = async (): Promise<string[]> => {
   try {
-    await sleep(2000);
-    // const response = await api.get<ApiResponse>(`${FACES_API_PREFIX}/tags`);
-    // return response.result;
-    return datasource.tags;
+    const response = await api.get<ApiResponse>(`${API_PREFIX}/tags`);
+    return response.result;
   } catch (error) {
     throw new ApiError('Get all tags', getErrorMessage(error));
   }
