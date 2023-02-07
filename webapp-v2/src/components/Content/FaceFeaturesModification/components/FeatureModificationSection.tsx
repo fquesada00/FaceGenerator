@@ -1,17 +1,19 @@
 import { Card, Grid, Typography } from "@mui/material";
+import clsx from "clsx";
 import { Children } from "react";
 
 type FeatureModificationSectionProps = {
   title: string;
   subtitle?: string;
   children: React.ReactNode;
+  first?: boolean;
 };
 
 const FeatureModificationSection = (props: FeatureModificationSectionProps) => {
-  const { title, subtitle, children } = props;
+  const { title, subtitle, children, first = false } = props;
 
   return (
-    <Card className="mt-8 w-full p-2">
+    <Card className={clsx("w-full p-2", !first ? "mt-8" : "")}>
       <Typography variant="h5" component="h2">
         {title}
       </Typography>
