@@ -133,20 +133,16 @@ const FaceFeaturesModification: React.FC = () => {
         <div className={clsx(inputsClasses.container)}>
           <CustomIdInput setId={setId} setErrorMessage={setIdErrorMessage} errorMessage={idErrorMessage} required id={id} />
           <PickImageButton onDone={(faceId) => setId(faceId ?? 0)} pickedFaceId={id} />
-          <Grid container spacing={2}>
-            <Grid item xs={12} sm={6} md={6} lg={6} xl={6}>
-              <FeatureModificationSection title="General">
+          <Grid container spacing={2} sx={{ marginTop: "1rem" }}>
+            <Grid item xs={12} sm={6} md={6} lg={6} xl={6} className="h-96 overflow-y-auto pr-1 pb-1">
+              <FeatureModificationSection title="General" first>
                 {AgeInput}
                 {GenderSlider}
               </FeatureModificationSection>
-            </Grid>
-            <Grid item xs={12} sm={6} md={6} lg={6} xl={6}>
               <FeatureModificationSection title="Face orientation">
                 {FaceVerticalOrientationSlider}
                 {FaceHorizontalOrientationSlider}
               </FeatureModificationSection>
-            </Grid>
-            <Grid item xs={12} sm={6} md={6} lg={6} xl={6}>
               <FeatureModificationSection title="Eyes">
                 {EyesDistanceSlider}
                 {EyesToEyeBrowsDistanceSlider}
@@ -154,53 +150,51 @@ const FaceFeaturesModification: React.FC = () => {
                 {EyesOpenSlider}
                 {EyesRollSlider}
               </FeatureModificationSection>
-            </Grid>
-            <Grid item xs={12} sm={6} md={6} lg={6} xl={6}>
               <FeatureModificationSection title="Mouth">
                 {MouthLipRatioSlider}
                 {MouthOpenSlider}
                 {MouthRatioSlider}
                 {MouthSmileSlider}
               </FeatureModificationSection>
-            </Grid>
-            <Grid item xs={12} sm={6} md={6} lg={6} xl={6}>
               <FeatureModificationSection title="Nose">
                 {NoseToMouthDistanceSlider}
                 {NoseRatioSlider}
                 {NoseTipHeightSlider}
               </FeatureModificationSection>
             </Grid>
+            <Grid item xs={12} sm={6} md={6} lg={6} xl={6}>
+              <div className="mt-8 justify-center flex items-center w-full">
+                <Box
+                  sx={{
+                    width: {
+                      xs: "14rem",
+                      sm: "18rem",
+                      md: "22rem",
+                      lg: "24rem",
+                      xl: "28rem",
+                    },
+                    height: {
+                      xs: "14rem",
+                      sm: "18rem",
+                      md: "22rem",
+                      lg: "24rem",
+                      xl: "28rem",
+                    }
+                  }}
+                >
+                  <ImageTemplate
+                    src={modifiedFace?.image}
+                    alt="Modified face"
+                    placeholderText="Your modified face will be displayed here"
+                    cardHeightClassName="h-full"
+                    cardWidthClassName="w-full"
+                    imgHeightClassName="h-5/6"
+                  />
+                </Box>
+              </div>
+            </Grid>
           </Grid>
           <CtaButton onClick={onSubmit} label="Generate" className="mt-8" loading={isLoadingModifyFace} />
-          <div className="mt-8 justify-center flex items-center w-full">
-            <Box
-              sx={{
-                width: {
-                  xs: "14rem",
-                  sm: "18rem",
-                  md: "22rem",
-                  lg: "24rem",
-                  xl: "28rem",
-                },
-                height: {
-                  xs: "14rem",
-                  sm: "18rem",
-                  md: "22rem",
-                  lg: "24rem",
-                  xl: "28rem",
-                }
-              }}
-            >
-              <ImageTemplate
-                src={modifiedFace?.image}
-                alt="Modified face"
-                placeholderText="Your modified face will be displayed here"
-                cardHeightClassName="h-full"
-                cardWidthClassName="w-full"
-                imgHeightClassName="h-5/6"
-              />
-            </Box>
-          </div>
         </div>
       </form>
     </div>
