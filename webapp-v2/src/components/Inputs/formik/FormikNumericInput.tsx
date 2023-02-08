@@ -4,8 +4,8 @@ import { useField, FieldProps, FieldHookConfig } from "formik"
 type FormikNumericInputProps = {
   label: string
   required: boolean
-  min: number
-  max: number
+  min?: number
+  max?: number
 } & FieldHookConfig<any>
 
 const FormikNumericInput = (props: FormikNumericInputProps) => {
@@ -26,8 +26,8 @@ const FormikNumericInput = (props: FormikNumericInputProps) => {
       }}
       onBlur={field.onBlur}
       required={required}
-      error={meta.touched && meta.error !== undefined}
-      helperText={meta.error}
+      error={meta.touched && !!meta.error}
+      helperText={meta.touched && meta.error}
       inputProps={{
         min: min,
         max: max,

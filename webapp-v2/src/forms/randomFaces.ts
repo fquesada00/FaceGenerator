@@ -1,9 +1,15 @@
 import * as Yup from "yup"
 import { minMaxField } from "./commons"
+import { MAX_FACES, MIN_FACES } from "constants"
 
-const RandomFacesFormSchema = ({ min, max }: { min: number; max: number }) =>
-  Yup.object().shape({
-    "random-faces": minMaxField(min, max),
-  })
+export interface RandomFacesFormValues {
+  randomFaces: number
+}
 
-export default RandomFacesFormSchema
+export const initialValues: RandomFacesFormValues = {
+  randomFaces: 0,
+}
+
+export const randomFacesFormSchema = Yup.object().shape({
+  randomFaces: minMaxField(MIN_FACES, MAX_FACES),
+})

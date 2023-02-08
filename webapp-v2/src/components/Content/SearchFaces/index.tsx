@@ -10,12 +10,12 @@ import { toastError } from "components/Toast"
 import ApiError from "services/api/Error"
 import { getAllFaces, searchFaces } from "services/api/FaceGeneratorApi"
 import useRenderImages from "hooks/useRenderImages"
-import SearchFacesFormSchema from "forms/searchFaces"
+import {
+  searchFacesFormSchema,
+  SearchFacesValues,
+  initialValues,
+} from "forms/searchFaces"
 import FormikAutoCompleteTags from "components/Inputs/formik/FormikAutoCompleteTags"
-
-interface SearchFacesValues {
-  tags: string[]
-}
 
 const SearchFaces: React.FC = () => {
   const [hideAll, setHideAll] = useState<boolean>(true)
@@ -81,8 +81,6 @@ const SearchFaces: React.FC = () => {
     mutateSearchFaces({ tags })
   }
 
-  const initialValues: SearchFacesValues = useMemo(() => ({ tags: [] }), [])
-
   return (
     <div>
       <ContentHeader
@@ -92,7 +90,7 @@ const SearchFaces: React.FC = () => {
       <Formik
         initialValues={initialValues}
         onSubmit={onSubmit}
-        validationSchema={SearchFacesFormSchema}
+        validationSchema={searchFacesFormSchema}
       >
         <Form>
           <div className={clsx(inputsClasses.container)}>

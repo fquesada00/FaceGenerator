@@ -14,11 +14,11 @@ import ApiError from "services/api/Error"
 import { toastError } from "components/Toast"
 import useRenderImages from "hooks/useRenderImages"
 import FormikCustomAmountInput from "components/Inputs/formik/custom/FormikCustomAmountInput"
-import RandomFacesFormSchema from "forms/randomFaces"
-
-interface RandomFacesFormValues {
-  "random-faces": number
-}
+import {
+  randomFacesFormSchema,
+  RandomFacesFormValues,
+  initialValues,
+} from "forms/randomFaces"
 
 const RandomFaces: React.FC = () => {
   const {
@@ -49,14 +49,7 @@ const RandomFaces: React.FC = () => {
 
   const { images: FacesImages } = useRenderImages({ faces })
 
-  const initialValues: RandomFacesFormValues = useMemo(
-    () => ({
-      "random-faces": 0,
-    }),
-    []
-  )
-
-  const onSubmit = ({ "random-faces": amount }: RandomFacesFormValues) => {
+  const onSubmit = ({ randomFaces: amount }: RandomFacesFormValues) => {
     mutate(amount)
   }
 
@@ -69,14 +62,11 @@ const RandomFaces: React.FC = () => {
       <Formik
         initialValues={initialValues}
         onSubmit={onSubmit}
-        validationSchema={RandomFacesFormSchema({
-          min: MIN_FACES,
-          max: MAX_FACES,
-        })}
+        validationSchema={randomFacesFormSchema}
       >
         <Form>
           <div className={clsx(inputsClasses.container)}>
-            <FormikCustomAmountInput name="random-faces" />
+            <FormikCustomAmountInput name="randomFaces" />
             <CtaButton
               type="submit"
               label="Generate"
