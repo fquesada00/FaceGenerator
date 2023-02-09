@@ -1,49 +1,64 @@
-import clsx from "clsx";
-import { useMemo, useState } from "react";
-import inputsClasses from "components/Inputs/styles/Inputs.module.scss";
-import CtaButton from "components/CtaButton";
-import ContentHeader from "components/ContentHeader";
-import paths from "routes/paths";
-import { useMutation } from "react-query";
-import { toastError } from "components/Toast";
-import ApiError from "services/api/Error";
-import { getAllFaces, searchFaces } from "services/api/FaceGeneratorApi";
-import useRenderImages from "hooks/useRenderImages";
-import useAutocompleteTags from "hooks/useAutocompleteTags";
-
+import clsx from "clsx"
+import { useMemo, useState } from "react"
+import { Formik, Form } from "formik"
+import inputsClasses from "components/Inputs/styles/Inputs.module.scss"
+import CtaButton from "components/CtaButton"
+import ContentHeader from "components/ContentHeader"
+import paths from "routes/paths"
+import { useMutation } from "react-query"
+import { toastError } from "components/Toast"
+import ApiError from "services/api/Error"
+import { getAllFaces, searchFaces } from "services/api/FaceGeneratorApi"
+import useRenderImages from "hooks/useRenderImages"
+import {
+  searchFacesFormSchema,
+  SearchFacesValues,
+  initialValues,
+} from "forms/searchFaces"
+import FormikAutoCompleteTags from "components/Inputs/formik/FormikAutoCompleteTags"
 
 const SearchFaces: React.FC = () => {
-  const [hideAll, setHideAll] = useState<boolean>(true);
+  const [hideAll, setHideAll] = useState<boolean>(true)
 
   const {
-    mutate: mutateSearchFaces, isLoading: isLoadingSearch, data: filteredFaces
+    mutate: mutateSearchFaces,
+    isLoading: isLoadingSearch,
+    data: filteredFaces,
   } = useMutation(searchFaces, {
     onSuccess: (data) => {
-      console.log(data);
+      console.log(data)
     },
     onError: (error) => {
       if (error instanceof ApiError) {
-        toastError(error.toString());
+        toastError(error.toString())
       }
-    }
-  });
+    },
+  })
 
-  const { images: SearchFacesImages } = useRenderImages({ faces: filteredFaces, disableSave: true })
+  const { images: SearchFacesImages } = useRenderImages({
+    faces: filteredFaces,
+    disableSave: true,
+  })
 
   const {
-    mutate: mutateGetAllFaces, isLoading: isLoadingShowAll, data: allFaces
+    mutate: mutateGetAllFaces,
+    isLoading: isLoadingShowAll,
+    data: allFaces,
   } = useMutation(getAllFaces, {
     onSuccess: (data) => {
-      console.log(data);
+      console.log(data)
     },
     onError: (error) => {
       if (error instanceof ApiError) {
-        toastError(error.toString());
+        toastError(error.toString())
       }
-    }
-  });
+    },
+  })
 
-  const { images: AllFacesImages } = useRenderImages({ faces: allFaces, disableSave: true })
+  const { images: AllFacesImages } = useRenderImages({
+    faces: allFaces,
+    disableSave: true,
+  })
 
   const renderSubtitle = useMemo(() => {
     return (
@@ -56,20 +71,15 @@ const SearchFaces: React.FC = () => {
   }, [])
 
   const onShowAll = () => {
-    if (hideAll) {
-      mutateGetAllFaces({});
+    if (!allFaces && hideAll) {
+      mutateGetAllFaces({})
     }
-    setHideAll(!hideAll);
+    setHideAll(!hideAll)
   }
 
-  const { Autocomplete, selectedTags } = useAutocompleteTags({
-    label: "Search tags",
-    allowUserInput: false,
-  });
-
-  const onSubmit = () => {
-    mutateSearchFaces({ tags: selectedTags });
-  };
+  const onSubmit = ({ tags }: SearchFacesValues) => {
+    mutateSearchFaces({ tags })
+  }
 
   return (
     <div>
@@ -77,25 +87,37 @@ const SearchFaces: React.FC = () => {
         title={paths.searchFaces.title}
         subtitle={renderSubtitle}
       />
-      <form>
-        <div className={clsx(inputsClasses.container)}>
-          <div className="flex justify-center">
-            <div className="w-11/12">
-              {Autocomplete}
+      <Formik
+        initialValues={initialValues}
+        onSubmit={onSubmit}
+        validationSchema={searchFacesFormSchema}
+      >
+        <Form>
+          <div className={clsx(inputsClasses.container)}>
+            <div className="flex justify-center">
+              <div className="w-11/12">
+                <FormikAutoCompleteTags name="tags" label="Search tags" />
+              </div>
             </div>
+            <CtaButton
+              type="submit"
+              label="Search"
+              className="mt-8"
+              loading={isLoadingSearch}
+            />
+            {!isLoadingSearch && filteredFaces && SearchFacesImages}
+            <CtaButton
+              onClick={onShowAll}
+              label={`${!hideAll ? "Hide" : "Show"} all`}
+              className="mt-4"
+              loading={isLoadingShowAll}
+            />
+            {!hideAll && !isLoadingShowAll && AllFacesImages}
           </div>
-          <CtaButton onClick={onSubmit} label="Search" className="mt-8" loading={isLoadingSearch} />
-          {
-            !isLoadingSearch && filteredFaces && SearchFacesImages
-          }
-          <CtaButton onClick={onShowAll} label={`${!hideAll ? "Hide" : "Show"} all`} className="mt-4" loading={isLoadingShowAll} />
-          {
-            !hideAll && !isLoadingShowAll && AllFacesImages
-          }
-        </div>
-      </form>
+        </Form>
+      </Formik>
     </div>
-  );
+  )
 }
 
-export default SearchFaces;
+export default SearchFaces
