@@ -133,60 +133,79 @@ const FaceFeaturesModification: React.FC = () => {
                   md={6}
                   lg={6}
                   xl={6}
-                  className="h-96 overflow-y-auto pr-1 pb-1"
+                  className="overflow-y-auto pr-1 pb-1"
                 >
-                  <FeatureModificationSection title="General" first>
-                    <FormikNumericInput
-                      name="age"
-                      label="Age"
-                      required={false}
-                      min={-MAX_AGE}
-                      max={MAX_AGE}
-                    />
-                    <FormikCustomSlider
-                      title="Gender"
-                      name="gender"
-                      LeftIcon={<FemaleIcon />}
-                      RightIcon={<MaleIcon />}
-                    />
-                  </FeatureModificationSection>
-                  <FeatureModificationSection title="Face orientation">
-                    <FormikCustomSlider
-                      title="Vertical"
-                      name="faceOrientationVertical"
-                    />
-                    <FormikCustomSlider
-                      title="Horizontal"
-                      name="faceOrientationHorizontal"
-                    />
-                  </FeatureModificationSection>
-                  <FeatureModificationSection title="Eyes">
-                    <FormikCustomSlider title="Distance" name="eyeDistance" />
-                    <FormikCustomSlider
-                      title="Distance to Eye Brows"
-                      name="eyebrowsDistance"
-                    />
-                    <FormikCustomSlider title="Ratio" name="eyesRatio" />
-                    <FormikCustomSlider title="Open" name="eyesOpen" />
-                    <FormikCustomSlider title="Roll" name="eyesRoll" />
-                  </FeatureModificationSection>
-                  <FeatureModificationSection title="Mouth">
-                    <FormikCustomSlider
-                      title="Lip Ratio"
-                      name="mouthLipRatio"
-                    />
-                    <FormikCustomSlider title="Open" name="mouthOpen" />
-                    <FormikCustomSlider title="Ratio" name="mouthRatio" />
-                    <FormikCustomSlider title="Smile" name="mouthSmile" />
-                  </FeatureModificationSection>
-                  <FeatureModificationSection title="Nose">
-                    <FormikCustomSlider
-                      title="Distance to Mouth"
-                      name="noseDistance"
-                    />
-                    <FormikCustomSlider title="Ratio" name="noseRatio" />
-                    <FormikCustomSlider title="Tip" name="noseTip" />
-                  </FeatureModificationSection>
+                  <Box
+                    sx={{
+                      width: {
+                        xs: "13rem",
+                        sm: "18rem",
+                        md: "22rem",
+                        lg: "24rem",
+                        xl: "28rem",
+                      },
+                      height: {
+                        xs: "18rem",
+                        sm: "22rem",
+                        md: "26rem",
+                        lg: "30rem",
+                        xl: "34rem",
+                      },
+                    }}
+                  >
+                    <FeatureModificationSection title="General" first>
+                      <FormikNumericInput
+                        name="age"
+                        label="Age"
+                        required={false}
+                        min={-MAX_AGE}
+                        max={MAX_AGE}
+                      />
+                      <FormikCustomSlider
+                        title="Gender"
+                        name="gender"
+                        LeftIcon={<FemaleIcon />}
+                        RightIcon={<MaleIcon />}
+                      />
+                    </FeatureModificationSection>
+                    <FeatureModificationSection title="Face orientation">
+                      <FormikCustomSlider
+                        title="Vertical"
+                        name="faceOrientationVertical"
+                      />
+                      <FormikCustomSlider
+                        title="Horizontal"
+                        name="faceOrientationHorizontal"
+                      />
+                    </FeatureModificationSection>
+                    <FeatureModificationSection title="Eyes">
+                      <FormikCustomSlider title="Distance" name="eyeDistance" />
+                      <FormikCustomSlider
+                        title="Distance to Eye Brows"
+                        name="eyebrowsDistance"
+                      />
+                      <FormikCustomSlider title="Ratio" name="eyesRatio" />
+                      <FormikCustomSlider title="Open" name="eyesOpen" />
+                      <FormikCustomSlider title="Roll" name="eyesRoll" />
+                    </FeatureModificationSection>
+                    <FeatureModificationSection title="Mouth">
+                      <FormikCustomSlider
+                        title="Lip Ratio"
+                        name="mouthLipRatio"
+                      />
+                      <FormikCustomSlider title="Open" name="mouthOpen" />
+                      <FormikCustomSlider title="Ratio" name="mouthRatio" />
+                      <FormikCustomSlider title="Smile" name="mouthSmile" />
+                    </FeatureModificationSection>
+                    <FeatureModificationSection title="Nose">
+                      <FormikCustomSlider
+                        title="Distance to Mouth"
+                        name="noseDistance"
+                      />
+                      <FormikCustomSlider title="Ratio" name="noseRatio" />
+                      <FormikCustomSlider title="Tip" name="noseTip" />
+                    </FeatureModificationSection>
+                  </Box>
                 </Grid>
                 <Grid item xs={12} sm={6} md={6} lg={6} xl={6}>
                   <div className="mt-8 justify-center flex items-center w-full">
