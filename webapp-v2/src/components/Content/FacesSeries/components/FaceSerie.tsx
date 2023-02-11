@@ -1,10 +1,11 @@
-import { Card, CardContent, Grid, IconButton, Typography } from "@mui/material";
+import { Card, CardActions, CardContent, Grid, IconButton, Typography } from "@mui/material";
 import clsx from "clsx";
 import ImageTemplate from "components/Images/ImageTemplate";
 import { useMemo, useState } from "react";
 import { IApiFaceSerie } from "services/api/models";
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import CtaButton from "components/CtaButton";
 
 type FaceSerieProps = {
   serie: IApiFaceSerie;
@@ -44,12 +45,20 @@ const FaceSerie = (props: FaceSerieProps) => {
         </div>
         {
           open && (
-            <Grid container spacing={2} className="justify-center flex items-center pb-4" style={{ marginTop: 0 }}>
+            <Grid container spacing={2} className="justify-center flex items-center pb-2" style={{ marginTop: 0 }}>
               {Faces}
             </Grid>
           )
         }
       </CardContent>
+      <CardActions className="flex content-center justify-center space-x-6 mb-2">
+        <CtaButton
+          type="button"
+          label="Download Serie"
+          onClick={() => { console.log("Download Serie" + serie.id) }}
+          className="w-48"
+        />
+      </CardActions>
     </Card>
   )
 };
