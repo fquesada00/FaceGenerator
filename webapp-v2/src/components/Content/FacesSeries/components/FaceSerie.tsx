@@ -32,7 +32,7 @@ const FaceSerie = (props: FaceSerieProps) => {
   }, [serie]);
 
   return (
-    <Card className={clsx(className, !open ? "cursor-pointer" : "")} onClick={() => !open && setOpen(true)}>
+    <Card className={clsx(className, !open ? "cursor-pointer" : "")} onClick={() => !open && setOpen(true)} sx={{ backgroundColor: "rgba(0, 0, 0, 0.075)" }}>
       <CardContent style={{ paddingBottom: "0.5rem", paddingTop: "0.5rem" }}>
         <div className="flex justify-between px-8" >
           <Typography variant="h5" component="h2" className="flex">

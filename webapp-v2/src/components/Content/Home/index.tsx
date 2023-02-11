@@ -27,12 +27,13 @@ const Home: React.FC = () => {
           subtitle={renderSubtitle}
         />
         <ul className="pl-4">
-          <FeatureListItem title="Random faces" description="Generate an amount of random faces." path={paths.randomFaces.path} />
-          <FeatureListItem title="Search faces" description="Search for faces using an id. Also displays all generated images." path={paths.searchFaces.path} />
-          <FeatureListItem title="Transition faces" description="Generate an amount of faces (transitions) between two faces." path={paths.transitionFaces.path} />
-          <FeatureListItem title="Face from image" description="Generate a face from an image." path={paths.faceFromImage.path} />
-          <FeatureListItem title="Modify face features" description="Modify the features of a generated face." path={paths.faceFeaturesModification.path} />
-          <FeatureListItem title="Interchange features" description="Interchange the features of two faces." path={paths.interchangeFacesFeatures.path} />
+          <FeatureListItem title={paths.randomFaces.title} description="Generate an amount of random faces." path={paths.randomFaces.path} />
+          <FeatureListItem title={paths.searchFaces.title} description="Search for faces using an id. Also displays all generated images." path={paths.searchFaces.path} />
+          <FeatureListItem title={paths.transitionFaces.title} description="Generate an amount of faces (transitions) between two faces." path={paths.transitionFaces.path} />
+          <FeatureListItem title={paths.faceFromImage.title} description="Generate a face from an image." path={paths.faceFromImage.path} />
+          <FeatureListItem title={paths.faceFeaturesModification.title} description="Modify the features of a generated face." path={paths.faceFeaturesModification.path} />
+          <FeatureListItem title={paths.interchangeFacesFeatures.title} description="Interchange the features of two faces." path={paths.interchangeFacesFeatures.path} />
+          <FeatureListItem title={paths.facesSeries.title} description="View all the saved faces series." path={paths.facesSeries.path} />
         </ul>
         <div className="mt-4">
           <Typography variant="subtitle1" sx={{ fontWeight: 'medium' }}>
