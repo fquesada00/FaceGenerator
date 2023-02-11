@@ -10,6 +10,7 @@ import FaceFeaturesModification from "components/Content/FaceFeaturesModificatio
 import FaceFromImage from "components/Content/FaceFromImage"
 import InterchangeFacesFeatures from "components/Content/InterchangeFacesFeatures"
 import TransitionFaces from "components/Content/TransitionFaces"
+import FacesSeries from "components/Content/FacesSeries"
 
 const routes: RouteObject[] = [
   {
@@ -39,6 +40,10 @@ const routes: RouteObject[] = [
       {
         path: paths.interchangeFacesFeatures.path,
         element: <InterchangeFacesFeatures />,
+      },
+      {
+        path: paths.facesSeries.path,
+        element: <FacesSeries />,
       },
       {
         element: <Home />,

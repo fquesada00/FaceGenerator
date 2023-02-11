@@ -38,3 +38,9 @@ export interface IApiFaceFeatures {
 export interface IApiFaceFilters {
   tags?: string[];
 };
+
+export interface IApiFaceSerie {
+  id: number;
+  faces: IApiFace[];
+  tags: string[];
+};

@@ -27,6 +27,10 @@ const paths = {
     path: 'interchange',
     title: 'Interchange features'
   },
+  facesSeries: {
+    path: 'series',
+    title: 'Faces series'
+  },
   about: {
     path: '/about',
     title: 'About'
