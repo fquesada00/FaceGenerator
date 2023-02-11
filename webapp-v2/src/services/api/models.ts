@@ -42,5 +42,5 @@ export interface IApiFaceFilters {
 export interface IApiFaceSerie {
   id: number;
   faces: IApiFace[];
-  tags: string[];
+  tags?: string[];
 };

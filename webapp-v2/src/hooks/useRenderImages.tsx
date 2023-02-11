@@ -25,7 +25,7 @@ const useRenderImages = (props: RenderImagesHookProps) => {
     );
   }, [faces, className])
 
-  return { images };
+  return { images, count: faces?.length || 0 };
 };
 
 export default useRenderImages;

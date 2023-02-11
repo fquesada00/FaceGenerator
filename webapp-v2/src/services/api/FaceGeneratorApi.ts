@@ -47,10 +47,11 @@ export const getFaceImage = async (id: number) => {
 };
 
 
-export const generateTransitions = async ({ fromId, toId, amount }: { fromId: number; toId: number; amount: number }) => {
+export const generateTransitions = async ({ fromId, toId, amount }: { fromId: number; toId: number; amount: number }): Promise<IApiFaceSerie>=> {
   try {
-    const response = await api.get<ApiResponse>(`${FACES_API_PREFIX}/transition`, { query: { 'from_id': fromId, 'to_id': toId, 'amount': amount } });
-    return response.result;
+    // const response = await api.get<ApiResponse>(`${FACES_API_PREFIX}/transition`, { query: { 'from_id': fromId, 'to_id': toId, 'amount': amount } });
+    // return response.result;
+    return datasource.series[0];
   } catch (error) {
     throw new ApiError('Generate transitions', getErrorMessage(error));
   }
@@ -121,5 +122,15 @@ export const getFacesSeries = async (tags: string[]): Promise<IApiFaceSerie[]> =
     return datasource.series;
   } catch (error) {
     throw new ApiError('Get faces series', getErrorMessage(error));
+  }
+};
+
+export const saveFaceSerie = async ({ id, metadata }: { id: number; metadata: Record<string, any> }) => {
+  try {
+    const response = await api.post<ApiResponse>(`${FACES_API_PREFIX}/series/${id}`, {
+      body: JSON.stringify(metadata),
+    });
+  } catch (error) {
+    throw new ApiError('Save face serie', getErrorMessage(error));
   }
 };

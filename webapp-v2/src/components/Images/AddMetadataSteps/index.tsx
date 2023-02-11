@@ -3,19 +3,21 @@ import { useMemo, useState } from "react";
 import useAddTagsStep from "./useAddTagsStep";
 
 export interface MetadataStepProps {
-  step: number;
+  stepTitle?: string;
+  stepDescription?: string;
 }
 
 export type AddMetadataStepsProps = {
   onDone: (metadata: Record<string, any>) => void;
   onCancel: () => void;
   open: boolean;
+  tagsStepProps?: MetadataStepProps;
 };
 
 const TOTAL_STEPS = 1;
 
 const AddMetadataSteps = (props: AddMetadataStepsProps) => {
-  const { onDone, onCancel, open } = props;
+  const { onDone, onCancel, open, tagsStepProps = {} } = props;
 
   const [step, setStep] = useState(0);
   const [metadata, setMetadata] = useState<Record<string, any>>({
@@ -37,7 +39,7 @@ const AddMetadataSteps = (props: AddMetadataStepsProps) => {
     setStep(newStep);
   };
 
-  const { title: addTagsTitle, content: addTagsContent, data: addTagsData } = useAddTagsStep({ step });
+  const { title: addTagsTitle, content: addTagsContent, data: addTagsData } = useAddTagsStep(tagsStepProps);
 
   const { title, content, data } = useMemo(() => {
     switch (step) {
