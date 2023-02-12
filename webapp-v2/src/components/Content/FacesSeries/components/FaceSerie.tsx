@@ -1,7 +1,7 @@
 import { Card, CardActions, CardContent, Grid, IconButton, Typography } from "@mui/material";
 import clsx from "clsx";
 import ImageTemplate from "components/Images/ImageTemplate";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { IApiFaceSerie } from "services/api/models";
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
@@ -10,12 +10,17 @@ import CtaButton from "components/CtaButton";
 type FaceSerieProps = {
   serie: IApiFaceSerie;
   className?: string;
+  collapse?: boolean;
 };
 
 const FaceSerie = (props: FaceSerieProps) => {
-  const { serie, className } = props;
+  const { serie, className, collapse = false } = props;
 
-  const [open, setOpen] = useState<boolean>(true);
+  const [open, setOpen] = useState<boolean>(!collapse);
+
+  useEffect(() => {
+    setOpen(!collapse);
+  }, [collapse]);
 
   const Faces = useMemo(() => {
     return serie.faces.map((face) => {

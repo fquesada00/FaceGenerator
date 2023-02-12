@@ -1,13 +1,28 @@
 import ContentHeader from "components/ContentHeader";
+import CtaButton from "components/CtaButton";
 import { toastError } from "components/Toast";
-import { useMemo } from "react";
-import { useQuery } from "react-query";
+import { useMemo, useState } from "react";
+import { useMutation } from "react-query";
 import paths from "routes/paths";
 import ApiError from "services/api/Error";
 import { getFacesSeries } from "services/api/FaceGeneratorApi";
-import FaceSerie from "./components/FaceSerie";
+import inputsClasses from "components/Inputs/styles/Inputs.module.scss"
+import FormikAutoCompleteTags from "components/Inputs/formik/FormikAutoCompleteTags";
+import clsx from "clsx";
+import { Form, Formik } from "formik";
+import useRenderFacesSeries from "hooks/useRenderFacesSeries";
+import {
+  searchFacesSeriesFormSchema,
+  SearchFacesSeriesValues,
+  initialValues,
+} from "forms/searchFacesSeries"
 
 const FacesSeries = () => {
+  const [hideAll, setHideAll] = useState<boolean>(true);
+  const [collapseAll, setCollapseAll] = useState<boolean>(false);
+
+  const [collapseAllFiltered, setCollapseAllFiltered] = useState<boolean>(false);
+
   const renderSubtitle = useMemo(() => {
     return (
       <div>
@@ -17,43 +32,127 @@ const FacesSeries = () => {
         The saved series will be displayed below.
       </div>
     )
-  }, [])
+  }, []);
 
-  const tags: string[] = [];
-
-  const { isLoading: isLoadingSeries, data: series } = useQuery(['series', tags], () => getFacesSeries(tags), {
+  const {
+    mutate: mutateSearchFacesSeries,
+    isLoading: isLoadingSearch,
+    data: filteredFacesSeries,
+  } = useMutation(getFacesSeries, {
+    onSuccess: (data) => {
+      console.log(data)
+    },
     onError: (error) => {
       if (error instanceof ApiError) {
-        toastError(error.toString());
+        toastError(error.toString())
       }
-    }
+    },
   });
 
-  const FacesSeries = useMemo(() => {
-    if (isLoadingSeries || !series) {
-      return <div>Loading...</div>;
+  console.log("filteredFacesSeries", filteredFacesSeries)
+
+  const { FacesSeries: FilteredFacesSeries } = useRenderFacesSeries({
+    faces: filteredFacesSeries,
+    className: "mt-4",
+    collapseAll: collapseAllFiltered,
+  });
+
+  const onCollapseAllFiltered = () => {
+    setCollapseAllFiltered(!collapseAllFiltered)
+  }
+
+  const {
+    mutate: mutateGetAllFacesSeries,
+    isLoading: isLoadingShowAll,
+    data: allFacesSeries,
+  } = useMutation(getFacesSeries, {
+    onSuccess: (data) => {
+      console.log(data)
+    },
+    onError: (error) => {
+      if (error instanceof ApiError) {
+        toastError(error.toString())
+      }
+    },
+  })
+
+  const { FacesSeries } = useRenderFacesSeries({
+    faces: allFacesSeries,
+    className: "mt-4",
+    collapseAll,
+  });
+
+  const onShowAll = () => {
+    if (!allFacesSeries && hideAll) {
+      mutateGetAllFacesSeries([]);
     }
 
-    if (series.length === 0) {
-      return <div>No series found.</div>;
+    if (hideAll) {
+      setCollapseAll(false);
     }
 
-    return series.map((serie) => {
-      return <FaceSerie serie={serie} className="mt-4"/>;
-    });
-  }, [series, isLoadingSeries]);
-  
+    setHideAll(!hideAll)
+  }
+
+  const onCollapseAll = () => {
+    setCollapseAll(!collapseAll)
+  }
+
+  const onSubmit = ({ tags }: SearchFacesSeriesValues) => {
+    mutateSearchFacesSeries(tags);
+    setCollapseAllFiltered(false);
+  }
+
   return (
     <div>
       <ContentHeader
         title={paths.facesSeries.title}
         subtitle={renderSubtitle}
       />
-      <div>
-        {
-          FacesSeries
-        }
-      </div>
+      <Formik
+        initialValues={initialValues}
+        onSubmit={onSubmit}
+        validationSchema={searchFacesSeriesFormSchema}
+      >
+        <Form>
+          <div className={clsx(inputsClasses.container)}>
+            <div className="flex justify-center">
+              <div className="w-11/12">
+                <FormikAutoCompleteTags name="tags" label="Search tags" />
+              </div>
+            </div>
+            <div className="flex mt-8">
+              <CtaButton
+                type="submit"
+                label="Search"
+                loading={isLoadingSearch}
+              />
+              <CtaButton
+                onClick={onCollapseAllFiltered}
+                label={`${collapseAllFiltered ? "Expand" : "Collapse"} all series`}
+                className={clsx(!isLoadingSearch && !filteredFacesSeries && "hidden", "w-48", "ml-4")}
+                loading={isLoadingSearch}
+              />
+            </div>
+            {!isLoadingSearch && filteredFacesSeries && FilteredFacesSeries}
+            <div className="flex mt-4">
+              <CtaButton
+                onClick={onShowAll}
+                label={`${!hideAll ? "Hide" : "Show"} all`}
+                loading={isLoadingShowAll}
+              />
+              <CtaButton
+                onClick={onCollapseAll}
+                label={`${collapseAll ? "Expand" : "Collapse"} all series`}
+                className={clsx(hideAll && "hidden", "w-48", "ml-4")}
+                loading={isLoadingShowAll}
+              />
+            </div>
+
+            {!hideAll && !isLoadingShowAll && FacesSeries}
+          </div>
+        </Form>
+      </Formik>
     </div>
   );
 };

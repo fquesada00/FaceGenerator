@@ -29,7 +29,7 @@ const paths = {
   },
   facesSeries: {
     path: 'series',
-    title: 'Faces series'
+    title: 'Search faces series'
   },
   about: {
     path: '/about',

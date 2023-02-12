@@ -108,8 +108,9 @@ export const modifyFaceFeatures = async ({ id, faceFeatures }: { id: number, fac
 
 export const getAllTags = async (): Promise<string[]> => {
   try {
-    const response = await api.get<ApiResponse>(`${API_PREFIX}/tags`);
-    return response.result;
+    // const response = await api.get<ApiResponse>(`${API_PREFIX}/tags`);
+    // return response.result;
+    return datasource.tags;
   } catch (error) {
     throw new ApiError('Get all tags', getErrorMessage(error));
   }
