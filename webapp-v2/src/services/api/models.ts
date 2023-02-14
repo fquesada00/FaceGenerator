@@ -1,40 +1,45 @@
 export type ApiResponse = {
-  result: any;
-  error: any;
-};
+  result: any
+  error: any
+}
 
 export interface IApiFace {
-  id: number;
-  image: string;
-};
+  id: number
+  image: string
+}
 
 export interface IApiFaceFeatures {
-  age?: number;
-  gender?: number;
+  age?: number
+  gender?: number
   orientation: {
-    vertical?: number;
-    horizontal?: number;
-  };
+    vertical?: number
+    horizontal?: number
+  }
   eyes: {
-    distance?: number;
-    distanceToEyeBrows?: number;
-    ratio?: number;
-    open?: number;
-    roll?: number;
-  };
+    distance?: number
+    distanceToEyeBrows?: number
+    ratio?: number
+    open?: number
+    roll?: number
+  }
   mouth: {
-    open?: number;
-    smile?: number;
-    ratio?: number;
-    lipRatio?: number;
-  };
+    open?: number
+    smile?: number
+    ratio?: number
+    lipRatio?: number
+  }
   nose: {
-    distanceToMouth?: number;
-    ratio?: number;
-    tip?: number;
-  };
-};
+    distanceToMouth?: number
+    ratio?: number
+    tip?: number
+  }
+}
 
 export interface IApiFaceFilters {
-  tags?: string[];
-};
+  tags?: string[]
+}
+
+export interface IApiAuth {
+  accessToken: string
+  roles: number[]
+}

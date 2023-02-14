@@ -9,7 +9,6 @@ import CtaButton from "components/CtaButton"
 import ContentHeader from "components/ContentHeader"
 import paths from "routes/paths"
 import { useMutation } from "react-query"
-import { generateFaces } from "services/api/FaceGeneratorApi"
 import ApiError from "services/api/Error"
 import { toastError } from "components/Toast"
 import useRenderImages from "hooks/useRenderImages"
@@ -19,8 +18,11 @@ import {
   RandomFacesFormValues,
   initialValues,
 } from "forms/randomFaces"
+import useFacesApi from "hooks/api/useFacesApi"
 
 const RandomFaces: React.FC = () => {
+  const { generateFaces } = useFacesApi()
+
   const {
     mutate,
     isLoading,

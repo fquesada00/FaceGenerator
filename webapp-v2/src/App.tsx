@@ -1,17 +1,20 @@
-import { ThemeProvider } from '@mui/material/styles';
+import { ThemeProvider } from "@mui/material/styles"
 import { RouterProvider } from "react-router-dom"
-import { QueryClient, QueryClientProvider } from 'react-query';
+import { QueryClient, QueryClientProvider } from "react-query"
 import router from "router"
 import mdTheme from "theme"
+import AuthProvider from "context/AuthProvider"
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient()
 
 const App = () => {
   return (
     <ThemeProvider theme={mdTheme}>
-      <QueryClientProvider client={queryClient}>
+      <AuthProvider>
+        <QueryClientProvider client={queryClient}>
           <RouterProvider router={router} />
-      </QueryClientProvider>
+        </QueryClientProvider>
+      </AuthProvider>
     </ThemeProvider>
   )
 }

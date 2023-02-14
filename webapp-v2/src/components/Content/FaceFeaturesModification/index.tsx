@@ -9,7 +9,6 @@ import CustomIdInput from "components/Inputs/custom/CustomIdInput"
 import { toastError } from "components/Toast"
 import { useMutation } from "react-query"
 import ApiError from "services/api/Error"
-import { modifyFaceFeatures } from "services/api/FaceGeneratorApi"
 import FeatureModificationSection from "./components/FeatureModificationSection"
 import CtaButton from "components/CtaButton"
 import useAgeInput from "./hooks/useAgeInput"
@@ -28,8 +27,11 @@ import FormikCustomIdInput from "components/Inputs/formik/custom/FormikCustomIdI
 import FormikNumericInput from "components/Inputs/formik/FormikNumericInput"
 import { MAX_AGE, MIN_AGE } from "constants"
 import FormikCustomSlider from "components/Inputs/formik/custom/FormikCustomSlider"
+import useFacesApi from "hooks/api/useFacesApi"
 
 const FaceFeaturesModification: React.FC = () => {
+  const { modifyFaceFeatures } = useFacesApi()
+
   const renderSubtitle = useMemo(() => {
     return (
       <div>

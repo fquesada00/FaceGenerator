@@ -9,7 +9,6 @@ import CtaButton from "components/CtaButton"
 import ContentHeader from "components/ContentHeader"
 import paths from "routes/paths"
 import { useMutation } from "react-query"
-import { generateFaceFromImage } from "services/api/FaceGeneratorApi"
 import { toastError } from "components/Toast"
 import ApiError from "services/api/Error"
 import ImageTemplate from "components/Images/ImageTemplate"
@@ -19,12 +18,15 @@ import {
   initialValues,
 } from "forms/faceFromImage"
 import { useCallback, useMemo, useRef } from "react"
+import useFacesApi from "hooks/api/useFacesApi"
 
 interface ImagePickerProps {
   imageFile: File | null
 }
 
 const FaceFromImage: React.FC = () => {
+  const { generateFaceFromImage } = useFacesApi()
+
   const inputRef = useRef<HTMLInputElement | null>(null)
 
   const {

@@ -10,56 +10,78 @@ import FaceFeaturesModification from "components/Content/FaceFeaturesModificatio
 import FaceFromImage from "components/Content/FaceFromImage"
 import InterchangeFacesFeatures from "components/Content/InterchangeFacesFeatures"
 import TransitionFaces from "components/Content/TransitionFaces"
+import Login from "pages/Login"
+import RequireAuth from "components/RequireAuth"
+import PersistentLogin from "components/PersistentLogin"
+
+const ROLES = {
+  USER: 0,
+  ADMIN: 1,
+}
 
 const routes: RouteObject[] = [
   {
-    path: paths.home.path,
-    element: <Root />,
-    children: [
-      {
-        path: paths.randomFaces.path,
-        element: <RandomFaces />,
-      },
-      {
-        path: paths.searchFaces.path,
-        element: <SearchFaces />,
-      },
-      {
-        path: paths.transitionFaces.path,
-        element: <TransitionFaces />,
-      },
-      {
-        path: paths.faceFromImage.path,
-        element: <FaceFromImage />,
-      },
-      {
-        path: paths.faceFeaturesModification.path,
-        element: <FaceFeaturesModification />,
-      },
-      {
-        path: paths.interchangeFacesFeatures.path,
-        element: <InterchangeFacesFeatures />,
-      },
-      {
-        element: <Home />,
-        index: true,
-      },
-    ],
+    path: paths.login.path,
+    element: <Login />,
   },
   {
-    path: paths.about.path,
-    element: <Root />,
+    element: <PersistentLogin />,
     children: [
       {
-        element: <About />,
-        index: true,
+        element: <RequireAuth allowedRoles={[ROLES.USER]} />,
+        children: [
+          {
+            path: paths.home.path,
+            element: <Root />,
+            children: [
+              {
+                path: paths.randomFaces.path,
+                element: <RandomFaces />,
+              },
+              {
+                path: paths.searchFaces.path,
+                element: <SearchFaces />,
+              },
+              {
+                path: paths.transitionFaces.path,
+                element: <TransitionFaces />,
+              },
+              {
+                path: paths.faceFromImage.path,
+                element: <FaceFromImage />,
+              },
+              {
+                path: paths.faceFeaturesModification.path,
+                element: <FaceFeaturesModification />,
+              },
+              {
+                path: paths.interchangeFacesFeatures.path,
+                element: <InterchangeFacesFeatures />,
+              },
+              {
+                element: <Home />,
+                index: true,
+              },
+            ],
+          },
+          {
+            path: paths.about.path,
+            element: <Root />,
+            children: [
+              {
+                element: <About />,
+                index: true,
+              },
+            ],
+          },
+        ],
       },
     ],
   },
   {
     path: "*",
-    element: <Navigate to={paths.home.path} replace/>,
-  }
+    element: <Navigate to={paths.home.path} replace />,
+  },
 ]
 
 export default routes

@@ -5,9 +5,9 @@ import {
 import { Checkbox, TextField, Autocomplete, Chip } from "@mui/material"
 import { toastError } from "components/Toast"
 import { useField } from "formik"
+import useFacesApi from "hooks/api/useFacesApi"
 import { useQuery } from "react-query"
 import ApiError from "services/api/Error"
-import { getAllTags } from "services/api/FaceGeneratorApi"
 
 interface FormikAutoCompleteTagsProps {
   name: string
@@ -16,6 +16,7 @@ interface FormikAutoCompleteTagsProps {
 }
 
 const FormikAutoCompleteTags = (props: FormikAutoCompleteTagsProps) => {
+  const { getAllTags } = useFacesApi()
   const { allowUserInput = false, name, label = "" } = props
   const { isLoading: _, data: tags } = useQuery("tags", getAllTags, {
     onError: (error) => {

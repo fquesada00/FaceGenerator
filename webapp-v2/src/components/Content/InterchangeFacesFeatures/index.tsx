@@ -11,7 +11,6 @@ import { toastError } from "components/Toast"
 import useRenderImages from "hooks/useRenderImages"
 import { useMutation } from "react-query"
 import ApiError from "services/api/Error"
-import { interchangeFacesFeatures } from "services/api/FaceGeneratorApi"
 import PickImageButton from "components/CtaButton/custom/PickImageButton"
 import FormikCustomIdInput from "components/Inputs/formik/custom/FormikCustomIdInput"
 import {
@@ -19,8 +18,11 @@ import {
   interchangeFaceFeaturesSchema,
   InterchangeFaceFeaturesFormValues,
 } from "forms/interchangeFaceFeatures"
+import useFacesApi from "hooks/api/useFacesApi"
 
 const InterchangeFacesFeatures: React.FC = () => {
+  const { interchangeFacesFeatures } = useFacesApi()
+
   const {
     mutate: mutateInterchangeFacesFeatures,
     isLoading: isLoadingInterchange,

@@ -8,7 +8,6 @@ import paths from "routes/paths"
 import { useMutation } from "react-query"
 import { toastError } from "components/Toast"
 import ApiError from "services/api/Error"
-import { getAllFaces, searchFaces } from "services/api/FaceGeneratorApi"
 import useRenderImages from "hooks/useRenderImages"
 import {
   searchFacesFormSchema,
@@ -16,8 +15,11 @@ import {
   initialValues,
 } from "forms/searchFaces"
 import FormikAutoCompleteTags from "components/Inputs/formik/FormikAutoCompleteTags"
+import useFacesApi from "hooks/api/useFacesApi"
 
 const SearchFaces: React.FC = () => {
+  const { searchFaces, getAllFaces } = useFacesApi()
+
   const [hideAll, setHideAll] = useState<boolean>(true)
 
   const {

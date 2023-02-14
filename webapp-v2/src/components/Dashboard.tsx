@@ -4,21 +4,21 @@ import Toolbar from "@mui/material/Toolbar"
 import IconButton from "@mui/material/IconButton"
 import MenuIcon from "@mui/icons-material/Menu"
 import Typography from "@mui/material/Typography"
-import Badge from "@mui/material/Badge"
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft"
-import NotificationsIcon from "@mui/icons-material/Notifications"
+import LogoutIcon from "@mui/icons-material/Logout"
 import Divider from "@mui/material/Divider"
 import List from "@mui/material/List"
 import Container from "@mui/material/Container"
 
-import { useState } from "react"
-import { Outlet } from "react-router-dom"
+import { useCallback, useState } from "react"
+import { Outlet, useNavigate } from "react-router-dom"
 
 import AppBar from "components/AppBar"
 import Drawer from "components/Drawer"
 import DrawerContent from "./Drawer/DrawerContent"
 import { ToastContainer } from "react-toastify"
 import { CustomToastContainer } from "./Toast"
+import useLogout from "hooks/useLogout"
 
 const Dashboard: React.FC<React.PropsWithChildren> = () => {
   const [open, setOpen] = useState(false)
@@ -26,7 +26,13 @@ const Dashboard: React.FC<React.PropsWithChildren> = () => {
     setOpen(!open)
   }
 
+  const logout = useLogout()
+  const navigate = useNavigate()
 
+  const signOut = useCallback(() => {
+    logout()
+    navigate("/login")
+  }, [logout])
 
   return (
     <Box sx={{ display: "flex" }}>
@@ -37,15 +43,17 @@ const Dashboard: React.FC<React.PropsWithChildren> = () => {
             pr: "24px", // keep right padding when drawer closed
           }}
         >
-          <Box sx={{
-            display: {
-              xs: "none",
-              sm: "block",
-              md: "block",
-              lg: "block",
-              xl: "block",
-            }
-          }}>
+          <Box
+            sx={{
+              display: {
+                xs: "none",
+                sm: "block",
+                md: "block",
+                lg: "block",
+                xl: "block",
+              },
+            }}
+          >
             <IconButton
               edge="start"
               color="inherit"
@@ -68,10 +76,12 @@ const Dashboard: React.FC<React.PropsWithChildren> = () => {
           >
             Face Generator
           </Typography>
-          <IconButton color="inherit">
-            <Badge badgeContent={4} color="secondary">
-              <NotificationsIcon />
-            </Badge>
+          <IconButton>
+            <Typography variant="body2" color="inherit" className="p-2" noWrap>
+              Logout
+            </Typography>
+            {/* Logout typography */}
+            <LogoutIcon onClick={signOut} />
           </IconButton>
         </Toolbar>
       </AppBar>
