@@ -38,11 +38,11 @@ async def login_for_access_token(response: Response, form_data: OAuth2PasswordRe
             detail="Incorrect username or password",
             headers={"WWW-Authenticate": "Bearer"},
         )
-    access_token_expires = timedelta(seconds=5)
+    access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
     access_token = create_access_token(
         data={"sub": user['username']}, expires_delta=access_token_expires
     )
-    refresh_token = create_access_token(data = {"sub": user['username']}, expires_delta = timedelta(seconds=30))
+    refresh_token = create_access_token(data = {"sub": user['username']}, expires_delta = timedelta(days = REFRESH_TOKEN_EXPIRE_DAYS))
     response.set_cookie(key="jwt", value=refresh_token, httponly=True)
     return {"result":{"access_token": access_token, "token_type": "bearer", "roles": [user['role']]}}
 
@@ -50,11 +50,10 @@ async def login_for_access_token(response: Response, form_data: OAuth2PasswordRe
 @app.get("/auth/refresh-token", response_model=ApiResponse[Token])
 async def refresh_token(response: Response, jwt: str = Cookie(default=None)):
     user = await get_current_user(jwt)
-    access_token_expires = timedelta(seconds=5)
+    access_token_expires = timedelta(minutes = ACCESS_TOKEN_EXPIRE_MINUTES)
     access_token = create_access_token(
         data={"sub": user['username']}, expires_delta=access_token_expires
     )
-    refresh_token = create_access_token(data = {"sub": user['username']}, expires_delta = timedelta(seconds=30))
     return {"result":{"access_token": access_token, "token_type": "bearer", "roles": [user['role']]}}
 
 

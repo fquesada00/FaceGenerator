@@ -8,13 +8,18 @@ from passlib.context import CryptContext
 from pydantic import BaseModel
 
 
-#TODO change this to singleton  
 from src.service.service import GeneratorService
+from src.service.settings import Settings
+
+import os
 
 #security
-SECRET_KEY = "6670660603b220caa0fc771570eb81f462d6d0a980aa9c5f5eefe48faca7ef4c"
-ALGORITHM = "HS256"
-ACCESS_TOKEN_EXPIRE_MINUTES = 30
+settings = Settings()
+SECRET_KEY = settings.secret_key
+ALGORITHM = settings.token_algorithm
+ACCESS_TOKEN_EXPIRE_MINUTES = settings.access_token_expire_minutes
+REFRESH_TOKEN_EXPIRE_DAYS = settings.refresh_token_expire_days
+
 
 service = GeneratorService()
 
@@ -61,7 +66,7 @@ def create_access_token(data: dict, expires_delta: Union[timedelta, None] = None
     if expires_delta:
         expire = datetime.utcnow() + expires_delta
     else:
-        expire = datetime.utcnow() + timedelta(minutes=15)
+        expire = datetime.utcnow() + timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
     to_encode.update({"exp": expire})
     encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
     return encoded_jwt
