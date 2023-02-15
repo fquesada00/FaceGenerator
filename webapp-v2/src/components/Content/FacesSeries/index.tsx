@@ -49,8 +49,6 @@ const FacesSeries = () => {
     },
   });
 
-  console.log("filteredFacesSeries", filteredFacesSeries)
-
   const { FacesSeries: FilteredFacesSeries } = useRenderFacesSeries({
     faces: filteredFacesSeries,
     className: "mt-4",
