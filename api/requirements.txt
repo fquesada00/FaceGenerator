@@ -3,5 +3,5 @@ Pillow==6.2.1
 uvicorn==0.16.0
 fastapi==0.83.0
 python-multipart==0.0.5
-PyGreSQL==5.2.4
+psycopg2==2.9.5
 Pyro4==4.82
