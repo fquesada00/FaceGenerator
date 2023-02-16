@@ -1,14 +1,6 @@
-import {
-  CheckBoxOutlineBlank as CheckBoxOutlineBlankIcon,
-  CheckBox as CheckBoxIcon,
-} from "@mui/icons-material"
-import { Checkbox, TextField, Autocomplete, Chip } from "@mui/material"
-import { toastError } from "components/Toast"
 import { useField } from "formik"
-import { useEffect } from "react"
-import { useMutation } from "react-query"
-import ApiError from "services/api/Error"
-import { getAllTags } from "services/api/FaceGeneratorApi"
+import useAutocompleteTags from "hooks/useAutocompleteTags"
+import React from "react"
 
 interface FormikAutoCompleteTagsProps {
   name: string
@@ -18,67 +10,34 @@ interface FormikAutoCompleteTagsProps {
 
 const FormikAutoCompleteTags = (props: FormikAutoCompleteTagsProps) => {
   const { allowUserInput = false, name, label = "" } = props
-  
-  const {
-    mutate: mutateGetAllTags,
-    isLoading: isLoadingTags,
-    data: tags
-  } = useMutation(getAllTags, {
-    onSuccess: (data) => {
-      console.log(data);
-    },
-    onError: (error) => {
-      if (error instanceof ApiError) {
-        toastError(error.toString());
-      }
-    }
-  });
-
-  useEffect(() => {
-    mutateGetAllTags();
-  }, []);
 
   const [field, meta, helpers] = useField(name)
 
-  return (
-    <Autocomplete
-      {...field}
-      onOpen={() => helpers.setTouched(true)}
-      multiple
-      options={tags ?? []}
-      freeSolo={allowUserInput}
-      disableCloseOnSelect
-      includeInputInList
-      renderOption={(props, option, { selected }) => (
-        <li {...props}>
-          <Checkbox
-            icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
-            checkedIcon={<CheckBoxIcon fontSize="small" />}
-            style={{ marginRight: 8 }}
-            checked={selected}
-          />
-          {option}
-        </li>
-      )}
-      renderTags={(value: readonly string[], getTagProps) =>
-        value.map((option: string, index: number) => (
-          <Chip variant="filled" label={option} {...getTagProps({ index })} />
-        ))
-      }
-      renderInput={(params) => (
-        <TextField
-          {...params}
-          variant="outlined"
-          placeholder={label}
-          error={meta.touched && !!meta.error}
-          helperText={meta.touched && meta.error}
-        />
-      )}
-      onChange={(_, value) => {
+  const { Autocomplete } = useAutocompleteTags({
+    label,
+    allowUserInput,
+    formikAutoCompleteTagsProps: {
+      onChange: (_, value) => {
         helpers.setValue(value)
-      }}
-    />
-  )
+      },
+      autocompleteProps: {
+        field,
+        onOpen: () => helpers.setTouched(true),
+      },
+      textFieldProps: {
+        error: meta.touched && !!meta.error,
+        helperText: meta.touched && meta.error,
+      },
+    },
+  });
+
+  return (
+    <React.Fragment>
+      {
+        Autocomplete
+      }
+    </React.Fragment>
+  );
 }
 
 export default FormikAutoCompleteTags

@@ -4,6 +4,7 @@ import {
 } from '@mui/icons-material';
 import { useState, useMemo } from "react";
 import { Checkbox, TextField, Autocomplete, Chip } from "@mui/material";
+import { FormikAutoCompleteTagsProps } from './formik/models/FormikAutoCompleteTagsModels';
 
 type AutocompleteChipsInputProps = {
   options: string[] | undefined;
@@ -11,14 +12,19 @@ type AutocompleteChipsInputProps = {
   onChange?: (value: string[]) => void;
   label: string;
   allowUserInput?: boolean;
+  formikAutoCompleteTagsProps: FormikAutoCompleteTagsProps;
 };
 
 const useAutocompleteChipsInput = (props: AutocompleteChipsInputProps) => {
-  const { options, value, onChange, label, allowUserInput = true } = props;
+  const { options, value, onChange, label, allowUserInput = true, formikAutoCompleteTagsProps } = props;
 
   const [selectedTags, setSelectedTags] = useState<string[]>(value);
 
   const handleChange = (event: React.ChangeEvent<{}>, newValue: string[]) => {
+    if (formikAutoCompleteTagsProps) {
+      formikAutoCompleteTagsProps.onChange(event, newValue);
+    }
+
     setSelectedTags(newValue);
     onChange?.(newValue);
   };
@@ -26,6 +32,7 @@ const useAutocompleteChipsInput = (props: AutocompleteChipsInputProps) => {
   const MemoizedAutocomplete = useMemo(() => {
     return (
       <Autocomplete
+        {...formikAutoCompleteTagsProps?.autocompleteProps}
         multiple
         options={options ?? []}
         freeSolo={allowUserInput}
@@ -51,13 +58,14 @@ const useAutocompleteChipsInput = (props: AutocompleteChipsInputProps) => {
             {...params}
             variant="outlined"
             placeholder={label}
+            {...formikAutoCompleteTagsProps?.textFieldProps}
           />
         )}
         value={selectedTags}
         onChange={handleChange}
       />
     );
-  }, [selectedTags, options, label]);
+  }, [selectedTags, options, label, formikAutoCompleteTagsProps]);
 
   return {
     content: MemoizedAutocomplete,

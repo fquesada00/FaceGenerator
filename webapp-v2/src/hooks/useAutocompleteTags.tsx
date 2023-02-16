@@ -1,3 +1,4 @@
+import { FormikAutoCompleteTagsProps } from "components/Inputs/formik/models/FormikAutoCompleteTagsModels";
 import useAutocompleteChipsInput from "components/Inputs/useAutocompleteChipsInput";
 import { toastError } from "components/Toast";
 import { useEffect } from "react";
@@ -5,13 +6,15 @@ import { useMutation } from "react-query";
 import ApiError from "services/api/Error";
 import { getAllTags } from "services/api/FaceGeneratorApi";
 
+
 type AutocompleteTags = {
   label?: string;
   allowUserInput?: boolean;
+  formikAutoCompleteTagsProps: FormikAutoCompleteTagsProps;
 };
 
 const useAutocompleteTags = (props: AutocompleteTags) => {
-  const { label = 'Tags', allowUserInput } = props;
+  const { label = 'Tags', allowUserInput, formikAutoCompleteTagsProps } = props;
 
   const {
     mutate: mutateGetAllTags,
@@ -32,7 +35,8 @@ const useAutocompleteTags = (props: AutocompleteTags) => {
     options: tags,
     value: [],
     label: label,
-    allowUserInput: allowUserInput
+    allowUserInput: allowUserInput,
+    formikAutoCompleteTagsProps
   });
 
   useEffect(() => {
