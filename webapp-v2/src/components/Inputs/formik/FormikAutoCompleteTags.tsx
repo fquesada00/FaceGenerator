@@ -5,7 +5,8 @@ import {
 import { Checkbox, TextField, Autocomplete, Chip } from "@mui/material"
 import { toastError } from "components/Toast"
 import { useField } from "formik"
-import { useQuery } from "react-query"
+import { useEffect } from "react"
+import { useMutation } from "react-query"
 import ApiError from "services/api/Error"
 import { getAllTags } from "services/api/FaceGeneratorApi"
 
@@ -17,13 +18,25 @@ interface FormikAutoCompleteTagsProps {
 
 const FormikAutoCompleteTags = (props: FormikAutoCompleteTagsProps) => {
   const { allowUserInput = false, name, label = "" } = props
-  const { isLoading: _, data: tags } = useQuery("tags", getAllTags, {
+  
+  const {
+    mutate: mutateGetAllTags,
+    isLoading: isLoadingTags,
+    data: tags
+  } = useMutation(getAllTags, {
+    onSuccess: (data) => {
+      console.log(data);
+    },
     onError: (error) => {
       if (error instanceof ApiError) {
-        toastError(error.toString())
+        toastError(error.toString());
       }
-    },
-  })
+    }
+  });
+
+  useEffect(() => {
+    mutateGetAllTags();
+  }, []);
 
   const [field, meta, helpers] = useField(name)
 

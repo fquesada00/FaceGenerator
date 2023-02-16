@@ -1,6 +1,7 @@
 import useAutocompleteChipsInput from "components/Inputs/useAutocompleteChipsInput";
 import { toastError } from "components/Toast";
-import { useQuery } from "react-query";
+import { useEffect } from "react";
+import { useMutation } from "react-query";
 import ApiError from "services/api/Error";
 import { getAllTags } from "services/api/FaceGeneratorApi";
 
@@ -12,7 +13,14 @@ type AutocompleteTags = {
 const useAutocompleteTags = (props: AutocompleteTags) => {
   const { label = 'Tags', allowUserInput } = props;
 
-  const { isLoading: isLoadingTags, data: tags } = useQuery('tags', getAllTags, {
+  const {
+    mutate: mutateGetAllTags,
+    isLoading: isLoadingTags,
+    data: tags
+  } = useMutation(getAllTags, {
+    onSuccess: (data) => {
+      console.log(data);
+    },
     onError: (error) => {
       if (error instanceof ApiError) {
         toastError(error.toString());
@@ -26,6 +34,10 @@ const useAutocompleteTags = (props: AutocompleteTags) => {
     label: label,
     allowUserInput: allowUserInput
   });
+
+  useEffect(() => {
+    mutateGetAllTags();
+  }, []);
 
   return {
     Autocomplete,
