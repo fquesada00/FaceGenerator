@@ -1,15 +1,15 @@
-import { Navigate, RouteObject } from "react-router-dom"
+import { Navigate, RouteObject } from 'react-router-dom';
 
-import Root from "pages/Root"
-import Home from "components/Content/Home"
-import paths from "./paths"
-import SearchFaces from "components/Content/SearchFaces"
-import About from "components/Content/About"
-import RandomFaces from "components/Content/RandomFaces"
-import FaceFeaturesModification from "components/Content/FaceFeaturesModification"
-import FaceFromImage from "components/Content/FaceFromImage"
-import InterchangeFacesFeatures from "components/Content/InterchangeFacesFeatures"
-import TransitionFaces from "components/Content/TransitionFaces"
+import Root from 'pages/Root';
+import Home from 'components/Content/Home';
+import SearchFaces from 'components/Content/SearchFaces';
+import About from 'components/Content/About';
+import RandomFaces from 'components/Content/RandomFaces';
+import FaceFeaturesModification from 'components/Content/FaceFeaturesModification';
+import FaceFromImage from 'components/Content/FaceFromImage';
+import InterchangeFacesFeatures from 'components/Content/InterchangeFacesFeatures';
+import TransitionFaces from 'components/Content/TransitionFaces';
+import paths from './paths';
 
 const routes: RouteObject[] = [
   {
@@ -18,33 +18,33 @@ const routes: RouteObject[] = [
     children: [
       {
         path: paths.randomFaces.path,
-        element: <RandomFaces />,
+        element: <RandomFaces />
       },
       {
         path: paths.searchFaces.path,
-        element: <SearchFaces />,
+        element: <SearchFaces />
       },
       {
         path: paths.transitionFaces.path,
-        element: <TransitionFaces />,
+        element: <TransitionFaces />
       },
       {
         path: paths.faceFromImage.path,
-        element: <FaceFromImage />,
+        element: <FaceFromImage />
       },
       {
         path: paths.faceFeaturesModification.path,
-        element: <FaceFeaturesModification />,
+        element: <FaceFeaturesModification />
       },
       {
         path: paths.interchangeFacesFeatures.path,
-        element: <InterchangeFacesFeatures />,
+        element: <InterchangeFacesFeatures />
       },
       {
         element: <Home />,
-        index: true,
-      },
-    ],
+        index: true
+      }
+    ]
   },
   {
     path: paths.about.path,
@@ -52,14 +52,14 @@ const routes: RouteObject[] = [
     children: [
       {
         element: <About />,
-        index: true,
-      },
-    ],
+        index: true
+      }
+    ]
   },
   {
-    path: "*",
-    element: <Navigate to={paths.home.path} replace/>,
+    path: '*',
+    element: <Navigate to={paths.home.path} replace />
   }
-]
+];
 
-export default routes
+export default routes;

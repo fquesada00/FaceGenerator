@@ -30,7 +30,7 @@ const paths = {
   about: {
     path: '/about',
     title: 'About'
-  },
+  }
 };
 
 export default paths;
