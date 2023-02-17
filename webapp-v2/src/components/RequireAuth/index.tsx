@@ -14,10 +14,11 @@ const RequireAuth: React.FC<RequireAuthProps> = ({
 
   const roles = useMemo(() => {
     return auth.roles
-  }, [])
+  }, [auth])
 
   const ComponentOrNavigate = useCallback(() => {
-    const isRoleAllowed = roles.find((role) => allowedRoles?.includes(role))
+    const isRoleAllowed =
+      roles.find((role) => allowedRoles?.includes(role)) !== undefined
 
     if (isRoleAllowed) {
       return <Outlet />

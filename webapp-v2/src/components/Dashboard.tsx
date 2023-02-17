@@ -32,7 +32,7 @@ const Dashboard: React.FC<React.PropsWithChildren> = () => {
   const signOut = useCallback(() => {
     logout()
     navigate("/login")
-  }, [logout])
+  }, [logout, navigate])
 
   return (
     <Box sx={{ display: "flex" }}>
