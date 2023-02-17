@@ -1,32 +1,42 @@
 # Face Generator API
-Face Generator API built with Python using StyleGAN2.
+
+StyleGan2 Generator Service built with Python.
 
 ## Setup
+
 1. Add the following lines to `~/.bashrc`, changing path as needed
+
 ```bash
-export API_PATH=~/pf-2022-face-generator/api
+export PROJECT_PATH=~/pf-2022-face-generator
 ```
+
 2. Install `virtualenv` to keep all your dependencies in one place.
+
 ```bash
 apt-get install virtualenv
 ```
+
 3. Create a virtual environment and activate it
+
 ```bash
 virtualenv venv --python=python3.6
 source venv/bin/activate
 ```
 
 4. Install the dependencies
+
 ```bash
 pip install -r requirements.txt
 ```
 
 5. Check hardware requirements are OK
+
 ```bash
 python cli.py
 ```
 
 ## Run
+
 ```bash
 cd $HOME/api
 ./run.sh
@@ -35,6 +45,7 @@ cd $HOME/api
 Generated images are saved to `$HOME/api/results/`
 
 When you are done executing the API, deactivate the `virtualenv` running
+
 ```bash
 deactivate
 ```
