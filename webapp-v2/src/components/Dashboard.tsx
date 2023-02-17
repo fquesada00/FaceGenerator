@@ -77,10 +77,6 @@ const Dashboard: React.FC<React.PropsWithChildren> = () => {
             Face Generator
           </Typography>
           <IconButton>
-            <Typography variant="body2" color="inherit" className="p-2" noWrap>
-              Logout
-            </Typography>
-            {/* Logout typography */}
             <LogoutIcon onClick={signOut} />
           </IconButton>
         </Toolbar>
