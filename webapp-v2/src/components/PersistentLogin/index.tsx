@@ -1,6 +1,6 @@
 import useRefreshToken from "hooks/useRefreshToken"
 import useAuth from "hooks/useAuth"
-import { useEffect, useState } from "react"
+import { useCallback, useEffect, useState } from "react"
 import { Outlet } from "react-router-dom"
 
 const PersistentLogin = () => {
@@ -29,11 +29,17 @@ const PersistentLogin = () => {
     }
   }, [])
 
-  return (
-    <>
-      {!persist ? <Outlet /> : isLoading ? <div>Loading...</div> : <Outlet />}
-    </>
-  )
+  const ComponentOrLoading = useCallback(() => {
+    if (!persist) {
+      return <Outlet />
+    }
+    if (isLoading) {
+      return <div>Loading...</div>
+    }
+    return <Outlet />
+  }, [persist, isLoading])
+
+  return <ComponentOrLoading />
 }
 
 export default PersistentLogin

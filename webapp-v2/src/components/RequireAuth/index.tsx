@@ -1,6 +1,6 @@
 import { useLocation, Navigate, Outlet } from "react-router-dom"
 import useAuth from "hooks/useAuth"
-import { useEffect, useMemo } from "react"
+import { useCallback, useEffect, useMemo } from "react"
 
 interface RequireAuthProps {
   allowedRoles?: number[]
@@ -16,13 +16,21 @@ const RequireAuth: React.FC<RequireAuthProps> = ({
     return auth.roles
   }, [])
 
-  return roles.find((role) => allowedRoles?.includes(role)) !== undefined ? (
-    <Outlet />
-  ) : auth.accessToken ? (
-    <Navigate to="/faces" state={{ from: location }} replace />
-  ) : (
-    <Navigate to="/login" state={{ from: location }} replace />
-  )
+  const ComponentOrNavigate = useCallback(() => {
+    const isRoleAllowed = roles.find((role) => allowedRoles?.includes(role))
+
+    if (isRoleAllowed) {
+      return <Outlet />
+    }
+
+    if (auth.accessToken) {
+      return <Navigate to="/faces" state={{ from: location }} replace />
+    }
+
+    return <Navigate to="/login" state={{ from: location }} replace />
+  }, [roles, allowedRoles, auth, location])
+
+  return <ComponentOrNavigate />
 }
 
 export default RequireAuth
