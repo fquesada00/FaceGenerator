@@ -4,6 +4,7 @@ import { RouterProvider } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import router from './router';
 import mdTheme from './theme';
+import AuthProvider from 'context/AuthProvider';
 
 const queryClient = new QueryClient();
 
@@ -11,7 +12,9 @@ function App() {
   return (
     <ThemeProvider theme={mdTheme}>
       <QueryClientProvider client={queryClient}>
-        <RouterProvider router={router} />
+        <AuthProvider>
+          <RouterProvider router={router} />
+        </AuthProvider>
       </QueryClientProvider>
     </ThemeProvider>
   );
