@@ -1,8 +1,8 @@
 import { privateClient } from 'services/api/Client';
-import useAuth from './useAuth';
-import useRefreshToken from './useRefreshToken';
 import { useEffect } from 'react';
 import { AxiosRequestConfig } from 'axios';
+import useAuth from './useAuth';
+import useRefreshToken from './useRefreshToken';
 
 const useAxiosPrivate = () => {
   const refresh = useRefreshToken();
@@ -12,7 +12,7 @@ const useAxiosPrivate = () => {
     const requestIntercept = privateClient.interceptors.request.use(
       (config: AxiosRequestConfig) => {
         const headers = config.headers as any;
-        const authHeader = headers && headers['Authorization'];
+        const authHeader = headers && headers.Authorization;
         if (!authHeader) {
           config.headers = {
             ...config.headers,
@@ -31,7 +31,7 @@ const useAxiosPrivate = () => {
         if (error?.response?.status === 401 && !prevRequest?.sent) {
           prevRequest.sent = true;
           const newAccessToken = await refresh();
-          prevRequest.headers['Authorization'] = `Bearer ${newAccessToken}`;
+          prevRequest.headers.Authorization = `Bearer ${newAccessToken}`;
           return privateClient(prevRequest);
         }
         return Promise.reject(error);

@@ -7,8 +7,8 @@ import faces from 'assets/faces.jpg';
 import FeatureListItem from './components/FeatureListItem';
 
 const Home: React.FC = () => {
-  const renderSubtitle = useMemo(() => {
-    return (
+  const renderSubtitle = useMemo(
+    () => (
       <div>
         This is a web application that allows you to generate faces using a GAN
         model. More specifically, it uses a StyleGAN2 model trained on the ...
@@ -17,8 +17,9 @@ const Home: React.FC = () => {
         <br />
         Here is a list of the features that are currently available:
       </div>
-    );
-  }, []);
+    ),
+    []
+  );
 
   return (
     <Grid container spacing={2}>

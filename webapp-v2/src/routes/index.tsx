@@ -2,7 +2,6 @@ import { Navigate, RouteObject } from 'react-router-dom';
 
 import Root from 'pages/Root';
 import Home from 'components/Content/Home';
-import paths from './paths';
 import SearchFaces from 'components/Content/SearchFaces';
 import About from 'components/Content/About';
 import RandomFaces from 'components/Content/RandomFaces';
@@ -13,6 +12,7 @@ import TransitionFaces from 'components/Content/TransitionFaces';
 import Login from 'pages/Login';
 import RequireAuth from 'components/RequireAuth';
 import PersistentLogin from 'components/PersistentLogin';
+import paths from './paths';
 
 const ROLES = {
   USER: 0,

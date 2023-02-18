@@ -29,8 +29,8 @@ const useAutocompleteTags = (props: AutocompleteTags) => {
     useAutocompleteChipsInput({
       options: tags,
       value: [],
-      label: label,
-      allowUserInput: allowUserInput
+      label,
+      allowUserInput
     });
 
   return {

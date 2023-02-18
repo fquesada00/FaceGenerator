@@ -1,7 +1,5 @@
 import { client } from 'services/api/Client';
 
-const useAxios = () => {
-  return client;
-};
+const useAxios = () => client;
 
 export default useAxios;

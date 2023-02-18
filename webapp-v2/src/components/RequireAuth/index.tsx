@@ -12,9 +12,7 @@ const RequireAuth: React.FC<RequireAuthProps> = ({
   const { auth } = useAuth();
   const location = useLocation();
 
-  const roles = useMemo(() => {
-    return auth.roles;
-  }, [auth]);
+  const roles = useMemo(() => auth.roles, [auth]);
 
   const ComponentOrNavigate = useCallback(() => {
     const isRoleAllowed =

@@ -19,6 +19,7 @@
     "@mui/lab": "^5.0.0-alpha.115",
     "@mui/material": "^5.10.16",
     "axios": "^1.2.2",
+    "eslint-plugin-jsx-a11y": "^6.7.1",
     "formik": "^2.2.9",
     "humps": "^2.0.1",
     "localforage": "^1.10.0",

@@ -10,7 +10,7 @@ export interface AuthContextProps {
 
 export const AuthContext = createContext({} as AuthContextProps);
 
-export const AuthProvider = ({ children }: React.PropsWithChildren) => {
+export function AuthProvider({ children }: React.PropsWithChildren) {
   const [auth, setAuth] = useState<IApiAuth>({ accessToken: '', roles: [] });
   const [persist, setPersist] = useState(
     JSON.parse(localStorage.getItem('persist') || '{}') || false
@@ -20,6 +20,6 @@ export const AuthProvider = ({ children }: React.PropsWithChildren) => {
       {children}
     </AuthContext.Provider>
   );
-};
+}
 
 export default AuthProvider;

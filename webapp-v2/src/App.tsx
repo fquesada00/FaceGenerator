@@ -7,12 +7,14 @@ import mdTheme from './theme';
 
 const queryClient = new QueryClient();
 
-const App = () => (
-  <ThemeProvider theme={mdTheme}>
-    <QueryClientProvider client={queryClient}>
-      <RouterProvider router={router} />
-    </QueryClientProvider>
-  </ThemeProvider>
-);
+function App() {
+  return (
+    <ThemeProvider theme={mdTheme}>
+      <QueryClientProvider client={queryClient}>
+        <RouterProvider router={router} />
+      </QueryClientProvider>
+    </ThemeProvider>
+  );
+}
 
 export default App;

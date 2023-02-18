@@ -15,10 +15,10 @@ import { Outlet, useNavigate } from 'react-router-dom';
 
 import AppBar from 'components/AppBar';
 import Drawer from 'components/Drawer';
-import DrawerContent from './Drawer/DrawerContent';
 import { ToastContainer } from 'react-toastify';
-import { CustomToastContainer } from './Toast';
 import useLogout from 'hooks/useLogout';
+import DrawerContent from './Drawer/DrawerContent';
+import { CustomToastContainer } from './Toast';
 
 const Dashboard: React.FC<React.PropsWithChildren> = () => {
   const [open, setOpen] = useState(false);

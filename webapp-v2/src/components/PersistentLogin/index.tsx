@@ -3,7 +3,7 @@ import useAuth from 'hooks/useAuth';
 import { useCallback, useEffect, useState } from 'react';
 import { Outlet } from 'react-router-dom';
 
-const PersistentLogin = () => {
+function PersistentLogin() {
   const [isLoading, setIsLoading] = useState(true);
   const refresh = useRefreshToken();
   const { auth, persist } = useAuth();
@@ -40,6 +40,6 @@ const PersistentLogin = () => {
   }, [persist, isLoading]);
 
   return <ComponentOrLoading />;
-};
+}
 
 export default PersistentLogin;

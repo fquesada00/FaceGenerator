@@ -45,7 +45,7 @@ const useFacesApi = () => {
   const searchFaces = useCallback(
     async (filters: IApiFaceFilters): Promise<IApiFace[]> => {
       try {
-        //filters to query param
+        // filters to query param
         const query = new URLSearchParams();
         filters.tags?.forEach(tag => query.append('tags', tag));
         const response = await api.get<ApiResponse>(`${FACES_API_PREFIX}`, {
@@ -86,7 +86,7 @@ const useFacesApi = () => {
       try {
         const response = await api.get<ApiResponse>(
           `${FACES_API_PREFIX}/transition`,
-          { query: { from_id: fromId, to_id: toId, amount: amount } }
+          { query: { from_id: fromId, to_id: toId, amount } }
         );
         return response.result;
       } catch (error) {
@@ -100,11 +100,11 @@ const useFacesApi = () => {
     async (image: File): Promise<IApiFace> => {
       try {
         console.log(image);
-        //await sleep(2000);
-        //send image file
+        // await sleep(2000);
+        // send image file
         const formData = new FormData();
         formData.append('image', image);
-        //const response = await api.post<ApiResponse>(`${FACES_API_PREFIX}/image`,  { body:formData, headers:{ 'Content-Type': 'multipart/form-data' }});
+        // const response = await api.post<ApiResponse>(`${FACES_API_PREFIX}/image`,  { body:formData, headers:{ 'Content-Type': 'multipart/form-data' }});
         const response = await api.post<ApiResponse>(
           `http://localhost:5000/faces/image`,
           { body: formData, headers: { 'Content-Type': 'multipart/form-data' } }
@@ -122,7 +122,7 @@ const useFacesApi = () => {
   const interchangeFacesFeatures = useCallback(
     async ({ firstId, secondId }: { firstId: number; secondId: number }) => {
       try {
-        //await sleep(2000);
+        // await sleep(2000);
         const response = await api.get<ApiResponse>(
           `${FACES_API_PREFIX}/interchange`,
           { query: { id1: firstId, id2: secondId } }
@@ -164,7 +164,7 @@ const useFacesApi = () => {
       faceFeatures: IApiFaceFeatures;
     }): Promise<IApiFace> => {
       try {
-        //await sleep(2000);
+        // await sleep(2000);
         const response = await api.put<ApiResponse>(
           `${FACES_API_PREFIX}/${id}`,
           {

@@ -15,7 +15,7 @@ interface FormikAutoCompleteTagsProps {
   allowUserInput?: boolean;
 }
 
-const FormikAutoCompleteTags = (props: FormikAutoCompleteTagsProps) => {
+function FormikAutoCompleteTags(props: FormikAutoCompleteTagsProps) {
   const { getAllTags } = useFacesApi();
   const { allowUserInput = false, name, label = '' } = props;
   const { isLoading: _, data: tags } = useQuery('tags', getAllTags, {
@@ -67,6 +67,6 @@ const FormikAutoCompleteTags = (props: FormikAutoCompleteTagsProps) => {
       }}
     />
   );
-};
+}
 
 export default FormikAutoCompleteTags;

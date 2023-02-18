@@ -9,11 +9,8 @@ import CustomIdInput from 'components/Inputs/custom/CustomIdInput';
 import { toastError } from 'components/Toast';
 import { useMutation } from 'react-query';
 import ApiError from 'services/api/Error';
-import FeatureModificationSection from './components/FeatureModificationSection';
 import CtaButton from 'components/CtaButton';
-import useAgeInput from './hooks/useAgeInput';
 import { Box, Grid } from '@mui/material';
-import useSlider from './hooks/useSlider';
 import MaleIcon from '@mui/icons-material/Male';
 import FemaleIcon from '@mui/icons-material/Female';
 import { IApiFaceFeatures } from 'services/api/models';
@@ -28,12 +25,15 @@ import FormikNumericInput from 'components/Inputs/formik/FormikNumericInput';
 import { MAX_AGE, MIN_AGE } from 'constants';
 import FormikCustomSlider from 'components/Inputs/formik/custom/FormikCustomSlider';
 import useFacesApi from 'hooks/api/useFacesApi';
+import useSlider from './hooks/useSlider';
+import useAgeInput from './hooks/useAgeInput';
+import FeatureModificationSection from './components/FeatureModificationSection';
 
 const FaceFeaturesModification: React.FC = () => {
   const { modifyFaceFeatures } = useFacesApi();
 
-  const renderSubtitle = useMemo(() => {
-    return (
+  const renderSubtitle = useMemo(
+    () => (
       <div>
         Change the face features of any of the saved faces. The features are
         grouped by sections. You can change the value of each feature by using
@@ -41,8 +41,9 @@ const FaceFeaturesModification: React.FC = () => {
         <br />
         The results will be displayed below.
       </div>
-    );
-  }, []);
+    ),
+    []
+  );
 
   const {
     mutate: mutateModifyFaceFeatures,

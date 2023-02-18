@@ -6,9 +6,9 @@ import { Fragment, useMemo, useRef, useState } from 'react';
 import { toastError, toastInfo } from 'components/Toast';
 import { useMutation } from 'react-query';
 import ApiError from 'services/api/Error';
+import useFacesApi from 'hooks/api/useFacesApi';
 import ImagePlaceholder from './ImagePlaceholder';
 import AddMetadataSteps from './AddMetadataSteps';
-import useFacesApi from 'hooks/api/useFacesApi';
 
 type ImageTemplateProps = {
   src?: string;
@@ -23,7 +23,7 @@ type ImageTemplateProps = {
   placeholderText?: string;
 };
 
-const ImageTemplate = (props: ImageTemplateProps) => {
+function ImageTemplate(props: ImageTemplateProps) {
   const { saveFace } = useFacesApi();
   const {
     src,
@@ -84,9 +84,7 @@ const ImageTemplate = (props: ImageTemplateProps) => {
     setOpenMetadataSteps(false);
   };
 
-  const isBase64 = (src: string) => {
-    return !src.startsWith('http');
-  };
+  const isBase64 = (src: string) => !src.startsWith('http');
 
   const CardContentComponent = useMemo(() => {
     if (!src) {
@@ -94,7 +92,7 @@ const ImageTemplate = (props: ImageTemplateProps) => {
     }
 
     return (
-      <Fragment>
+      <>
         <img
           src={(isBase64(src) ? 'data:image/png;base64, ' : '') + src}
           alt={alt}
@@ -108,7 +106,7 @@ const ImageTemplate = (props: ImageTemplateProps) => {
           </Typography>
           {!disableDownload && (
             <IconButton onClick={onDownload}>
-              <a ref={downloadRef} href={src} download={'image.jpg'} />
+              <a ref={downloadRef} href={src} download="image.jpg" />
               <DownloadIcon />
             </IconButton>
           )}
@@ -118,7 +116,7 @@ const ImageTemplate = (props: ImageTemplateProps) => {
             </IconButton>
           )}
         </CardActions>
-      </Fragment>
+      </>
     );
   }, [
     src,
@@ -133,7 +131,7 @@ const ImageTemplate = (props: ImageTemplateProps) => {
   ]);
 
   return (
-    <Fragment>
+    <>
       <Card
         className={clsx(
           cardWidthClassName ?? 'w-48',
@@ -150,8 +148,8 @@ const ImageTemplate = (props: ImageTemplateProps) => {
           onCancel={onMetadataStepsCancel}
         />
       )}
-    </Fragment>
+    </>
   );
-};
+}
 
 export default ImageTemplate;
