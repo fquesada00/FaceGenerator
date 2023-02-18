@@ -1,16 +1,16 @@
-import * as Yup from "yup"
+import * as Yup from 'yup';
 
 export interface LoginFormValues {
-  username: string
-  password: string
+  username: string;
+  password: string;
 }
 
 export const initialValues: LoginFormValues = {
-  username: "",
-  password: "",
-}
+  username: '',
+  password: ''
+};
 
 export const loginSchema = Yup.object().shape({
-  username: Yup.string().required("Username is required"),
-  password: Yup.string().required("Password is required"),
-})
+  username: Yup.string().required('Username is required'),
+  password: Yup.string().required('Password is required')
+});

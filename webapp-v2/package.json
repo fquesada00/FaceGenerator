@@ -22,6 +22,7 @@
     "formik": "^2.2.9",
     "humps": "^2.0.1",
     "localforage": "^1.10.0",
+    "prettier": "^2.8.4",
     "qs": "^6.11.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
@@ -31,10 +32,10 @@
     "yup": "^0.32.11"
   },
   "devDependencies": {
+    "@types/humps": "^2.0.2",
     "@types/qs": "^6.9.7",
     "@types/react": "^18.0.24",
     "@types/react-dom": "^18.0.8",
-    "@types/humps": "^2.0.2",
     "@typescript-eslint/eslint-plugin": "^5.52.0",
     "@typescript-eslint/parser": "^5.52.0",
     "@vitejs/plugin-react": "^2.2.0",

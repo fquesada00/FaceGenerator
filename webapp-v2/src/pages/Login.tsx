@@ -7,61 +7,61 @@ import {
   CssBaseline,
   FormControlLabel,
   TextField,
-  Typography,
-} from "@mui/material"
-import LockOutlinedIcon from "@mui/icons-material/LockOutlined"
-import { toastError } from "components/Toast"
-import { Field, Form, Formik } from "formik"
-import { initialValues, loginSchema, LoginFormValues } from "forms/login"
-import useAuthApi from "hooks/api/useAuthApi"
-import useAuth from "hooks/useAuth"
-import { useEffect, useMemo } from "react"
-import { useMutation } from "react-query"
-import { useLocation, useNavigate } from "react-router-dom"
-import ApiError from "services/api/Error"
+  Typography
+} from '@mui/material';
+import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
+import { toastError } from 'components/Toast';
+import { Field, Form, Formik } from 'formik';
+import { initialValues, loginSchema, LoginFormValues } from 'forms/login';
+import useAuthApi from 'hooks/api/useAuthApi';
+import useAuth from 'hooks/useAuth';
+import { useEffect, useMemo } from 'react';
+import { useMutation } from 'react-query';
+import { useLocation, useNavigate } from 'react-router-dom';
+import ApiError from 'services/api/Error';
 
 const Login: React.FC = () => {
-  const { setAuth, auth, persist, setPersist } = useAuth()
-  const { login } = useAuthApi()
+  const { setAuth, auth, persist, setPersist } = useAuth();
+  const { login } = useAuthApi();
 
-  const navigate = useNavigate()
-  const location = useLocation()
-  const from = useMemo(() => location.state?.from?.pathname || "/", [location])
+  const navigate = useNavigate();
+  const location = useLocation();
+  const from = useMemo(() => location.state?.from?.pathname || '/', [location]);
 
   const {
     mutate: mutateLogin,
     isLoading: isLoadingLogin,
-    data: loginData,
+    data: loginData
   } = useMutation(login, {
-    onSuccess: (data) => {
-      console.log("data", data)
+    onSuccess: data => {
+      console.log('data', data);
     },
-    onError: (error) => {
+    onError: error => {
       if (error instanceof ApiError) {
-        toastError(error.toString())
+        toastError(error.toString());
       }
-    },
-  })
+    }
+  });
 
   useEffect(() => {
     if (loginData) {
-      setAuth(loginData)
+      setAuth(loginData);
     }
-  }, [loginData])
+  }, [loginData]);
 
   useEffect(() => {
     if (auth.accessToken) {
-      navigate(from, { replace: true })
+      navigate(from, { replace: true });
     }
-  }, [auth])
+  }, [auth]);
 
   const onSubmit = ({ username, password }: LoginFormValues) => {
-    mutateLogin({ username, password })
-  }
+    mutateLogin({ username, password });
+  };
 
   useEffect(() => {
-    localStorage.setItem("persist", JSON.stringify(persist))
-  }, [persist])
+    localStorage.setItem('persist', JSON.stringify(persist));
+  }, [persist]);
 
   return (
     <Container component="main" maxWidth="xs">
@@ -69,12 +69,12 @@ const Login: React.FC = () => {
       <Box
         sx={{
           marginTop: 8,
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center'
         }}
       >
-        <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
+        <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
           <LockOutlinedIcon />
         </Avatar>
         <Typography component="h1" variant="h5">
@@ -133,7 +133,7 @@ const Login: React.FC = () => {
         </Formik>
       </Box>
     </Container>
-  )
-}
+  );
+};
 
-export default Login
+export default Login;
