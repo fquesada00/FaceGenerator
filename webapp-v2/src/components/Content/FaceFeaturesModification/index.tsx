@@ -1,36 +1,36 @@
-import ContentHeader from "components/ContentHeader"
-import { useMemo, useState } from "react"
-import { Form, Formik } from "formik"
-import paths from "routes/paths"
-import inputsClasses from "components/Inputs/styles/Inputs.module.scss"
-import clsx from "clsx"
-import PickImageButton from "components/CtaButton/custom/PickImageButton"
-import CustomIdInput from "components/Inputs/custom/CustomIdInput"
-import { toastError } from "components/Toast"
-import { useMutation } from "react-query"
-import ApiError from "services/api/Error"
-import FeatureModificationSection from "./components/FeatureModificationSection"
-import CtaButton from "components/CtaButton"
-import useAgeInput from "./hooks/useAgeInput"
-import { Box, Grid } from "@mui/material"
-import useSlider from "./hooks/useSlider"
-import MaleIcon from "@mui/icons-material/Male"
-import FemaleIcon from "@mui/icons-material/Female"
-import { IApiFaceFeatures } from "services/api/models"
-import ImageTemplate from "components/Images/ImageTemplate"
+import ContentHeader from 'components/ContentHeader';
+import { useMemo, useState } from 'react';
+import { Form, Formik } from 'formik';
+import paths from 'routes/paths';
+import inputsClasses from 'components/Inputs/styles/Inputs.module.scss';
+import clsx from 'clsx';
+import PickImageButton from 'components/CtaButton/custom/PickImageButton';
+import CustomIdInput from 'components/Inputs/custom/CustomIdInput';
+import { toastError } from 'components/Toast';
+import { useMutation } from 'react-query';
+import ApiError from 'services/api/Error';
+import FeatureModificationSection from './components/FeatureModificationSection';
+import CtaButton from 'components/CtaButton';
+import useAgeInput from './hooks/useAgeInput';
+import { Box, Grid } from '@mui/material';
+import useSlider from './hooks/useSlider';
+import MaleIcon from '@mui/icons-material/Male';
+import FemaleIcon from '@mui/icons-material/Female';
+import { IApiFaceFeatures } from 'services/api/models';
+import ImageTemplate from 'components/Images/ImageTemplate';
 import {
   ModifyFaceFeaturesFormValues,
   initialValues,
-  modifyFaceFeaturesSchema,
-} from "forms/modifyFaceFeatures"
-import FormikCustomIdInput from "components/Inputs/formik/custom/FormikCustomIdInput"
-import FormikNumericInput from "components/Inputs/formik/FormikNumericInput"
-import { MAX_AGE, MIN_AGE } from "constants"
-import FormikCustomSlider from "components/Inputs/formik/custom/FormikCustomSlider"
-import useFacesApi from "hooks/api/useFacesApi"
+  modifyFaceFeaturesSchema
+} from 'forms/modifyFaceFeatures';
+import FormikCustomIdInput from 'components/Inputs/formik/custom/FormikCustomIdInput';
+import FormikNumericInput from 'components/Inputs/formik/FormikNumericInput';
+import { MAX_AGE, MIN_AGE } from 'constants';
+import FormikCustomSlider from 'components/Inputs/formik/custom/FormikCustomSlider';
+import useFacesApi from 'hooks/api/useFacesApi';
 
 const FaceFeaturesModification: React.FC = () => {
-  const { modifyFaceFeatures } = useFacesApi()
+  const { modifyFaceFeatures } = useFacesApi();
 
   const renderSubtitle = useMemo(() => {
     return (
@@ -41,23 +41,23 @@ const FaceFeaturesModification: React.FC = () => {
         <br />
         The results will be displayed below.
       </div>
-    )
-  }, [])
+    );
+  }, []);
 
   const {
     mutate: mutateModifyFaceFeatures,
     isLoading: isLoadingModifyFace,
-    data: modifiedFace,
+    data: modifiedFace
   } = useMutation(modifyFaceFeatures, {
-    onSuccess: (data) => {
-      console.log(data)
+    onSuccess: data => {
+      console.log(data);
     },
-    onError: (error) => {
+    onError: error => {
       if (error instanceof ApiError) {
-        toastError(error.toString())
+        toastError(error.toString());
       }
-    },
-  })
+    }
+  });
 
   const onSubmit = ({
     id,
@@ -76,37 +76,37 @@ const FaceFeaturesModification: React.FC = () => {
     mouthSmile,
     noseDistance,
     noseRatio,
-    noseTip,
+    noseTip
   }: ModifyFaceFeaturesFormValues) => {
     const faceFeatures: IApiFaceFeatures = {
       age,
       gender,
       orientation: {
         vertical: faceOrientationVertical,
-        horizontal: faceOrientationHorizontal,
+        horizontal: faceOrientationHorizontal
       },
       eyes: {
         distance: eyeDistance,
         distanceToEyeBrows: eyebrowsDistance,
         ratio: eyesRatio,
         open: eyesOpen,
-        roll: eyesRoll,
+        roll: eyesRoll
       },
       mouth: {
         lipRatio: mouthLipRatio,
         open: mouthOpen,
         ratio: mouthRatio,
-        smile: mouthSmile,
+        smile: mouthSmile
       },
       nose: {
         distanceToMouth: noseDistance,
         ratio: noseRatio,
-        tip: noseTip,
-      },
-    }
+        tip: noseTip
+      }
+    };
 
-    mutateModifyFaceFeatures({ id, faceFeatures })
-  }
+    mutateModifyFaceFeatures({ id, faceFeatures });
+  };
 
   return (
     <div>
@@ -124,10 +124,10 @@ const FaceFeaturesModification: React.FC = () => {
             <div className={clsx(inputsClasses.container)}>
               <FormikCustomIdInput name="id" required />
               <PickImageButton
-                onDone={(faceId) => setFieldValue("id", faceId ?? 0)}
+                onDone={faceId => setFieldValue('id', faceId ?? 0)}
                 pickedFaceId={values.id}
               />
-              <Grid container spacing={2} sx={{ marginTop: "1rem" }}>
+              <Grid container spacing={2} sx={{ marginTop: '1rem' }}>
                 <Grid
                   item
                   xs={12}
@@ -140,19 +140,19 @@ const FaceFeaturesModification: React.FC = () => {
                   <Box
                     sx={{
                       width: {
-                        xs: "13rem",
-                        sm: "18rem",
-                        md: "22rem",
-                        lg: "24rem",
-                        xl: "28rem",
+                        xs: '13rem',
+                        sm: '18rem',
+                        md: '22rem',
+                        lg: '24rem',
+                        xl: '28rem'
                       },
                       height: {
-                        xs: "18rem",
-                        sm: "22rem",
-                        md: "26rem",
-                        lg: "30rem",
-                        xl: "34rem",
-                      },
+                        xs: '18rem',
+                        sm: '22rem',
+                        md: '26rem',
+                        lg: '30rem',
+                        xl: '34rem'
+                      }
                     }}
                   >
                     <FeatureModificationSection title="General" first>
@@ -214,19 +214,19 @@ const FaceFeaturesModification: React.FC = () => {
                     <Box
                       sx={{
                         width: {
-                          xs: "14rem",
-                          sm: "18rem",
-                          md: "22rem",
-                          lg: "24rem",
-                          xl: "28rem",
+                          xs: '14rem',
+                          sm: '18rem',
+                          md: '22rem',
+                          lg: '24rem',
+                          xl: '28rem'
                         },
                         height: {
-                          xs: "14rem",
-                          sm: "18rem",
-                          md: "22rem",
-                          lg: "24rem",
-                          xl: "28rem",
-                        },
+                          xs: '14rem',
+                          sm: '18rem',
+                          md: '22rem',
+                          lg: '24rem',
+                          xl: '28rem'
+                        }
                       }}
                     >
                       <ImageTemplate
@@ -252,7 +252,7 @@ const FaceFeaturesModification: React.FC = () => {
         )}
       </Formik>
     </div>
-  )
-}
+  );
+};
 
-export default FaceFeaturesModification
+export default FaceFeaturesModification;

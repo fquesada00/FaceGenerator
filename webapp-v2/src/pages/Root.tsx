@@ -1,7 +1,5 @@
-import Dashboard from "components/Dashboard"
+import Dashboard from 'components/Dashboard';
 
-const Root: React.FC = () => {
-  return <Dashboard />
-}
+const Root: React.FC = () => <Dashboard />;
 
-export default Root
+export default Root;

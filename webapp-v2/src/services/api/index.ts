@@ -1,15 +1,15 @@
-import { AxiosInstance } from "axios"
+import { AxiosInstance } from 'axios';
 
-export const API_PREFIX = "/api"
-export const FACES_API_PREFIX = `${API_PREFIX}/faces`
-export const AUTH_API_PREFIX = `${API_PREFIX}/auth`
+export const API_PREFIX = '/api';
+export const FACES_API_PREFIX = `${API_PREFIX}/faces`;
+export const AUTH_API_PREFIX = `${API_PREFIX}/auth`;
 
 type ApiMethodParams = {
-  query?: { [key: string]: any }
-  body?: any
-  headers?: { [key: string]: any }
-  withCredentials?: boolean
-}
+  query?: { [key: string]: any };
+  body?: any;
+  headers?: { [key: string]: any };
+  withCredentials?: boolean;
+};
 
 const apiProvider = (client: AxiosInstance) => ({
   get: async <T>(
@@ -20,11 +20,11 @@ const apiProvider = (client: AxiosInstance) => ({
       const { data: responseData } = await client.get(url, {
         params: query,
         headers,
-        withCredentials,
-      })
-      return responseData as T
+        withCredentials
+      });
+      return responseData as T;
     } catch (error) {
-      throw error
+      throw error;
     }
   },
   post: async <T>(
@@ -35,11 +35,11 @@ const apiProvider = (client: AxiosInstance) => ({
       const { data: responseData } = await client.post(url, body, {
         params: query,
         headers,
-        withCredentials,
-      })
-      return responseData as T
+        withCredentials
+      });
+      return responseData as T;
     } catch (error) {
-      throw error
+      throw error;
     }
   },
   put: async <T>(
@@ -50,11 +50,11 @@ const apiProvider = (client: AxiosInstance) => ({
       const { data: responseData } = await client.put(url, body, {
         params: query,
         headers,
-        withCredentials,
-      })
-      return responseData as T
+        withCredentials
+      });
+      return responseData as T;
     } catch (error) {
-      throw error
+      throw error;
     }
   },
   patch: async <T>(
@@ -65,11 +65,11 @@ const apiProvider = (client: AxiosInstance) => ({
       const { data: responseData } = await client.patch(url, body, {
         params: query,
         headers,
-        withCredentials,
-      })
-      return responseData as T
+        withCredentials
+      });
+      return responseData as T;
     } catch (error) {
-      throw error
+      throw error;
     }
   },
   delete: async <T>(
@@ -80,13 +80,13 @@ const apiProvider = (client: AxiosInstance) => ({
       const { data: responseData } = await client.delete(url, {
         params: query,
         headers,
-        withCredentials,
-      })
-      return responseData as T
+        withCredentials
+      });
+      return responseData as T;
     } catch (error) {
-      throw error
+      throw error;
     }
-  },
-})
+  }
+});
 
-export default apiProvider
+export default apiProvider;

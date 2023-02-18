@@ -1,11 +1,11 @@
-import { Typography } from "@mui/material";
+import { Typography } from '@mui/material';
 
 type AboutSectionProps = {
   title: string;
   content: string;
 };
 
-const AboutSection = (props: AboutSectionProps) => {
+function AboutSection(props: AboutSectionProps) {
   const { title, content } = props;
 
   return (
@@ -18,6 +18,6 @@ const AboutSection = (props: AboutSectionProps) => {
       </Typography>
     </div>
   );
-};
+}
 
 export default AboutSection;

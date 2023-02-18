@@ -72,7 +72,7 @@ const PickImageButton = (props: PickImageButtonProps) => {
     onSuccess: (data) => {
       console.log(data)
     },
-    onError: (error) => {
+    onError: error => {
       if (error instanceof ApiError) {
         toastError(error.toString())
       }
@@ -104,7 +104,7 @@ const PickImageButton = (props: PickImageButtonProps) => {
   }, [allFaces, selectedFaceId])
 
   return (
-    <Fragment>
+    <>
       <CtaButton
         onClick={handleClickOpen}
         label="Pick face"

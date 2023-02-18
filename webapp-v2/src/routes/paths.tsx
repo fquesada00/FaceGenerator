@@ -1,40 +1,40 @@
 const paths = {
   login: {
-    path: "/login",
-    title: "Login",
+    path: '/login',
+    title: 'Login'
   },
   home: {
-    path: "/faces",
-    title: "Home",
+    path: '/faces',
+    title: 'Home'
   },
   randomFaces: {
-    path: "random",
-    title: "Random faces",
+    path: 'random',
+    title: 'Random faces'
   },
   searchFaces: {
-    path: "search",
-    title: "Search faces",
+    path: 'search',
+    title: 'Search faces'
   },
   transitionFaces: {
-    path: "transition",
-    title: "Transition faces",
+    path: 'transition',
+    title: 'Transition faces'
   },
   faceFromImage: {
-    path: "from-image",
-    title: "Face from image",
+    path: 'from-image',
+    title: 'Face from image'
   },
   faceFeaturesModification: {
-    path: "modification",
-    title: "Modify face features",
+    path: 'modification',
+    title: 'Modify face features'
   },
   interchangeFacesFeatures: {
-    path: "interchange",
-    title: "Interchange features",
+    path: 'interchange',
+    title: 'Interchange features'
   },
   about: {
-    path: "/about",
-    title: "About",
-  },
-}
+    path: '/about',
+    title: 'About'
+  }
+};
 
-export default paths
+export default paths;

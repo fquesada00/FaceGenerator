@@ -45,14 +45,6 @@ class GeneratorService:
         return n
 
     #database methods
-    @staticmethod
-    def get_ids():
-        ids = []
-        zs = []
-        for id, z in database.fetch_all():
-            ids.append(id)
-            zs.append(z)
-        return ids, zs
     
     @staticmethod
     def image_to_bytes(image: Image, encoded = True):

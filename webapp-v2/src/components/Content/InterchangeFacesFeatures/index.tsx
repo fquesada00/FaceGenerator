@@ -1,63 +1,64 @@
-import { Grid } from "@mui/material"
-import clsx from "clsx"
-import { useMemo } from "react"
-import { Formik, Form } from "formik"
+import { Grid } from '@mui/material';
+import clsx from 'clsx';
+import { useMemo } from 'react';
+import { Formik, Form } from 'formik';
 
-import inputsClasses from "components/Inputs/styles/Inputs.module.scss"
-import CtaButton from "components/CtaButton"
-import ContentHeader from "components/ContentHeader"
-import paths from "routes/paths"
-import { toastError } from "components/Toast"
-import useRenderImages from "hooks/useRenderImages"
-import { useMutation } from "react-query"
-import ApiError from "services/api/Error"
-import PickImageButton from "components/CtaButton/custom/PickImageButton"
-import FormikCustomIdInput from "components/Inputs/formik/custom/FormikCustomIdInput"
+import inputsClasses from 'components/Inputs/styles/Inputs.module.scss';
+import CtaButton from 'components/CtaButton';
+import ContentHeader from 'components/ContentHeader';
+import paths from 'routes/paths';
+import { toastError } from 'components/Toast';
+import useRenderImages from 'hooks/useRenderImages';
+import { useMutation } from 'react-query';
+import ApiError from 'services/api/Error';
+import PickImageButton from 'components/CtaButton/custom/PickImageButton';
+import FormikCustomIdInput from 'components/Inputs/formik/custom/FormikCustomIdInput';
 import {
   initialValues,
   interchangeFaceFeaturesSchema,
-  InterchangeFaceFeaturesFormValues,
-} from "forms/interchangeFaceFeatures"
-import useFacesApi from "hooks/api/useFacesApi"
+  InterchangeFaceFeaturesFormValues
+} from 'forms/interchangeFaceFeatures';
+import useFacesApi from 'hooks/api/useFacesApi';
 
 const InterchangeFacesFeatures: React.FC = () => {
-  const { interchangeFacesFeatures } = useFacesApi()
+  const { interchangeFacesFeatures } = useFacesApi();
 
   const {
     mutate: mutateInterchangeFacesFeatures,
     isLoading: isLoadingInterchange,
-    data: interchangedFaces,
+    data: interchangedFaces
   } = useMutation(interchangeFacesFeatures, {
-    onSuccess: (data) => {
-      console.log(data)
+    onSuccess: data => {
+      console.log(data);
     },
-    onError: (error) => {
+    onError: error => {
       if (error instanceof ApiError) {
-        toastError(error.toString())
+        toastError(error.toString());
       }
-    },
-  })
+    }
+  });
 
   const { images: InterchangedFacesImages } = useRenderImages({
-    faces: interchangedFaces,
-  })
+    faces: interchangedFaces
+  });
 
-  const renderSubtitle = useMemo(() => {
-    return (
+  const renderSubtitle = useMemo(
+    () => (
       <div>
         Interchange the features (styles) of two faces.
         <br />
         The results will be displayed below.
       </div>
-    )
-  }, [])
+    ),
+    []
+  );
 
   const onSubmit = ({
     firstId,
-    secondId,
+    secondId
   }: InterchangeFaceFeaturesFormValues) => {
-    mutateInterchangeFacesFeatures({ firstId, secondId })
-  }
+    mutateInterchangeFacesFeatures({ firstId, secondId });
+  };
 
   return (
     <div>
@@ -73,7 +74,7 @@ const InterchangeFacesFeatures: React.FC = () => {
         {({ setFieldValue, values }) => (
           <Form>
             <div className={clsx(inputsClasses.container)}>
-              <Grid container style={{ width: "25rem" }} rowSpacing={4}>
+              <Grid container style={{ width: '25rem' }} rowSpacing={4}>
                 <Grid item xs={12} sm={6} md={6} lg={6} xl={6}>
                   <FormikCustomIdInput
                     required
@@ -81,7 +82,7 @@ const InterchangeFacesFeatures: React.FC = () => {
                     name="firstId"
                   />
                   <PickImageButton
-                    onDone={(faceId) => setFieldValue("firstId", faceId ?? 0)}
+                    onDone={faceId => setFieldValue('firstId', faceId ?? 0)}
                     pickedFaceId={values.firstId}
                   />
                 </Grid>
@@ -92,7 +93,7 @@ const InterchangeFacesFeatures: React.FC = () => {
                     name="secondId"
                   />
                   <PickImageButton
-                    onDone={(faceId) => setFieldValue("secondId", faceId ?? 0)}
+                    onDone={faceId => setFieldValue('secondId', faceId ?? 0)}
                     pickedFaceId={values.secondId}
                   />
                 </Grid>
@@ -109,7 +110,7 @@ const InterchangeFacesFeatures: React.FC = () => {
         )}
       </Formik>
     </div>
-  )
-}
+  );
+};
 
-export default InterchangeFacesFeatures
+export default InterchangeFacesFeatures;

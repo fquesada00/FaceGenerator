@@ -1,10 +1,10 @@
-import { Box, Grid, Typography } from "@mui/material"
-import ContentHeader from "components/ContentHeader"
-import { useMemo } from "react"
-import { Link } from "react-router-dom"
-import paths from "routes/paths"
-import faces from "assets/faces.jpg"
-import FeatureListItem from "./components/FeatureListItem"
+import { Box, Grid, Typography } from '@mui/material';
+import ContentHeader from 'components/ContentHeader';
+import { useMemo } from 'react';
+import { Link } from 'react-router-dom';
+import paths from 'routes/paths';
+import faces from 'assets/faces.jpg';
+import FeatureListItem from './components/FeatureListItem';
 
 const Home: React.FC = () => {
   const renderSubtitle = useMemo(() => {
@@ -17,8 +17,8 @@ const Home: React.FC = () => {
         <br />
         Here is a list of the features that are currently available:
       </div>
-    )
-  }, [])
+    );
+  }, []);
 
   return (
     <Grid container spacing={2}>
@@ -60,7 +60,7 @@ const Home: React.FC = () => {
           />
         </ul>
         <div className="mt-4">
-          <Typography variant="subtitle1" sx={{ fontWeight: "medium" }}>
+          <Typography variant="subtitle1" sx={{ fontWeight: 'medium' }}>
             You can find more information about the project in the&nbsp;
             <Link
               to={paths.about.path}
@@ -87,30 +87,30 @@ const Home: React.FC = () => {
         <Box
           sx={{
             width: {
-              xs: "16rem",
-              sm: "20rem",
-              md: "24rem",
-              lg: "26rem",
-              xl: "30rem",
+              xs: '16rem',
+              sm: '20rem',
+              md: '24rem',
+              lg: '26rem',
+              xl: '30rem'
             },
             height: {
-              xs: "16rem",
-              sm: "20rem",
-              md: "24rem",
-              lg: "26rem",
-              xl: "30rem",
-            },
+              xs: '16rem',
+              sm: '20rem',
+              md: '24rem',
+              lg: '26rem',
+              xl: '30rem'
+            }
           }}
         >
           <img
             src={faces}
             alt="Faces"
-            style={{ height: "inherit", width: "inherit" }}
+            style={{ height: 'inherit', width: 'inherit' }}
           />
         </Box>
       </Grid>
     </Grid>
-  )
-}
+  );
+};
 
-export default Home
+export default Home;
