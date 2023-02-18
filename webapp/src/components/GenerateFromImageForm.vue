@@ -59,7 +59,7 @@
                 reader.onload = () => {
                     formData.append('file', reader.result)
                     axios({
-                        url: 'http://pf-2021-generadorcaras.it.itba.edu.ar/api/latentspace',
+                        url: '/api/latentspace',
                         method: 'post',
                         data: formData,
                         headers: { "Content-Type": "multipart/form-data" },

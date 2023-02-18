@@ -1,7 +1,8 @@
 # Thesis - Face generator app 2021S2
 ## Authors
-* Agustin Roca
-* Nicolas Britos
+* Francisco Quesada
+* Octavio Serpe
+* Agustin Jerusalinsky
 
 
 ## Intro

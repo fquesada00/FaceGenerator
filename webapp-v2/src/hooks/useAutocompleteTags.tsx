@@ -1,0 +1,42 @@
+import useAutocompleteChipsInput from 'components/Inputs/useAutocompleteChipsInput';
+import { toastError } from 'components/Toast';
+import { useQuery } from 'react-query';
+import ApiError from 'services/api/Error';
+import { getAllTags } from 'services/api/FaceGeneratorApi';
+
+type AutocompleteTags = {
+  label?: string;
+  allowUserInput?: boolean;
+};
+
+const useAutocompleteTags = (props: AutocompleteTags) => {
+  const { label = 'Tags', allowUserInput } = props;
+
+  const { isLoading: isLoadingTags, data: tags } = useQuery(
+    'tags',
+    getAllTags,
+    {
+      onError: error => {
+        if (error instanceof ApiError) {
+          toastError(error.toString());
+        }
+      }
+    }
+  );
+
+  const { content: Autocomplete, value: selectedTags } =
+    useAutocompleteChipsInput({
+      options: tags,
+      value: [],
+      label,
+      allowUserInput
+    });
+
+  return {
+    Autocomplete,
+    selectedTags,
+    isLoadingTags
+  };
+};
+
+export default useAutocompleteTags;
