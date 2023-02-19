@@ -1,57 +1,60 @@
-import clsx from "clsx"
-import { useMemo, useState } from "react"
-import { Formik, Form } from "formik"
-import { MIN_FACES, MAX_FACES } from "constants"
+import clsx from 'clsx';
+import { useMemo, useState } from 'react';
+import { Formik, Form } from 'formik';
+import { MIN_FACES, MAX_FACES } from 'constants/constants';
 
-import inputsClasses from "components/Inputs/styles/Inputs.module.scss"
-import CustomAmountInput from "components/Inputs/custom/CustomAmountInput"
-import CtaButton from "components/CtaButton"
-import ContentHeader from "components/ContentHeader"
-import paths from "routes/paths"
-import { useMutation } from "react-query"
-import { generateFaces } from "services/api/FaceGeneratorApi"
-import ApiError from "services/api/Error"
-import { toastError } from "components/Toast"
-import useRenderImages from "hooks/useRenderImages"
-import FormikCustomAmountInput from "components/Inputs/formik/custom/FormikCustomAmountInput"
+import inputsClasses from 'components/Inputs/styles/Inputs.module.scss';
+import CustomAmountInput from 'components/Inputs/custom/CustomAmountInput';
+import CtaButton from 'components/CtaButton';
+import ContentHeader from 'components/ContentHeader';
+import paths from 'routes/paths';
+import { useMutation } from 'react-query';
+import ApiError from 'services/api/Error';
+import { toastError } from 'components/Toast';
+import useRenderImages from 'hooks/useRenderImages';
+import FormikCustomAmountInput from 'components/Inputs/formik/custom/FormikCustomAmountInput';
 import {
   randomFacesFormSchema,
   RandomFacesFormValues,
-  initialValues,
-} from "forms/randomFaces"
+  initialValues
+} from 'forms/randomFaces';
+import useFacesApi from 'hooks/api/useFacesApi';
 
 const RandomFaces: React.FC = () => {
+  const { generateFaces } = useFacesApi();
+
   const {
     mutate,
     isLoading,
-    data: faces,
+    data: faces
   } = useMutation(generateFaces, {
-    onSuccess: (data) => {
-      console.log(data)
+    onSuccess: data => {
+      console.log(data);
     },
-    onError: (error) => {
+    onError: error => {
       if (error instanceof ApiError) {
-        toastError(error.toString())
+        toastError(error.toString());
       }
-    },
-  })
+    }
+  });
 
-  const renderSubtitle = useMemo(() => {
-    return (
+  const renderSubtitle = useMemo(
+    () => (
       <div>
         Enter the amount of faces (between {MIN_FACES} and {MAX_FACES}) that you
         want to see.
         <br />
         The results will be displayed below.
       </div>
-    )
-  }, [])
+    ),
+    []
+  );
 
-  const { images: FacesImages } = useRenderImages({ faces })
+  const { images: FacesImages } = useRenderImages({ faces });
 
   const onSubmit = ({ randomFaces: amount }: RandomFacesFormValues) => {
-    mutate(amount)
-  }
+    mutate(amount);
+  };
 
   return (
     <div>
@@ -78,7 +81,7 @@ const RandomFaces: React.FC = () => {
         </Form>
       </Formik>
     </div>
-  )
-}
+  );
+};
 
-export default RandomFaces
+export default RandomFaces;
