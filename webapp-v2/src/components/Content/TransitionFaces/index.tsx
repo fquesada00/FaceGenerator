@@ -1,3 +1,7 @@
+import { useState } from 'react';
+import { toastInfo } from 'components/Toast';
+import AddMetadataSteps from 'components/Images/AddMetadataSteps';
+
 import { Grid } from '@mui/material';
 import clsx from 'clsx';
 import { useMemo } from 'react';
@@ -22,11 +26,13 @@ import FormikCustomAmountInput from 'components/Inputs/formik/custom/FormikCusto
 import useFacesApi from 'hooks/api/useFacesApi';
 
 const TransitionFaces: React.FC = () => {
-  const { generateTransitions } = useFacesApi();
+  const [openMetadataSteps, setOpenMetadataSteps] = useState<boolean>(false);
+  const { generateTransitions, saveFaceSerie } = useFacesApi();
+
   const {
     mutate: mutateGenerateTransitions,
     isLoading: isLoadingTransitions,
-    data: transitionFaces
+    data: transitionFacesSerie
   } = useMutation(generateTransitions, {
     onSuccess: data => {
       console.log(data);
@@ -38,9 +44,15 @@ const TransitionFaces: React.FC = () => {
     }
   });
 
-  const { images: TransitionFacesImages } = useRenderImages({
-    faces: transitionFaces
-  });
+  const transitionFaces = useMemo(() => {
+    if (!transitionFacesSerie) return [];
+    return transitionFacesSerie.faces;
+  }, [transitionFacesSerie]);
+
+  const { images: TransitionFacesImages, count: transitionFacesCount } =
+    useRenderImages({
+      faces: transitionFaces
+    });
 
   const renderSubtitle = useMemo(
     () => (
@@ -59,6 +71,46 @@ const TransitionFaces: React.FC = () => {
     amount
   }: TransitionFacesFormValues) => {
     mutateGenerateTransitions({ fromId: firstId, toId: secondId, amount });
+  };
+
+  const { mutate: mutateSaveFaceSerie, isLoading: isLoadingSaveSerie } =
+    useMutation(saveFaceSerie, {
+      onSuccess: data => {
+        console.log(data);
+      },
+      onError: error => {
+        if (error instanceof ApiError) {
+          toastError(
+            `Error saving face serie with id ${transitionFacesSerie!
+              .id!}. ${error.toString()}`
+          );
+        }
+      }
+    });
+
+  const onSaveSerie = () => {
+    if (
+      transitionFacesSerie === undefined ||
+      transitionFacesSerie!.id === undefined
+    ) {
+      toastError(`Saving Face Serie: Face Serie id is undefined`);
+      return;
+    }
+
+    setOpenMetadataSteps(true);
+  };
+
+  const onMetadataStepsDone = (metadata: Record<string, any>) => {
+    setOpenMetadataSteps(false);
+    toastInfo(`Saving serie with id ${transitionFacesSerie!.id!}...`);
+    mutateSaveFaceSerie({
+      id: transitionFacesSerie!.id!,
+      metadata
+    });
+  };
+
+  const onMetadataStepsCancel = () => {
+    setOpenMetadataSteps(false);
   };
 
   return (
@@ -108,6 +160,26 @@ const TransitionFaces: React.FC = () => {
                   loading={isLoadingTransitions}
                 />
                 {!isLoadingTransitions && TransitionFacesImages}
+                {!isLoadingTransitions && transitionFacesCount > 0 && (
+                  <CtaButton
+                    label="Save Serie"
+                    type="button"
+                    className="mt-8"
+                    onClick={onSaveSerie}
+                  />
+                )}
+                {openMetadataSteps && (
+                  <AddMetadataSteps
+                    open={openMetadataSteps}
+                    onDone={onMetadataStepsDone}
+                    onCancel={onMetadataStepsCancel}
+                    tagsStepProps={{
+                      stepTitle: 'Add tags to the serie',
+                      stepDescription: `The tags will be added only to the serie. The faces will not be affected but they will be saved without tags unless you add them.
+                      Feel free to close this modal and save the faces individually with tags.`
+                    }}
+                  />
+                )}
               </div>
             </div>
           </Form>

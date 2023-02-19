@@ -1,4 +1,4 @@
-import { FieldInputProps } from "formik";
+import { FieldInputProps } from 'formik';
 
 type FormikAutocompleteTagsProps = {
   field: FieldInputProps<any>;

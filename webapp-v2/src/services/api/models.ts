@@ -39,6 +39,12 @@ export interface IApiFaceFilters {
   tags?: string[];
 }
 
+export interface IApiFaceSerie {
+  id: number;
+  faces: IApiFace[];
+  tags?: string[];
+}
+
 export interface IApiAuth {
   accessToken: string;
   roles: number[];
