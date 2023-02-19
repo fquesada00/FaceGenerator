@@ -1,7 +1,10 @@
 import os
 from pydantic import BaseSettings
 
-ENVIRONMENT='production'
+class Environment:
+    PRODUCTION = 'production'
+    DEVELOPMENT = 'development'
+    
 class Settings(BaseSettings):
     # Environment
     ENV: str = 'production'
@@ -34,4 +37,4 @@ class Settings(BaseSettings):
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 30
     REFRESH_TOKEN_EXPIRE_DAYS: int = 7
 
-settings = Settings(_env_file=os.environ.get("PROJECT_PATH") + '/api/.env.' + ENVIRONMENT, _env_file_encoding='utf-8')
+settings = Settings(_env_file=os.environ.get("PROJECT_PATH") + '/api/.env.' + Environment.DEVELOPMENT, _env_file_encoding='utf-8')
