@@ -100,9 +100,9 @@ function ImageTemplate(props: ImageTemplateProps) {
           style={{ objectFit: 'cover' }}
         />
         <CardActions className="flex content-center justify-center space-x-6">
-          <Typography gutterBottom variant="h6" component="span">
+          {/* <Typography gutterBottom variant="h6" component="span">
             ID {faceId}
-          </Typography>
+          </Typography> */}
           {!disableDownload && (
             <IconButton onClick={onDownload}>
               <a ref={downloadRef} href={src} download="image.jpg" />

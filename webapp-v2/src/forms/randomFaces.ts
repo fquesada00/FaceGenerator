@@ -1,5 +1,5 @@
 import * as Yup from 'yup';
-import { MAX_FACES, MIN_FACES } from 'constants';
+import { MAX_FACES, MIN_FACES } from 'constants/constants';
 import { minMaxField } from './commons';
 
 export interface RandomFacesFormValues {

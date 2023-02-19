@@ -4,7 +4,7 @@ import {
   MIDDLE_FEATURE_SLIDER_VALUE,
   MIN_FEATURE_SLIDER_VALUE,
   STEP_FEATURE_SLIDER_VALUE
-} from 'constants';
+} from 'constants/constants';
 import { useMemo, useState } from 'react';
 import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';

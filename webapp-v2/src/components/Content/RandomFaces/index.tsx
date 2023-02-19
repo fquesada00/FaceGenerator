@@ -1,7 +1,7 @@
 import clsx from 'clsx';
 import { useMemo, useState } from 'react';
 import { Formik, Form } from 'formik';
-import { MIN_FACES, MAX_FACES } from 'constants';
+import { MIN_FACES, MAX_FACES } from 'constants/constants';
 
 import inputsClasses from 'components/Inputs/styles/Inputs.module.scss';
 import CustomAmountInput from 'components/Inputs/custom/CustomAmountInput';
