@@ -23,7 +23,7 @@ import {
 } from 'forms/modifyFaceFeatures';
 import FormikCustomIdInput from 'components/Inputs/formik/custom/FormikCustomIdInput';
 import FormikNumericInput from 'components/Inputs/formik/FormikNumericInput';
-import { MAX_AGE, MIN_AGE } from 'constants';
+import { MAX_AGE, MIN_AGE } from 'constants/constants';
 import FormikCustomSlider from 'components/Inputs/formik/custom/FormikCustomSlider';
 import useSlider from './hooks/useSlider';
 import useAgeInput from './hooks/useAgeInput';

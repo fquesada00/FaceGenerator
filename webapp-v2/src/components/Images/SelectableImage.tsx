@@ -37,9 +37,9 @@ function SelectableImage(props: SelectableImageProps) {
           className={clsx('flex', 'justify-center')}
           sx={{ backgroundColor: selected ? 'success.main' : 'secondary.main' }}
         >
-          <Typography gutterBottom variant="subtitle1" component="span">
+          {/* <Typography gutterBottom variant="subtitle1" component="span">
             ID {faceId}
-          </Typography>
+          </Typography> */}
         </Box>
       </Card>
     </div>
