@@ -366,3 +366,6 @@ sketch
 # End of https://www.toptal.com/developers/gitignore/api/webstorm,intellij,react,python,jupyternotebooks
 
 build/**
+
+*.env*
+!.env.example

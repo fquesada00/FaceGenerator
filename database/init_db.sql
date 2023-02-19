@@ -4,6 +4,14 @@ create table if not exists images (
     tags text[]
 );
 
+create table if not exists users (
+    id SERIAL primary key ,
+    username varchar(16),
+    password text,
+    user_role int
+);
+
+
 -- insert function, #tags converted to lower case
 create or replace function insert_image(_z float[], _tags text[])
     returns integer
@@ -31,3 +39,5 @@ create or replace function search_image(_tags text[])
         return query (select * from images where lower(_tags::text)::text[]  <@ images.tags );
     end;
 $$ LANGUAGE plpgsql;
+
+INSERT into users(username, password, user_role) values ('admin','$2b$12$gzGWzT7IjxF3hjeCcc4hU.t6uNH3.Q9wZ0mo6YmXrirJxdebD16wO',0);
