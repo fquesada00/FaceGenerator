@@ -1,24 +1,24 @@
-import { MAX_AGE, MIN_AGE } from "constants"
-import * as Yup from "yup"
+import { MAX_AGE, MIN_AGE } from 'constants/constants';
+import * as Yup from 'yup';
 
 export interface ModifyFaceFeaturesFormValues {
-  id: number
-  age: number
-  gender: number
-  faceOrientationVertical: number
-  faceOrientationHorizontal: number
-  eyeDistance: number
-  eyebrowsDistance: number
-  eyesRatio: number
-  eyesOpen: number
-  eyesRoll: number
-  mouthLipRatio: number
-  mouthOpen: number
-  mouthRatio: number
-  mouthSmile: number
-  noseDistance: number
-  noseRatio: number
-  noseTip: number
+  id: number;
+  age: number;
+  gender: number;
+  faceOrientationVertical: number;
+  faceOrientationHorizontal: number;
+  eyeDistance: number;
+  eyebrowsDistance: number;
+  eyesRatio: number;
+  eyesOpen: number;
+  eyesRoll: number;
+  mouthLipRatio: number;
+  mouthOpen: number;
+  mouthRatio: number;
+  mouthSmile: number;
+  noseDistance: number;
+  noseRatio: number;
+  noseTip: number;
 }
 
 export const initialValues: ModifyFaceFeaturesFormValues = {
@@ -38,13 +38,13 @@ export const initialValues: ModifyFaceFeaturesFormValues = {
   mouthSmile: 0,
   noseDistance: 0,
   noseRatio: 0,
-  noseTip: 0,
-}
+  noseTip: 0
+};
 
 export const modifyFaceFeaturesSchema = Yup.object().shape({
   id: Yup.number()
-    .required("ID is required")
-    .min(1, "ID must be greater than 0"),
+    .required('ID is required')
+    .min(1, 'ID must be greater than 0'),
   age: Yup.number()
     .min(-MAX_AGE, `Age must be greater than or equal to ${MIN_AGE}`)
     .max(MAX_AGE, `Age must be less than or equal to ${MAX_AGE}`),
@@ -62,5 +62,5 @@ export const modifyFaceFeaturesSchema = Yup.object().shape({
   mouthSmile: Yup.number().min(-1).max(1),
   noseDistance: Yup.number().min(-1).max(1),
   noseRatio: Yup.number().min(-1).max(1),
-  noseTip: Yup.number().min(-1).max(1),
-})
+  noseTip: Yup.number().min(-1).max(1)
+});

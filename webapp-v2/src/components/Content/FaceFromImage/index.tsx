@@ -1,58 +1,60 @@
-import { Grid } from "@mui/material"
-import clsx from "clsx"
-import { Formik, Form, ErrorMessage } from "formik"
-import AddSvg from "assets/add-svgrepo-com.svg"
+import { Grid } from '@mui/material';
+import clsx from 'clsx';
+import { Formik, Form, ErrorMessage } from 'formik';
+import AddSvg from 'assets/add-svgrepo-com.svg';
 
-import inputsClasses from "components/Inputs/styles/Inputs.module.scss"
-import { Box } from "@mui/system"
-import CtaButton from "components/CtaButton"
-import ContentHeader from "components/ContentHeader"
-import paths from "routes/paths"
-import { useMutation } from "react-query"
-import { generateFaceFromImage } from "services/api/FaceGeneratorApi"
-import { toastError } from "components/Toast"
-import ApiError from "services/api/Error"
-import ImageTemplate from "components/Images/ImageTemplate"
+import inputsClasses from 'components/Inputs/styles/Inputs.module.scss';
+import { Box } from '@mui/system';
+import CtaButton from 'components/CtaButton';
+import ContentHeader from 'components/ContentHeader';
+import paths from 'routes/paths';
+import { useMutation } from 'react-query';
+import { toastError } from 'components/Toast';
+import ApiError from 'services/api/Error';
+import ImageTemplate from 'components/Images/ImageTemplate';
 import {
   faceFromImageFormSchema,
   FaceFromImageFormValues,
-  initialValues,
-} from "forms/faceFromImage"
-import { useCallback, useMemo, useRef } from "react"
+  initialValues
+} from 'forms/faceFromImage';
+import { useCallback, useMemo, useRef } from 'react';
+import useFacesApi from 'hooks/api/useFacesApi';
 
 interface ImagePickerProps {
-  imageFile: File | null
+  imageFile: File | null;
 }
 
 const FaceFromImage: React.FC = () => {
-  const inputRef = useRef<HTMLInputElement | null>(null)
+  const { generateFaceFromImage } = useFacesApi();
+
+  const inputRef = useRef<HTMLInputElement | null>(null);
 
   const {
     mutate: mutateGenerateFaceFromImage,
     isLoading: isLoadingFaceFromImage,
-    data: faceFromImage,
+    data: faceFromImage
   } = useMutation(generateFaceFromImage, {
-    onSuccess: (data) => {
-      console.log(data)
+    onSuccess: data => {
+      console.log(data);
     },
-    onError: (error) => {
+    onError: error => {
       if (error instanceof ApiError) {
-        toastError(error.toString())
+        toastError(error.toString());
       }
-    },
-  })
+    }
+  });
 
   const onClickImage = () => {
-    inputRef?.current?.click()
-  }
+    inputRef?.current?.click();
+  };
 
   const onGenerateFaceFromImage = ({ image }: FaceFromImageFormValues) => {
     if (!image) {
-      return
+      return;
     }
 
-    mutateGenerateFaceFromImage(image)
-  }
+    mutateGenerateFaceFromImage(image);
+  };
 
   const ImagePicker = useCallback(
     ({ imageFile }: ImagePickerProps) => {
@@ -61,17 +63,17 @@ const FaceFromImage: React.FC = () => {
           <div className="flex flex-col items-center justify-center w-full h-full">
             <div
               className="w-24 h-24 rounded-full border-stone-900"
-              style={{ borderWidth: "0.25rem" }}
+              style={{ borderWidth: '0.25rem' }}
             >
               <div className="flex flex-col items-center justify-center w-full h-full">
                 <img src={AddSvg} alt="Add SVG" />
               </div>
             </div>
           </div>
-        )
+        );
       }
 
-      const imageSrc = URL.createObjectURL(imageFile)
+      const imageSrc = URL.createObjectURL(imageFile);
 
       return (
         <div className="w-full h-full">
@@ -79,13 +81,13 @@ const FaceFromImage: React.FC = () => {
             className="w-full h-full"
             src={imageSrc}
             alt="Your face image"
-            style={{ objectFit: "cover" }}
+            style={{ objectFit: 'cover' }}
           />
         </div>
-      )
+      );
     },
     [inputRef, AddSvg]
-  )
+  );
 
   return (
     <div>
@@ -116,23 +118,23 @@ const FaceFromImage: React.FC = () => {
                 <Form>
                   <Box
                     className="rounded-lg border-stone-900"
-                    style={{ borderWidth: "0.25rem" }}
+                    style={{ borderWidth: '0.25rem' }}
                     onClick={onClickImage}
                     sx={{
                       width: {
-                        xs: "14rem",
-                        sm: "18rem",
-                        md: "22rem",
-                        lg: "24rem",
-                        xl: "28rem",
+                        xs: '14rem',
+                        sm: '18rem',
+                        md: '22rem',
+                        lg: '24rem',
+                        xl: '28rem'
                       },
                       height: {
-                        xs: "14rem",
-                        sm: "18rem",
-                        md: "22rem",
-                        lg: "24rem",
-                        xl: "28rem",
-                      },
+                        xs: '14rem',
+                        sm: '18rem',
+                        md: '22rem',
+                        lg: '24rem',
+                        xl: '28rem'
+                      }
                     }}
                   >
                     <input
@@ -143,11 +145,11 @@ const FaceFromImage: React.FC = () => {
                       onClick={() => setTouched({ image: true })}
                       onChange={() => {
                         if (inputRef?.current?.files?.length === 0) {
-                          return
+                          return;
                         }
 
-                        const file = inputRef?.current?.files?.[0] || null
-                        setFieldValue("image", file)
+                        const file = inputRef?.current?.files?.[0] || null;
+                        setFieldValue('image', file);
                       }}
                       ref={inputRef}
                     />
@@ -155,7 +157,7 @@ const FaceFromImage: React.FC = () => {
                   </Box>
                   <ErrorMessage
                     name="image"
-                    render={(message) => (
+                    render={message => (
                       <div className="text-red-600 mt-2">{message}</div>
                     )}
                   />
@@ -183,19 +185,19 @@ const FaceFromImage: React.FC = () => {
             <Box
               sx={{
                 width: {
-                  xs: "14rem",
-                  sm: "18rem",
-                  md: "22rem",
-                  lg: "24rem",
-                  xl: "28rem",
+                  xs: '14rem',
+                  sm: '18rem',
+                  md: '22rem',
+                  lg: '24rem',
+                  xl: '28rem'
                 },
                 height: {
-                  xs: "14rem",
-                  sm: "18rem",
-                  md: "22rem",
-                  lg: "24rem",
-                  xl: "28rem",
-                },
+                  xs: '14rem',
+                  sm: '18rem',
+                  md: '22rem',
+                  lg: '24rem',
+                  xl: '28rem'
+                }
               }}
             >
               <ImageTemplate
@@ -211,7 +213,7 @@ const FaceFromImage: React.FC = () => {
         </Grid>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default FaceFromImage
+export default FaceFromImage;

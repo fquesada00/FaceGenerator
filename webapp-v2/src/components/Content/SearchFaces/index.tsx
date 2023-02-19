@@ -1,85 +1,88 @@
-import clsx from "clsx"
-import { useMemo, useState } from "react"
-import { Formik, Form } from "formik"
-import inputsClasses from "components/Inputs/styles/Inputs.module.scss"
-import CtaButton from "components/CtaButton"
-import ContentHeader from "components/ContentHeader"
-import paths from "routes/paths"
-import { useMutation } from "react-query"
-import { toastError } from "components/Toast"
-import ApiError from "services/api/Error"
-import { getAllFaces, searchFaces } from "services/api/FaceGeneratorApi"
-import useRenderImages from "hooks/useRenderImages"
+import clsx from 'clsx';
+import { useMemo, useState } from 'react';
+import { Formik, Form } from 'formik';
+import inputsClasses from 'components/Inputs/styles/Inputs.module.scss';
+import CtaButton from 'components/CtaButton';
+import ContentHeader from 'components/ContentHeader';
+import paths from 'routes/paths';
+import { useMutation } from 'react-query';
+import { toastError } from 'components/Toast';
+import ApiError from 'services/api/Error';
+import useRenderImages from 'hooks/useRenderImages';
 import {
   searchFacesFormSchema,
   SearchFacesValues,
-  initialValues,
-} from "forms/searchFaces"
-import FormikAutoCompleteTags from "components/Inputs/formik/FormikAutoCompleteTags"
+  initialValues
+} from 'forms/searchFaces';
+import FormikAutoCompleteTags from 'components/Inputs/formik/FormikAutoCompleteTags';
+import useFacesApi from 'hooks/api/useFacesApi';
 
 const SearchFaces: React.FC = () => {
-  const [hideAll, setHideAll] = useState<boolean>(true)
+  const { searchFaces, getAllFaces } = useFacesApi();
+
+  const [hideAll, setHideAll] = useState<boolean>(true);
 
   const {
     mutate: mutateSearchFaces,
     isLoading: isLoadingSearch,
-    data: filteredFaces,
+    data: filteredFaces
   } = useMutation(searchFaces, {
-    onSuccess: (data) => {
-      console.log(data)
+    onSuccess: data => {
+      console.log(data);
     },
-    onError: (error) => {
+    onError: error => {
       if (error instanceof ApiError) {
-        toastError(error.toString())
+        toastError(error.toString());
       }
-    },
-  })
+    }
+  });
 
   const { images: SearchFacesImages } = useRenderImages({
     faces: filteredFaces,
-    disableSave: true,
-  })
+    disableSave: true
+  });
 
   const {
     mutate: mutateGetAllFaces,
     isLoading: isLoadingShowAll,
-    data: allFaces,
+    data: allFaces
   } = useMutation(getAllFaces, {
-    onSuccess: (data) => {
-      console.log(data)
+    onSuccess: data => {
+      console.log(data);
     },
-    onError: (error) => {
+    onError: error => {
       if (error instanceof ApiError) {
-        toastError(error.toString())
+        toastError(error.toString());
       }
-    },
-  })
+    }
+  });
 
   const { images: AllFacesImages } = useRenderImages({
     faces: allFaces,
-    disableSave: true,
-  })
+    disableSave: true
+  });
 
-  const renderSubtitle = useMemo(() => {
-    return (
+  const renderSubtitle = useMemo(
+    () => (
       <div>
         Lookup for the faces that you want to see.
         <br />
         The results will be displayed below.
       </div>
-    )
-  }, [])
+    ),
+    []
+  );
 
   const onShowAll = () => {
     if (!allFaces && hideAll) {
-      mutateGetAllFaces({})
+      mutateGetAllFaces({});
     }
-    setHideAll(!hideAll)
-  }
+    setHideAll(!hideAll);
+  };
 
   const onSubmit = ({ tags }: SearchFacesValues) => {
-    mutateSearchFaces({ tags })
-  }
+    mutateSearchFaces({ tags });
+  };
 
   return (
     <div>
@@ -108,7 +111,7 @@ const SearchFaces: React.FC = () => {
             {!isLoadingSearch && filteredFaces && SearchFacesImages}
             <CtaButton
               onClick={onShowAll}
-              label={`${!hideAll ? "Hide" : "Show"} all`}
+              label={`${!hideAll ? 'Hide' : 'Show'} all`}
               className="mt-4"
               loading={isLoadingShowAll}
             />
@@ -117,7 +120,7 @@ const SearchFaces: React.FC = () => {
         </Form>
       </Formik>
     </div>
-  )
-}
+  );
+};
 
-export default SearchFaces
+export default SearchFaces;

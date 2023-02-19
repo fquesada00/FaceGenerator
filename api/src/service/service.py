@@ -10,10 +10,7 @@ import os
 import Pyro4
 from Pyro4.util import SerializerBase
 from src.service.utils import SingletonMeta
-
-
-
-
+from src.service.config import settings
 
 database = GeneratorDB()
 
@@ -65,7 +62,7 @@ class GeneratorService(metaclass=SingletonMeta):
             #image = self.generator.generate_image_from_latent_vector(value['z'])
             #image = FaceImage.to_image(image)
             face = {
-                'image': 'http://localhost:5000/faces/' + str(value['id']),
+                'image': settings.FULL_HOST + settings.API_PATH + '/faces/' + str(value['id']),
                 'id': value['id'],
                 'z': value['z']
             }

@@ -1,31 +1,32 @@
 import {
   CheckBoxOutlineBlank as CheckBoxOutlineBlankIcon,
-  CheckBox as CheckBoxIcon,
-} from "@mui/icons-material"
-import { Checkbox, TextField, Autocomplete, Chip } from "@mui/material"
-import { toastError } from "components/Toast"
-import { useField } from "formik"
-import { useQuery } from "react-query"
-import ApiError from "services/api/Error"
-import { getAllTags } from "services/api/FaceGeneratorApi"
+  CheckBox as CheckBoxIcon
+} from '@mui/icons-material';
+import { Checkbox, TextField, Autocomplete, Chip } from '@mui/material';
+import { toastError } from 'components/Toast';
+import { useField } from 'formik';
+import useFacesApi from 'hooks/api/useFacesApi';
+import { useQuery } from 'react-query';
+import ApiError from 'services/api/Error';
 
 interface FormikAutoCompleteTagsProps {
-  name: string
-  label?: string
-  allowUserInput?: boolean
+  name: string;
+  label?: string;
+  allowUserInput?: boolean;
 }
 
-const FormikAutoCompleteTags = (props: FormikAutoCompleteTagsProps) => {
-  const { allowUserInput = false, name, label = "" } = props
-  const { isLoading: _, data: tags } = useQuery("tags", getAllTags, {
-    onError: (error) => {
+function FormikAutoCompleteTags(props: FormikAutoCompleteTagsProps) {
+  const { getAllTags } = useFacesApi();
+  const { allowUserInput = false, name, label = '' } = props;
+  const { isLoading: _, data: tags } = useQuery('tags', getAllTags, {
+    onError: error => {
       if (error instanceof ApiError) {
-        toastError(error.toString())
+        toastError(error.toString());
       }
-    },
-  })
+    }
+  });
 
-  const [field, meta, helpers] = useField(name)
+  const [field, meta, helpers] = useField(name);
 
   return (
     <Autocomplete
@@ -52,7 +53,7 @@ const FormikAutoCompleteTags = (props: FormikAutoCompleteTagsProps) => {
           <Chip variant="filled" label={option} {...getTagProps({ index })} />
         ))
       }
-      renderInput={(params) => (
+      renderInput={params => (
         <TextField
           {...params}
           variant="outlined"
@@ -62,10 +63,10 @@ const FormikAutoCompleteTags = (props: FormikAutoCompleteTagsProps) => {
         />
       )}
       onChange={(_, value) => {
-        helpers.setValue(value)
+        helpers.setValue(value);
       }}
     />
-  )
+  );
 }
 
-export default FormikAutoCompleteTags
+export default FormikAutoCompleteTags;

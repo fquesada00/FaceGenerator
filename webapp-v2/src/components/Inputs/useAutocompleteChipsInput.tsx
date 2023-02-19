@@ -2,8 +2,8 @@ import {
   CheckBoxOutlineBlank as CheckBoxOutlineBlankIcon,
   CheckBox as CheckBoxIcon
 } from '@mui/icons-material';
-import { useState, useMemo } from "react";
-import { Checkbox, TextField, Autocomplete, Chip } from "@mui/material";
+import { useState, useMemo } from 'react';
+import { Checkbox, TextField, Autocomplete, Chip } from '@mui/material';
 
 type AutocompleteChipsInputProps = {
   options: string[] | undefined;
@@ -23,8 +23,8 @@ const useAutocompleteChipsInput = (props: AutocompleteChipsInputProps) => {
     onChange?.(newValue);
   };
 
-  const MemoizedAutocomplete = useMemo(() => {
-    return (
+  const MemoizedAutocomplete = useMemo(
+    () => (
       <Autocomplete
         multiple
         options={options ?? []}
@@ -46,18 +46,15 @@ const useAutocompleteChipsInput = (props: AutocompleteChipsInputProps) => {
             <Chip variant="filled" label={option} {...getTagProps({ index })} />
           ))
         }
-        renderInput={(params) => (
-          <TextField
-            {...params}
-            variant="outlined"
-            placeholder={label}
-          />
+        renderInput={params => (
+          <TextField {...params} variant="outlined" placeholder={label} />
         )}
         value={selectedTags}
         onChange={handleChange}
       />
-    );
-  }, [selectedTags, options, label]);
+    ),
+    [selectedTags, options, label]
+  );
 
   return {
     content: MemoizedAutocomplete,

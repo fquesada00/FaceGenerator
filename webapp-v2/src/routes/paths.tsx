@@ -1,4 +1,8 @@
 const paths = {
+  login: {
+    path: '/login',
+    title: 'Login'
+  },
   home: {
     path: '/faces',
     title: 'Home'
@@ -30,7 +34,7 @@ const paths = {
   about: {
     path: '/about',
     title: 'About'
-  },
+  }
 };
 
 export default paths;

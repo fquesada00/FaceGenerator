@@ -1,5 +1,6 @@
 class ApiError extends Error {
   private _title: string;
+
   private _detail: string;
 
   constructor(title: string, message: string) {
@@ -24,6 +25,6 @@ class ApiError extends Error {
 export const getErrorMessage = (error: unknown) => {
   if (error instanceof Error) return error.message;
   return String(error);
-}
+};
 
 export default ApiError;
