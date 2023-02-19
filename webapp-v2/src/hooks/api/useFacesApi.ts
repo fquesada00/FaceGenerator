@@ -206,6 +206,19 @@ const useFacesApi = () => {
     [api]
   );
 
+  const getFacesSeries = useCallback(
+    async (tags: string[]): Promise<IApiFaceSerie[]> => {
+      try {
+        // const response = await api.get<ApiResponse>(`${FACES_API_PREFIX}/series`, { query:{ tags }});
+        // return response.result;
+        return datasource.series;
+      } catch (error) {
+        throw new ApiError('Get faces series', getErrorMessage(error));
+      }
+    },
+    [api]
+  );
+
   return {
     generateFaces,
     getAllFaces,
@@ -217,7 +230,8 @@ const useFacesApi = () => {
     saveFace,
     modifyFaceFeatures,
     getAllTags,
-    saveFaceSerie
+    saveFaceSerie,
+    getFacesSeries
   };
 };
 
