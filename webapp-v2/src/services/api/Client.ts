@@ -3,14 +3,20 @@ import { camelizeKeys, decamelizeKeys } from 'humps';
 
 const CONTENT_TYPE_JSON = 'application/json';
 
-export const client = axios.create({});
+const BASIC_OPTIONS = {
+  baseURL: import.meta.env.VITE_APP_BASE_PATH
+};
+
+export const client = axios.create({
+  ...BASIC_OPTIONS
+});
 
 export const privateClient = axios.create({
+  ...BASIC_OPTIONS,
   headers: {
     'Content-Type': CONTENT_TYPE_JSON
   },
-  withCredentials: true,
-  baseURL: import.meta.env.VITE_APP_BASE_PATH
+  withCredentials: true
 });
 
 const requestInterceptor = (config: AxiosRequestConfig) => {
