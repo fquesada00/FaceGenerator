@@ -3,6 +3,8 @@ version: '3.1'
 services:
   db:
     image: postgres:15
+    hostname: postgres
+    container_name: postgres
     environment:
       POSTGRES_USER: facegenerator
       POSTGRES_PASSWORD: facegenerator
@@ -12,3 +14,4 @@ services:
     volumes:
       - ./init_db.sql:/docker-entrypoint-initdb.d/init.sql
       - ./data:/var/lib/postgresql/data
+    network_mode: host
