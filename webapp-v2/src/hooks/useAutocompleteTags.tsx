@@ -1,11 +1,10 @@
-import { FormikAutoCompleteTagsProps } from "components/Inputs/formik/models/FormikAutoCompleteTagsModels";
-import useAutocompleteChipsInput from "components/Inputs/useAutocompleteChipsInput";
-import { useEffect } from "react";
-import { useMutation } from "react-query";
+import { FormikAutoCompleteTagsProps } from 'components/Inputs/formik/models/FormikAutoCompleteTagsModels';
+import useAutocompleteChipsInput from 'components/Inputs/useAutocompleteChipsInput';
+import { useEffect } from 'react';
+import { useMutation } from 'react-query';
 import { toastError } from 'components/Toast';
 import ApiError from 'services/api/Error';
-import useFacesApi from "./api/useFacesApi";
-
+import useFacesApi from './api/useFacesApi';
 
 type AutocompleteTags = {
   label?: string;
@@ -22,23 +21,24 @@ const useAutocompleteTags = (props: AutocompleteTags) => {
     isLoading: isLoadingTags,
     data: tags
   } = useMutation(getAllTags, {
-    onSuccess: (data) => {
+    onSuccess: data => {
       console.log(data);
     },
-    onError: (error) => {
+    onError: error => {
       if (error instanceof ApiError) {
         toastError(error.toString());
       }
     }
   });
 
-  const { content: Autocomplete, value: selectedTags } = useAutocompleteChipsInput({
-    options: tags,
-    value: [],
-    label: label,
-    allowUserInput: allowUserInput,
-    formikAutoCompleteTagsProps
-  });
+  const { content: Autocomplete, value: selectedTags } =
+    useAutocompleteChipsInput({
+      options: tags,
+      value: [],
+      label: label,
+      allowUserInput: allowUserInput,
+      formikAutoCompleteTagsProps
+    });
 
   useEffect(() => {
     mutateGetAllTags();

@@ -27,8 +27,7 @@ import useFacesApi from 'hooks/api/useFacesApi';
 
 const TransitionFaces: React.FC = () => {
   const [openMetadataSteps, setOpenMetadataSteps] = useState<boolean>(false);
-  const { generateTransitions, saveFaceSerie} = useFacesApi();
-
+  const { generateTransitions, saveFaceSerie } = useFacesApi();
 
   const {
     mutate: mutateGenerateTransitions,

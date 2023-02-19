@@ -1,29 +1,25 @@
-import { useMemo } from "react";
-import { MetadataStepProps } from ".";
-import { CircularProgress, Typography } from "@mui/material";
-import useAutocompleteTags from "hooks/useAutocompleteTags";
-import React from "react";
+import { useMemo } from 'react';
+import { MetadataStepProps } from '.';
+import { CircularProgress, Typography } from '@mui/material';
+import useAutocompleteTags from 'hooks/useAutocompleteTags';
+import React from 'react';
 
 const useAddTagsSteps = (props: MetadataStepProps) => {
-  const { stepTitle = "Add tags to the image", stepDescription } = props;
+  const { stepTitle = 'Add tags to the image', stepDescription } = props;
 
   const { Autocomplete, selectedTags, isLoadingTags } = useAutocompleteTags({
-    label: 'Search tags',
+    label: 'Search tags'
   });
 
   const title = useMemo(() => {
     return (
       <React.Fragment>
-        <p>
-          {stepTitle}
-        </p>
-        {
-          stepDescription && (
-            <Typography variant="body1" color="textSecondary">
-              {stepDescription}
-            </Typography>
-          )
-        }
+        <p>{stepTitle}</p>
+        {stepDescription && (
+          <Typography variant="body1" color="textSecondary">
+            {stepDescription}
+          </Typography>
+        )}
       </React.Fragment>
     );
   }, [stepTitle]);

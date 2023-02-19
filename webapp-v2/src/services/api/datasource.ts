@@ -76,7 +76,7 @@ const datasource = {
     'brown',
     'black',
     'red',
-    'white',
+    'white'
   ],
   series: [
     {
@@ -133,20 +133,20 @@ const datasource = {
         {
           id: 13,
           image: 'https://dummyimage.com/600x400/ff00ff/ededed&text=id+13'
-        },
+        }
       ],
       tags: [
-        "male",
-        "young",
-        "smiling",
-        "happy",
-        "neutral",
-        "beard",
-        "mustache",
-        "glasses",
-        "hat",
-        "hair",
-        "blond"
+        'male',
+        'young',
+        'smiling',
+        'happy',
+        'neutral',
+        'beard',
+        'mustache',
+        'glasses',
+        'hat',
+        'hair',
+        'blond'
       ]
     },
     {
@@ -203,20 +203,20 @@ const datasource = {
         {
           id: 13,
           image: 'https://dummyimage.com/600x400/ff00ff/ededed&text=id+13'
-        },
+        }
       ],
       tags: [
-        "male",
-        "young",
-        "smiling",
-        "happy",
-        "neutral",
-        "beard",
-        "mustache",
-        "glasses",
-        "hat",
-        "hair",
-        "blond"
+        'male',
+        'young',
+        'smiling',
+        'happy',
+        'neutral',
+        'beard',
+        'mustache',
+        'glasses',
+        'hat',
+        'hair',
+        'blond'
       ]
     },
     {
@@ -273,20 +273,20 @@ const datasource = {
         {
           id: 13,
           image: 'https://dummyimage.com/600x400/ff00ff/ededed&text=id+13'
-        },
+        }
       ],
       tags: [
-        "male",
-        "young",
-        "smiling",
-        "happy",
-        "neutral",
-        "beard",
-        "mustache",
-        "glasses",
-        "hat",
-        "hair",
-        "blond"
+        'male',
+        'young',
+        'smiling',
+        'happy',
+        'neutral',
+        'beard',
+        'mustache',
+        'glasses',
+        'hat',
+        'hair',
+        'blond'
       ]
     },
     {
@@ -343,20 +343,20 @@ const datasource = {
         {
           id: 13,
           image: 'https://dummyimage.com/600x400/ff00ff/ededed&text=id+13'
-        },
+        }
       ],
       tags: [
-        "male",
-        "young",
-        "smiling",
-        "happy",
-        "neutral",
-        "beard",
-        "mustache",
-        "glasses",
-        "hat",
-        "hair",
-        "blond"
+        'male',
+        'young',
+        'smiling',
+        'happy',
+        'neutral',
+        'beard',
+        'mustache',
+        'glasses',
+        'hat',
+        'hair',
+        'blond'
       ]
     },
     {
@@ -413,20 +413,20 @@ const datasource = {
         {
           id: 13,
           image: 'https://dummyimage.com/600x400/ff00ff/ededed&text=id+13'
-        },
+        }
       ],
       tags: [
-        "male",
-        "young",
-        "smiling",
-        "happy",
-        "neutral",
-        "beard",
-        "mustache",
-        "glasses",
-        "hat",
-        "hair",
-        "blond"
+        'male',
+        'young',
+        'smiling',
+        'happy',
+        'neutral',
+        'beard',
+        'mustache',
+        'glasses',
+        'hat',
+        'hair',
+        'blond'
       ]
     }
   ]

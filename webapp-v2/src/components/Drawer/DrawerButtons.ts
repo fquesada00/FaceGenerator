@@ -13,43 +13,43 @@ const buttons = [
   {
     icon: HomeIcon,
     text: paths.home.title,
-    path: paths.home.path,
+    path: paths.home.path
   },
   {
     icon: ShuffleIcon,
     text: paths.randomFaces.title,
-    path: `${paths.home.path}/${paths.randomFaces.path}`,
+    path: `${paths.home.path}/${paths.randomFaces.path}`
   },
   {
     icon: SearchIcon,
     text: paths.searchFaces.title,
-    path: `${paths.home.path}/${paths.searchFaces.path}`,
+    path: `${paths.home.path}/${paths.searchFaces.path}`
   },
   {
     icon: LayersIcon,
     text: paths.transitionFaces.title,
-    path: `${paths.home.path}/${paths.transitionFaces.path}`,
+    path: `${paths.home.path}/${paths.transitionFaces.path}`
   },
   {
     icon: ImageSearchIcon,
     text: paths.faceFromImage.title,
-    path: `${paths.home.path}/${paths.faceFromImage.path}`,
+    path: `${paths.home.path}/${paths.faceFromImage.path}`
   },
   {
     icon: FaceRetouchingNaturalIcon,
     text: paths.faceFeaturesModification.title,
-    path: `${paths.home.path}/${paths.faceFeaturesModification.path}`,
+    path: `${paths.home.path}/${paths.faceFeaturesModification.path}`
   },
   {
     icon: ImportExportIcon,
     text: paths.interchangeFacesFeatures.title,
-    style: { transform: "rotate(90deg)" },
-    path: `${paths.home.path}/${paths.interchangeFacesFeatures.path}`,
+    style: { transform: 'rotate(90deg)' },
+    path: `${paths.home.path}/${paths.interchangeFacesFeatures.path}`
   },
   {
     icon: GroupIcon,
     text: paths.facesSeries.title,
-    path: `${paths.home.path}/${paths.facesSeries.path}`,
+    path: `${paths.home.path}/${paths.facesSeries.path}`
   },
   {
     icon: InfoIcon,

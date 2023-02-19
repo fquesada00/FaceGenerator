@@ -43,7 +43,11 @@ const AddMetadataSteps = (props: AddMetadataStepsProps) => {
     setStep(newStep);
   };
 
-  const { title: addTagsTitle, content: addTagsContent, data: addTagsData } = useAddTagsStep(tagsStepProps);
+  const {
+    title: addTagsTitle,
+    content: addTagsContent,
+    data: addTagsData
+  } = useAddTagsStep(tagsStepProps);
 
   const { title, content, data } = useMemo(() => {
     switch (step) {
@@ -84,6 +88,6 @@ const AddMetadataSteps = (props: AddMetadataStepsProps) => {
       </DialogActions>
     </Dialog>
   );
-}
+};
 
 export default AddMetadataSteps;

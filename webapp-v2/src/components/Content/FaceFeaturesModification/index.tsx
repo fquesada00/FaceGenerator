@@ -141,19 +141,19 @@ const FaceFeaturesModification: React.FC = () => {
                   <Box
                     sx={{
                       width: {
-                        xs: "13rem",
-                        sm: "18rem",
-                        md: "22rem",
-                        lg: "24rem",
-                        xl: "28rem",
+                        xs: '13rem',
+                        sm: '18rem',
+                        md: '22rem',
+                        lg: '24rem',
+                        xl: '28rem'
                       },
                       height: {
-                        xs: "18rem",
-                        sm: "22rem",
-                        md: "26rem",
-                        lg: "30rem",
-                        xl: "34rem",
-                      },
+                        xs: '18rem',
+                        sm: '22rem',
+                        md: '26rem',
+                        lg: '30rem',
+                        xl: '34rem'
+                      }
                     }}
                   >
                     <FeatureModificationSection title="General" first>
