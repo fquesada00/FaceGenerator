@@ -5,49 +5,55 @@ import LayersIcon from '@mui/icons-material/Layers';
 import ImageSearchIcon from '@mui/icons-material/ImageSearch';
 import FaceRetouchingNaturalIcon from '@mui/icons-material/FaceRetouchingNatural';
 import ShuffleIcon from '@mui/icons-material/Shuffle';
+import GroupIcon from '@mui/icons-material/Group';
 import InfoIcon from '@mui/icons-material/Info';
 import paths from 'routes/paths';
 
 const buttons = [
   {
     icon: HomeIcon,
-    text: 'Home',
+    text: paths.home.title,
     path: paths.home.path
   },
   {
     icon: ShuffleIcon,
-    text: 'Random faces',
+    text: paths.randomFaces.title,
     path: `${paths.home.path}/${paths.randomFaces.path}`
   },
   {
     icon: SearchIcon,
-    text: 'Search faces',
+    text: paths.searchFaces.title,
     path: `${paths.home.path}/${paths.searchFaces.path}`
   },
   {
     icon: LayersIcon,
-    text: 'Transition faces',
+    text: paths.transitionFaces.title,
     path: `${paths.home.path}/${paths.transitionFaces.path}`
   },
   {
     icon: ImageSearchIcon,
-    text: 'Face from image',
+    text: paths.faceFromImage.title,
     path: `${paths.home.path}/${paths.faceFromImage.path}`
   },
   {
     icon: FaceRetouchingNaturalIcon,
-    text: 'Modify face features',
+    text: paths.faceFeaturesModification.title,
     path: `${paths.home.path}/${paths.faceFeaturesModification.path}`
   },
   {
     icon: ImportExportIcon,
-    text: 'Interchange features',
+    text: paths.interchangeFacesFeatures.title,
     style: { transform: 'rotate(90deg)' },
     path: `${paths.home.path}/${paths.interchangeFacesFeatures.path}`
   },
   {
+    icon: GroupIcon,
+    text: paths.facesSeries.title,
+    path: `${paths.home.path}/${paths.facesSeries.path}`
+  },
+  {
     icon: InfoIcon,
-    text: 'About',
+    text: paths.about.title,
     path: paths.about.path
   }
 ];

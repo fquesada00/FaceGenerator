@@ -1,5 +1,4 @@
 import { Navigate, RouteObject } from 'react-router-dom';
-
 import Root from 'pages/Root';
 import Home from 'components/Content/Home';
 import SearchFaces from 'components/Content/SearchFaces';
@@ -13,6 +12,7 @@ import Login from 'pages/Login';
 import RequireAuth from 'components/RequireAuth';
 import PersistentLogin from 'components/PersistentLogin';
 import paths from './paths';
+import FacesSeries from 'components/Content/FacesSeries';
 
 const ROLES = {
   USER: 0,
@@ -57,6 +57,10 @@ const routes: RouteObject[] = [
               {
                 path: paths.interchangeFacesFeatures.path,
                 element: <InterchangeFacesFeatures />
+              },
+              {
+                path: paths.facesSeries.path,
+                element: <FacesSeries />
               },
               {
                 element: <Home />,

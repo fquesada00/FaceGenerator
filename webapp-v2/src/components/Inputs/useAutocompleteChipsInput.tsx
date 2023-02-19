@@ -12,7 +12,7 @@ type AutocompleteChipsInputProps = {
   onChange?: (value: string[]) => void;
   label: string;
   allowUserInput?: boolean;
-  formikAutoCompleteTagsProps: FormikAutoCompleteTagsProps;
+  formikAutoCompleteTagsProps?: FormikAutoCompleteTagsProps;
 };
 
 const useAutocompleteChipsInput = (props: AutocompleteChipsInputProps) => {

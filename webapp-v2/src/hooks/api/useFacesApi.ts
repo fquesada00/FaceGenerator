@@ -7,7 +7,8 @@ import {
   ApiResponse,
   IApiFace,
   IApiFaceFeatures,
-  IApiFaceFilters
+  IApiFaceFilters,
+  IApiFaceSerie
 } from 'services/api/models';
 
 const useFacesApi = () => {
@@ -82,7 +83,7 @@ const useFacesApi = () => {
       fromId: number;
       toId: number;
       amount: number;
-    }) => {
+    }): Promise<IApiFaceSerie> => {
       try {
         const response = await api.get<ApiResponse>(
           `${FACES_API_PREFIX}/transition`,
@@ -189,6 +190,35 @@ const useFacesApi = () => {
     }
   }, [api]);
 
+  const saveFaceSerie = useCallback(
+    async ({ id, metadata }: { id: number; metadata: Record<string, any> }) => {
+      try {
+        const response = await api.post<ApiResponse>(
+          `${FACES_API_PREFIX}/series/${id}`,
+          {
+            body: JSON.stringify(metadata)
+          }
+        );
+      } catch (error) {
+        throw new ApiError('Save face serie', getErrorMessage(error));
+      }
+    },
+    [api]
+  );
+
+  const getFacesSeries = useCallback(
+    async (tags: string[]): Promise<IApiFaceSerie[]> => {
+      try {
+        // const response = await api.get<ApiResponse>(`${FACES_API_PREFIX}/series`, { query:{ tags }});
+        // return response.result;
+        return datasource.series;
+      } catch (error) {
+        throw new ApiError('Get faces series', getErrorMessage(error));
+      }
+    },
+    [api]
+  );
+
   return {
     generateFaces,
     getAllFaces,
@@ -199,7 +229,9 @@ const useFacesApi = () => {
     interchangeFacesFeatures,
     saveFace,
     modifyFaceFeatures,
-    getAllTags
+    getAllTags,
+    saveFaceSerie,
+    getFacesSeries
   };
 };
 
