@@ -2,6 +2,7 @@ import {
   CheckBoxOutlineBlank as CheckBoxOutlineBlankIcon,
   CheckBox as CheckBoxIcon
 } from '@mui/icons-material';
+import { FormikAutoCompleteTagsProps } from './formik/models/FormikAutoCompleteTagsModels';
 import { useState, useMemo } from 'react';
 import { Checkbox, TextField, Autocomplete, Chip } from '@mui/material';
 
@@ -11,14 +12,26 @@ type AutocompleteChipsInputProps = {
   onChange?: (value: string[]) => void;
   label: string;
   allowUserInput?: boolean;
+  formikAutoCompleteTagsProps: FormikAutoCompleteTagsProps;
 };
 
 const useAutocompleteChipsInput = (props: AutocompleteChipsInputProps) => {
-  const { options, value, onChange, label, allowUserInput = true } = props;
+  const {
+    options,
+    value,
+    onChange,
+    label,
+    allowUserInput = true,
+    formikAutoCompleteTagsProps
+  } = props;
 
   const [selectedTags, setSelectedTags] = useState<string[]>(value);
 
   const handleChange = (event: React.ChangeEvent<{}>, newValue: string[]) => {
+    if (formikAutoCompleteTagsProps) {
+      formikAutoCompleteTagsProps.onChange(event, newValue);
+    }
+
     setSelectedTags(newValue);
     onChange?.(newValue);
   };
@@ -26,6 +39,7 @@ const useAutocompleteChipsInput = (props: AutocompleteChipsInputProps) => {
   const MemoizedAutocomplete = useMemo(
     () => (
       <Autocomplete
+        {...formikAutoCompleteTagsProps?.autocompleteProps}
         multiple
         options={options ?? []}
         freeSolo={allowUserInput}
@@ -47,13 +61,18 @@ const useAutocompleteChipsInput = (props: AutocompleteChipsInputProps) => {
           ))
         }
         renderInput={params => (
-          <TextField {...params} variant="outlined" placeholder={label} />
+          <TextField
+            {...params}
+            variant="outlined"
+            placeholder={label}
+            {...formikAutoCompleteTagsProps?.textFieldProps}
+          />
         )}
         value={selectedTags}
         onChange={handleChange}
       />
     ),
-    [selectedTags, options, label]
+    [selectedTags, options, label, formikAutoCompleteTagsProps]
   );
 
   return {
