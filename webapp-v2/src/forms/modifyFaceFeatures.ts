@@ -1,4 +1,4 @@
-import { MAX_AGE, MIN_AGE } from 'constants';
+import { MAX_AGE, MIN_AGE } from 'constants/constants';
 import * as Yup from 'yup';
 
 export interface ModifyFaceFeaturesFormValues {

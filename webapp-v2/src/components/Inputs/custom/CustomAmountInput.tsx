@@ -1,5 +1,5 @@
 import clsx from 'clsx';
-import { MIN_FACES, MAX_FACES } from 'constants';
+import { MIN_FACES, MAX_FACES } from 'constants/constants';
 import inputsClasses from 'components/Inputs/styles/Inputs.module.scss';
 import AmountInput from '../AmountInput';
 
