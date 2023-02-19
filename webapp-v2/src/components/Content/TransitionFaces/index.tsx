@@ -11,7 +11,6 @@ import { toastError } from 'components/Toast';
 import useRenderImages from 'hooks/useRenderImages';
 import { useMutation } from 'react-query';
 import ApiError from 'services/api/Error';
-import { generateTransitions } from 'services/api/FaceGeneratorApi';
 import PickImageButton from 'components/CtaButton/custom/PickImageButton';
 import {
   transitionFacesSchema,
@@ -20,8 +19,10 @@ import {
 } from 'forms/transitionFaces';
 import FormikCustomIdInput from 'components/Inputs/formik/custom/FormikCustomIdInput';
 import FormikCustomAmountInput from 'components/Inputs/formik/custom/FormikCustomAmountInput';
+import useFacesApi from 'hooks/api/useFacesApi';
 
 const TransitionFaces: React.FC = () => {
+  const { generateTransitions } = useFacesApi();
   const {
     mutate: mutateGenerateTransitions,
     isLoading: isLoadingTransitions,

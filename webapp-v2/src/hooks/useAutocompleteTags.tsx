@@ -2,7 +2,7 @@ import useAutocompleteChipsInput from 'components/Inputs/useAutocompleteChipsInp
 import { toastError } from 'components/Toast';
 import { useQuery } from 'react-query';
 import ApiError from 'services/api/Error';
-import { getAllTags } from 'services/api/FaceGeneratorApi';
+import useFacesApi from './api/useFacesApi';
 
 type AutocompleteTags = {
   label?: string;
@@ -10,6 +10,7 @@ type AutocompleteTags = {
 };
 
 const useAutocompleteTags = (props: AutocompleteTags) => {
+  const { getAllTags } = useFacesApi();
   const { label = 'Tags', allowUserInput } = props;
 
   const { isLoading: isLoadingTags, data: tags } = useQuery(

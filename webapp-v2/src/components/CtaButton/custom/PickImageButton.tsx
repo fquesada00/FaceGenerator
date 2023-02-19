@@ -13,9 +13,9 @@ import useAutocompleteTags from 'hooks/useAutocompleteTags';
 import { Fragment, useEffect, useMemo, useState } from 'react';
 import { useMutation } from 'react-query';
 import ApiError from 'services/api/Error';
-import { getAllFaces } from 'services/api/FaceGeneratorApi';
 import { IApiFaceFilters } from 'services/api/models';
 import CtaButton from '..';
+import useFacesApi from 'hooks/api/useFacesApi';
 
 type PickImageButtonProps = {
   onPick?: (faceId: number) => void;
@@ -25,7 +25,8 @@ type PickImageButtonProps = {
   pickedFaceId?: number;
 };
 
-function PickImageButton(props: PickImageButtonProps) {
+const PickImageButton = (props: PickImageButtonProps) => {
+  const { getAllFaces } = useFacesApi();
   const { onPick, onDone, onClose, className, pickedFaceId = null } = props;
 
   const [open, setOpen] = useState(false);
@@ -134,6 +135,6 @@ function PickImageButton(props: PickImageButtonProps) {
       </Dialog>
     </>
   );
-}
+};
 
 export default PickImageButton;

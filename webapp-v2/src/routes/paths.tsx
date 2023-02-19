@@ -1,4 +1,8 @@
 const paths = {
+  login: {
+    path: '/login',
+    title: 'Login'
+  },
   home: {
     path: '/faces',
     title: 'Home'

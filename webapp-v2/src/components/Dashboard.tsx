@@ -4,19 +4,19 @@ import Toolbar from '@mui/material/Toolbar';
 import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
 import Typography from '@mui/material/Typography';
-import Badge from '@mui/material/Badge';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
-import NotificationsIcon from '@mui/icons-material/Notifications';
+import LogoutIcon from '@mui/icons-material/Logout';
 import Divider from '@mui/material/Divider';
 import List from '@mui/material/List';
 import Container from '@mui/material/Container';
 
-import { useState } from 'react';
-import { Outlet } from 'react-router-dom';
+import { useCallback, useState } from 'react';
+import { Outlet, useNavigate } from 'react-router-dom';
 
 import AppBar from 'components/AppBar';
 import Drawer from 'components/Drawer';
 import { ToastContainer } from 'react-toastify';
+import useLogout from 'hooks/useLogout';
 import DrawerContent from './Drawer/DrawerContent';
 import { CustomToastContainer } from './Toast';
 
@@ -25,6 +25,14 @@ const Dashboard: React.FC<React.PropsWithChildren> = () => {
   const toggleDrawer = () => {
     setOpen(!open);
   };
+
+  const logout = useLogout();
+  const navigate = useNavigate();
+
+  const signOut = useCallback(() => {
+    logout();
+    navigate('/login');
+  }, [logout, navigate]);
 
   return (
     <Box sx={{ display: 'flex' }}>
@@ -68,10 +76,8 @@ const Dashboard: React.FC<React.PropsWithChildren> = () => {
           >
             Face Generator
           </Typography>
-          <IconButton color="inherit">
-            <Badge badgeContent={4} color="secondary">
-              <NotificationsIcon />
-            </Badge>
+          <IconButton>
+            <LogoutIcon onClick={signOut} />
           </IconButton>
         </Toolbar>
       </AppBar>

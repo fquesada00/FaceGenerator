@@ -6,7 +6,7 @@ import { Fragment, useMemo, useRef, useState } from 'react';
 import { toastError, toastInfo } from 'components/Toast';
 import { useMutation } from 'react-query';
 import ApiError from 'services/api/Error';
-import { saveFace } from 'services/api/FaceGeneratorApi';
+import useFacesApi from 'hooks/api/useFacesApi';
 import ImagePlaceholder from './ImagePlaceholder';
 import AddMetadataSteps from './AddMetadataSteps';
 
@@ -24,6 +24,7 @@ type ImageTemplateProps = {
 };
 
 function ImageTemplate(props: ImageTemplateProps) {
+  const { saveFace } = useFacesApi();
   const {
     src,
     alt,

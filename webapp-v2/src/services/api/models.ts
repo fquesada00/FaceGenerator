@@ -38,3 +38,8 @@ export interface IApiFaceFeatures {
 export interface IApiFaceFilters {
   tags?: string[];
 }
+
+export interface IApiAuth {
+  accessToken: string;
+  roles: number[];
+}
