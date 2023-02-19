@@ -1,59 +1,67 @@
-import CssBaseline from "@mui/material/CssBaseline"
-import Box from "@mui/material/Box"
-import Toolbar from "@mui/material/Toolbar"
-import IconButton from "@mui/material/IconButton"
-import MenuIcon from "@mui/icons-material/Menu"
-import Typography from "@mui/material/Typography"
-import Badge from "@mui/material/Badge"
-import ChevronLeftIcon from "@mui/icons-material/ChevronLeft"
-import NotificationsIcon from "@mui/icons-material/Notifications"
-import Divider from "@mui/material/Divider"
-import List from "@mui/material/List"
-import Container from "@mui/material/Container"
+import CssBaseline from '@mui/material/CssBaseline';
+import Box from '@mui/material/Box';
+import Toolbar from '@mui/material/Toolbar';
+import IconButton from '@mui/material/IconButton';
+import MenuIcon from '@mui/icons-material/Menu';
+import Typography from '@mui/material/Typography';
+import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
+import LogoutIcon from '@mui/icons-material/Logout';
+import Divider from '@mui/material/Divider';
+import List from '@mui/material/List';
+import Container from '@mui/material/Container';
 
-import { useState } from "react"
-import { Outlet } from "react-router-dom"
+import { useCallback, useState } from 'react';
+import { Outlet, useNavigate } from 'react-router-dom';
 
-import AppBar from "components/AppBar"
-import Drawer from "components/Drawer"
-import DrawerContent from "./Drawer/DrawerContent"
-import { ToastContainer } from "react-toastify"
-import { CustomToastContainer } from "./Toast"
+import AppBar from 'components/AppBar';
+import Drawer from 'components/Drawer';
+import { ToastContainer } from 'react-toastify';
+import useLogout from 'hooks/useLogout';
+import DrawerContent from './Drawer/DrawerContent';
+import { CustomToastContainer } from './Toast';
 
 const Dashboard: React.FC<React.PropsWithChildren> = () => {
-  const [open, setOpen] = useState(false)
+  const [open, setOpen] = useState(false);
   const toggleDrawer = () => {
-    setOpen(!open)
-  }
+    setOpen(!open);
+  };
 
+  const logout = useLogout();
+  const navigate = useNavigate();
 
+  const signOut = useCallback(() => {
+    logout();
+    navigate('/login');
+  }, [logout, navigate]);
 
   return (
-    <Box sx={{ display: "flex" }}>
+    <Box sx={{ display: 'flex' }}>
       <CssBaseline />
       <AppBar position="absolute" open={open}>
         <Toolbar
           sx={{
-            pr: "24px", // keep right padding when drawer closed
+            pr: '24px' // keep right padding when drawer closed
           }}
         >
-          <Box sx={{
-            display: {
-              xs: "none",
-              sm: "block",
-              md: "block",
-              lg: "block",
-              xl: "block",
-            }
-          }}>
+          <Box
+            sx={{
+              display: {
+                xs: 'none',
+                sm: 'block',
+                md: 'block',
+                lg: 'block',
+                xl: 'block'
+              }
+            }}
+          >
             <IconButton
               edge="start"
               color="inherit"
               aria-label="open drawer"
               onClick={toggleDrawer}
               sx={{
-                marginRight: "36px",
-                ...(open && { display: "none" }),
+                marginRight: '36px',
+                ...(open && { display: 'none' })
               }}
             >
               <MenuIcon />
@@ -68,20 +76,18 @@ const Dashboard: React.FC<React.PropsWithChildren> = () => {
           >
             Face Generator
           </Typography>
-          <IconButton color="inherit">
-            <Badge badgeContent={4} color="secondary">
-              <NotificationsIcon />
-            </Badge>
+          <IconButton>
+            <LogoutIcon onClick={signOut} />
           </IconButton>
         </Toolbar>
       </AppBar>
       <Drawer variant="permanent" open={open}>
         <Toolbar
           sx={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "flex-end",
-            px: [1],
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'flex-end',
+            px: [1]
           }}
         >
           <IconButton onClick={toggleDrawer}>
@@ -96,13 +102,13 @@ const Dashboard: React.FC<React.PropsWithChildren> = () => {
       <Box
         component="main"
         sx={{
-          backgroundColor: (theme) =>
-            theme.palette.mode === "light"
+          backgroundColor: theme =>
+            theme.palette.mode === 'light'
               ? theme.palette.grey[100]
               : theme.palette.grey[900],
           flexGrow: 1,
-          height: "100vh",
-          overflow: "auto",
+          height: '100vh',
+          overflow: 'auto'
         }}
       >
         <Toolbar />
@@ -112,7 +118,7 @@ const Dashboard: React.FC<React.PropsWithChildren> = () => {
         </Container>
       </Box>
     </Box>
-  )
-}
+  );
+};
 
-export default Dashboard
+export default Dashboard;

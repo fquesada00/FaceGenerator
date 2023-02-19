@@ -1,26 +1,26 @@
-import { Stack, Slider, Typography } from "@mui/material"
+import { Stack, Slider, Typography } from '@mui/material';
 import {
   MAX_FEATURE_SLIDER_VALUE,
   MIDDLE_FEATURE_SLIDER_VALUE,
   MIN_FEATURE_SLIDER_VALUE,
-  STEP_FEATURE_SLIDER_VALUE,
-} from "constants"
-import AddIcon from "@mui/icons-material/Add"
-import RemoveIcon from "@mui/icons-material/Remove"
-import { useField } from "formik"
+  STEP_FEATURE_SLIDER_VALUE
+} from 'constants/constants';
+import AddIcon from '@mui/icons-material/Add';
+import RemoveIcon from '@mui/icons-material/Remove';
+import { useField } from 'formik';
 
 interface FormikCustomSliderProps {
-  name: string
-  title: string
-  LeftIcon?: React.ReactNode
-  RightIcon?: React.ReactNode
-  min?: number
-  max?: number
-  middle?: number
-  step?: number
+  name: string;
+  title: string;
+  LeftIcon?: React.ReactNode;
+  RightIcon?: React.ReactNode;
+  min?: number;
+  max?: number;
+  middle?: number;
+  step?: number;
 }
 
-const FormikCustomSlider = (props: FormikCustomSliderProps) => {
+function FormikCustomSlider(props: FormikCustomSliderProps) {
   const {
     name,
     min = MIN_FEATURE_SLIDER_VALUE,
@@ -29,14 +29,14 @@ const FormikCustomSlider = (props: FormikCustomSliderProps) => {
     step = STEP_FEATURE_SLIDER_VALUE,
     title,
     LeftIcon = <RemoveIcon />,
-    RightIcon = <AddIcon />,
-  } = props
+    RightIcon = <AddIcon />
+  } = props;
 
-  const [field, meta, helpers] = useField(name)
+  const [field, meta, helpers] = useField(name);
 
   return (
     <div className="w-48 m-2">
-      <Typography gutterBottom sx={{ textAlign: "center" }}>
+      <Typography gutterBottom sx={{ textAlign: 'center' }}>
         {title}
       </Typography>
       <Stack spacing={2} direction="row" sx={{ mb: 1 }} alignItems="center">
@@ -53,7 +53,7 @@ const FormikCustomSlider = (props: FormikCustomSliderProps) => {
         {RightIcon}
       </Stack>
     </div>
-  )
+  );
 }
 
-export default FormikCustomSlider
+export default FormikCustomSlider;

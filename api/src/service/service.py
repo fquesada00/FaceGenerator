@@ -9,12 +9,8 @@ import re
 import os
 import Pyro4
 from Pyro4.util import SerializerBase
-
-
-
-
-
-API_PATH = os.getenv("PROJECT_PATH") + "/api"
+from src.service.utils import SingletonMeta
+from src.service.config import settings
 
 database = GeneratorDB()
 
@@ -31,7 +27,7 @@ SerializerBase.register_class_to_dict(FaceImage, face_image_serializer)
 SerializerBase.register_dict_to_class('face_image', face_image_deserializer )
 
 
-class GeneratorService:
+class GeneratorService(metaclass=SingletonMeta):
     def __init__(self):
         #self.generator = Generator()
         self.generator = Pyro4.Proxy("PYRONAME:facegenerator.generator")
@@ -57,9 +53,7 @@ class GeneratorService:
             return byte_arr.getvalue()
     def get_image_by_id(self, face_id: int):
         image: Image = self.generate_face(face_id)
-        return self.image_to_bytes(image, encoded=False)
-
- 
+        return self.image_to_bytes(image, encoded=False) 
 
     def get_images_from_database(self, tags=None):
         values = database.fetch(tags)
@@ -68,13 +62,12 @@ class GeneratorService:
             #image = self.generator.generate_image_from_latent_vector(value['z'])
             #image = FaceImage.to_image(image)
             face = {
-                'image': 'http://localhost:5000/faces/' + str(value['id']),
+                'image': settings.FULL_HOST + settings.API_PATH + '/faces/' + str(value['id']),
                 'id': value['id'],
                 'z': value['z']
             }
             faces.append(face)
         return faces
-
 
     def save_image(self, id, tags=None):
         print("Saving image...")
@@ -85,9 +78,12 @@ class GeneratorService:
     def get_tags(self):
         return database.get_tags()
 
-    #generator methods   
-   
 
+    def get_user_by_username(self, username: str):
+        return database.get_user_by_username(username)
+
+
+    #generator methods   
     def generate_face(self, id: int):
         print("Generating image...")
         z = database.fetch_z_by_id(id=id)

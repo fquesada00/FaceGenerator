@@ -1,6 +1,12 @@
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle } from "@mui/material";
-import { useMemo, useState } from "react";
-import useAddTagsStep from "./useAddTagsStep";
+import {
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle
+} from '@mui/material';
+import { useMemo, useState } from 'react';
+import useAddTagsStep from './useAddTagsStep';
 
 export interface MetadataStepProps {
   step: number;
@@ -14,12 +20,12 @@ export type AddMetadataStepsProps = {
 
 const TOTAL_STEPS = 1;
 
-const AddMetadataSteps = (props: AddMetadataStepsProps) => {
+function AddMetadataSteps(props: AddMetadataStepsProps) {
   const { onDone, onCancel, open } = props;
 
   const [step, setStep] = useState(0);
   const [metadata, setMetadata] = useState<Record<string, any>>({
-    tags: [],
+    tags: []
   });
 
   const onStepChange = (newStep: number) => {
@@ -27,17 +33,19 @@ const AddMetadataSteps = (props: AddMetadataStepsProps) => {
       return;
     }
 
-    setMetadata((prevMetadata) => {
-      return {
-        ...prevMetadata,
-        ...data,
-      }
-    });
-    
+    setMetadata(prevMetadata => ({
+      ...prevMetadata,
+      ...data
+    }));
+
     setStep(newStep);
   };
 
-  const { title: addTagsTitle, content: addTagsContent, data: addTagsData } = useAddTagsStep({ step });
+  const {
+    title: addTagsTitle,
+    content: addTagsContent,
+    data: addTagsData
+  } = useAddTagsStep({ step });
 
   const { title, content, data } = useMemo(() => {
     switch (step) {
@@ -45,39 +53,29 @@ const AddMetadataSteps = (props: AddMetadataStepsProps) => {
         return {
           title: addTagsTitle,
           content: addTagsContent,
-          data: addTagsData,
+          data: addTagsData
         };
       default:
         return {
           title: addTagsTitle,
           content: addTagsContent,
-          data: addTagsData,
+          data: addTagsData
         };
     }
   }, [step, addTagsTitle, addTagsContent, addTagsData]);
 
   return (
     <Dialog open={open} onClose={onCancel} fullWidth maxWidth="sm">
-      <DialogTitle>
-        {title}
-      </DialogTitle>
-      <DialogContent>
-        {content}
-      </DialogContent>
+      <DialogTitle>{title}</DialogTitle>
+      <DialogContent>{content}</DialogContent>
       <DialogActions className="justify-around">
         {step > 0 && (
-          <Button onClick={() => onStepChange(step - 1)}>
-            Back
-          </Button>
+          <Button onClick={() => onStepChange(step - 1)}>Back</Button>
         )}
         <div>
-          <Button onClick={onCancel}>
-            Cancel
-          </Button>
+          <Button onClick={onCancel}>Cancel</Button>
           {step < TOTAL_STEPS - 1 && (
-            <Button onClick={() => onStepChange(step + 1)}>
-              Next
-            </Button>
+            <Button onClick={() => onStepChange(step + 1)}>Next</Button>
           )}
           {step === TOTAL_STEPS - 1 && (
             <Button onClick={() => onDone({ ...metadata, ...data })}>
@@ -88,6 +86,6 @@ const AddMetadataSteps = (props: AddMetadataStepsProps) => {
       </DialogActions>
     </Dialog>
   );
-};
+}
 
 export default AddMetadataSteps;

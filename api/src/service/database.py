@@ -39,3 +39,13 @@ class GeneratorDB:
         res = [r[0] for r in cur.fetchall()]
         cur.close()
         return res
+
+    def get_user_by_username(self, username: str):
+        cur = self.db.cursor()
+        cur.execute('select username, password, user_role from users where username = %s', (username,))
+        res = cur.fetchone()
+        cur.close()
+        if res is None:
+            return None
+        res = {'username': res[0], 'password': res[1], 'role': res[2]}
+        return res

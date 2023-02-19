@@ -1,18 +1,18 @@
-import { LoadingButton } from "@mui/lab"
-import clsx from "clsx"
+import { LoadingButton } from '@mui/lab';
+import clsx from 'clsx';
 
-import contentClasses from "components/Content/styles/Content.module.scss"
+import contentClasses from 'components/Content/styles/Content.module.scss';
 
 type CtaButtonProps = {
-  onClick?: () => void
-  label: string
-  className?: string
-  loading?: boolean
-  type?: "button" | "submit" | "reset" | undefined
-}
+  onClick?: () => void;
+  label: string;
+  className?: string;
+  loading?: boolean;
+  type?: 'button' | 'submit' | 'reset' | undefined;
+};
 
-const CtaButton = (props: CtaButtonProps) => {
-  const { onClick, label, className, loading, type } = props
+function CtaButton(props: CtaButtonProps) {
+  const { onClick, label, className, loading, type } = props;
 
   return (
     <div className={clsx(contentClasses.cta, className)}>
@@ -27,7 +27,7 @@ const CtaButton = (props: CtaButtonProps) => {
         {label}
       </LoadingButton>
     </div>
-  )
+  );
 }
 
-export default CtaButton
+export default CtaButton;

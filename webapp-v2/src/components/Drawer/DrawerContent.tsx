@@ -1,9 +1,10 @@
-import React from "react"
-import DrawerButton from "./DrawerButton"
-import drawerButtons from "./DrawerButtons"
-const DrawerContent = () => {
+import React from 'react';
+import DrawerButton from './DrawerButton';
+import drawerButtons from './DrawerButtons';
+
+function DrawerContent() {
   return (
-    <React.Fragment>
+    <>
       {drawerButtons.map(({ icon: Icon, path, text, style }, index) => (
         <DrawerButton
           key={index}
@@ -12,8 +13,8 @@ const DrawerContent = () => {
           path={path}
         />
       ))}
-    </React.Fragment>
-  )
+    </>
+  );
 }
 
-export default DrawerContent
+export default DrawerContent;

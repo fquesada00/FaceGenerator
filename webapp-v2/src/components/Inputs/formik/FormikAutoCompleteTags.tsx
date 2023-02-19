@@ -3,15 +3,15 @@ import useAutocompleteTags from "hooks/useAutocompleteTags"
 import React from "react"
 
 interface FormikAutoCompleteTagsProps {
-  name: string
-  label?: string
-  allowUserInput?: boolean
+  name: string;
+  label?: string;
+  allowUserInput?: boolean;
 }
 
 const FormikAutoCompleteTags = (props: FormikAutoCompleteTagsProps) => {
   const { allowUserInput = false, name, label = "" } = props
 
-  const [field, meta, helpers] = useField(name)
+  const [field, meta, helpers] = useField(name);
 
   const { Autocomplete } = useAutocompleteTags({
     label,
@@ -40,4 +40,4 @@ const FormikAutoCompleteTags = (props: FormikAutoCompleteTagsProps) => {
   );
 }
 
-export default FormikAutoCompleteTags
+export default FormikAutoCompleteTags;

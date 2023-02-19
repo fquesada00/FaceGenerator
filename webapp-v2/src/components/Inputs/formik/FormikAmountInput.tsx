@@ -1,13 +1,13 @@
-import FormikNumericInput from "./FormikNumericInput"
+import FormikNumericInput from './FormikNumericInput';
 
 type FormikAmountInputProps = {
-  name: string
-  min: number
-  max: number
-}
+  name: string;
+  min: number;
+  max: number;
+};
 
-const FormikAmountInput = (props: FormikAmountInputProps) => {
-  const { min, max, name } = props
+function FormikAmountInput(props: FormikAmountInputProps) {
+  const { min, max, name } = props;
 
   return (
     <FormikNumericInput
@@ -17,7 +17,7 @@ const FormikAmountInput = (props: FormikAmountInputProps) => {
       min={min}
       max={max}
     />
-  )
+  );
 }
 
-export default FormikAmountInput
+export default FormikAmountInput;
