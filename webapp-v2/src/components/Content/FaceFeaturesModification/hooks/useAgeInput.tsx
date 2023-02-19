@@ -1,6 +1,6 @@
 import NumericInput from 'components/Inputs/NumericInput';
 import { useState, useMemo } from 'react';
-import { MIN_AGE, MAX_AGE } from 'constants';
+import { MIN_AGE, MAX_AGE } from 'constants/constants';
 
 const useAgeInput = () => {
   const [age, setAge] = useState(0);

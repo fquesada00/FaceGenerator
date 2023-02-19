@@ -9,7 +9,8 @@ export const privateClient = axios.create({
   headers: {
     'Content-Type': CONTENT_TYPE_JSON
   },
-  withCredentials: true
+  withCredentials: true,
+  baseURL: import.meta.env.VITE_APP_BASE_PATH
 });
 
 const requestInterceptor = (config: AxiosRequestConfig) => {
