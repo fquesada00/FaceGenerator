@@ -51,7 +51,7 @@ const datasource = {
     {
       id: 13,
       image: 'https://dummyimage.com/600x400/ff00ff/ededed&text=id+13'
-    },
+    }
   ],
   tags: [
     'female',

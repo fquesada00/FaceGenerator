@@ -1,19 +1,19 @@
-import { useEffect, useState } from "react";
-import NumericInput from "./NumericInput"
+import { useEffect, useState } from 'react';
+import NumericInput from './NumericInput';
 
 type AmountInputProps = {
-  onChange: (n: number) => void,
-  min: number,
-  max: number,
-  setErrorMessage: (s: string) => void,
-  errorMessage?: string,
-  value?: number,
-}
+  onChange: (n: number) => void;
+  min: number;
+  max: number;
+  setErrorMessage: (s: string) => void;
+  errorMessage?: string;
+  value?: number;
+};
 
-const AmountInput = (props: AmountInputProps) => {
+function AmountInput(props: AmountInputProps) {
   const { onChange, min, max, setErrorMessage, errorMessage, value } = props;
 
-  const [errorText, setErrorText] = useState<string>("");
+  const [errorText, setErrorText] = useState<string>('');
 
   useEffect(() => {
     if (errorMessage) {
@@ -25,7 +25,7 @@ const AmountInput = (props: AmountInputProps) => {
     <NumericInput
       value={value === 0 ? undefined : value}
       label="Amount"
-      onChange={(n) => {
+      onChange={n => {
         if (n < min || n > max) {
           const errorMessage = `Must be between ${min} and ${max}`;
           setErrorText(errorMessage);
@@ -34,15 +34,15 @@ const AmountInput = (props: AmountInputProps) => {
           return;
         }
 
-        if (errorText !== "") {
-          setErrorText("");
-          setErrorMessage("");
+        if (errorText !== '') {
+          setErrorText('');
+          setErrorMessage('');
         }
 
         onChange(n);
       }}
       required
-      error={errorText !== ""}
+      error={errorText !== ''}
       helperText={errorText}
       min={min}
       max={max}

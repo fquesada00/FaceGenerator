@@ -5,7 +5,6 @@ import { useMemo, useState } from "react";
 import { useMutation } from "react-query";
 import paths from "routes/paths";
 import ApiError from "services/api/Error";
-import { getFacesSeries } from "services/api/FaceGeneratorApi";
 import inputsClasses from "components/Inputs/styles/Inputs.module.scss"
 import FormikAutoCompleteTags from "components/Inputs/formik/FormikAutoCompleteTags";
 import clsx from "clsx";
@@ -16,8 +15,10 @@ import {
   SearchFacesSeriesValues,
   initialValues,
 } from "forms/searchFacesSeries"
+import useFacesApi from "hooks/api/useFacesApi";
 
 const FacesSeries = () => {
+  const { getFacesSeries } = useFacesApi();
   const [hideAll, setHideAll] = useState<boolean>(true);
   const [collapseAll, setCollapseAll] = useState<boolean>(false);
 

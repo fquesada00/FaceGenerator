@@ -1,4 +1,4 @@
-import HomeIcon from "@mui/icons-material/Home"
+import HomeIcon from '@mui/icons-material/Home';
 import ImportExportIcon from '@mui/icons-material/ImportExport';
 import SearchIcon from '@mui/icons-material/Search';
 import LayersIcon from '@mui/icons-material/Layers';
@@ -7,7 +7,7 @@ import FaceRetouchingNaturalIcon from '@mui/icons-material/FaceRetouchingNatural
 import ShuffleIcon from '@mui/icons-material/Shuffle';
 import GroupIcon from '@mui/icons-material/Group';
 import InfoIcon from '@mui/icons-material/Info';
-import paths from "routes/paths";
+import paths from 'routes/paths';
 
 const buttons = [
   {
@@ -53,9 +53,9 @@ const buttons = [
   },
   {
     icon: InfoIcon,
-    text: "About",
-    path: paths.about.path,
+    text: paths.about.title,
+    path: paths.about.path
   }
-]
+];
 
-export default buttons
+export default buttons;

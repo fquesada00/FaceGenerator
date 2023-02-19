@@ -1,32 +1,51 @@
 import numpy as np
 import io
-from pg import DB
+import psycopg2
 
 class GeneratorDB:
     def __init__(self):
-        self.db = DB(dbname="facegenerator", host='localhost', port=5432, user="facegenerator", passwd="facegenerator")
-
-    
+        self.db = psycopg2.connect(dbname="facegenerator", host='localhost', port=5432, user="facegenerator", password="facegenerator")
 
     def insert_z(self, z:np.ndarray, tags: list):
-        return self.db.query_formatted('select insert_image(%s,%s)', (z, tags)).getresult()[0][0]
+        cur = self.db.cursor()
+        cur.execute('select insert_image(%s,%s)', (z, tags))
+        res = cur.fetchone()[0]
+        self.db.commit()
+        cur.close()
+        return res
 
     def fetch(self, tags: list = None):
+        cur = self.db.cursor()
         if tags == None:
-            return self.db.query('select * from search_image(array[]::text[])').dictresult()
+            cur.execute('select id,z,tags  from search_image(array[]::text[])')
+        else:
+            cur.execute('select id,z,tags from search_image(%s)', (tags,))
+        res = cur.fetchall()
+        cur.close()
+        res = [{'id': r[0], 'z': r[1], 'tags': r[2]} for r in res]
+        return res
 
-        return self.db.query_formatted('select * from search_image(%s)', (tags,)).dictresult()
-  
     def fetch_z_by_id(self, id: int):
-        return self.db.query_formatted('SELECT z FROM images WHERE id = %s', (id,)).getresult()[0][0]
+        cur = self.db.cursor()
+        cur.execute('SELECT z FROM images WHERE id = %s', (id,))
+        res = cur.fetchone()[0]
+        cur.close()
+        return res
 
-       
-
-    def fetch_all(self):
-        self.db.query('SELECT * FROM images')
-
-        return self.db.getresult()
 
     def get_tags(self):
-        res = self.db.query('select * from tags').getresult()
-        return [r[0] for r in res]
+        cur = self.db.cursor()
+        cur.execute('select * from tags')
+        res = [r[0] for r in cur.fetchall()]
+        cur.close()
+        return res
+
+    def get_user_by_username(self, username: str):
+        cur = self.db.cursor()
+        cur.execute('select username, password, user_role from users where username = %s', (username,))
+        res = cur.fetchone()
+        cur.close()
+        if res is None:
+            return None
+        res = {'username': res[0], 'password': res[1], 'role': res[2]}
+        return res

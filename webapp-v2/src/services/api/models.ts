@@ -6,7 +6,7 @@ export type ApiResponse = {
 export interface IApiFace {
   id: number;
   image: string;
-};
+}
 
 export interface IApiFaceFeatures {
   age?: number;
@@ -33,7 +33,7 @@ export interface IApiFaceFeatures {
     ratio?: number;
     tip?: number;
   };
-};
+}
 
 export interface IApiFaceFilters {
   tags?: string[];
@@ -44,3 +44,8 @@ export interface IApiFaceSerie {
   faces: IApiFace[];
   tags?: string[];
 };
+
+export interface IApiAuth {
+  accessToken: string;
+  roles: number[];
+}
