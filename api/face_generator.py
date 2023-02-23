@@ -1,5 +1,5 @@
 from src.service.app import app
-from src.service.config import settings
+from src.service.settings import settings
 import uvicorn
 
 if __name__ == "__main__":
