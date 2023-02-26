@@ -81,16 +81,18 @@ class GeneratorDB:
         return res
 
     def get_face_by_tags(self, tags: list = None):
-        if tags is None:
-          return []
-
-        tags = [t.lower() for t in tags]
-
         cur = self.db.cursor()
-        cur.execute('SELECT id, tags \
-          FROM image_tags_view \
-          WHERE %s::varchar(64)[] <@ tags', (tags,)
-        )
+
+        if tags is None:
+          cur.execute('SELECT id, tags \
+            FROM image_tags_view')
+        else:
+          tags = [t.lower() for t in tags]
+
+          cur.execute('SELECT id, tags \
+            FROM image_tags_view \
+            WHERE %s::varchar(64)[] <@ tags', (tags,)
+          )
 
         res = cur.fetchall()
         cur.close()
@@ -100,16 +102,18 @@ class GeneratorDB:
         return res
 
     def get_series_by_tags(self, tags: list = None):
-        if tags is None:
-          return []
-
-        tags = [t.lower() for t in tags]
-
         cur = self.db.cursor()
-        cur.execute('SELECT id, images_id, tags \
-          FROM series_tags_view \
-          WHERE %s::varchar(64)[] <@ tags', (tags,)
-        )
+
+        if tags is None:
+          cur.execute('SELECT id, images_id, tags \
+            FROM series_tags_view')
+        else:
+          tags = [t.lower() for t in tags]
+
+          cur.execute('SELECT id, images_id, tags \
+            FROM series_tags_view \
+            WHERE %s::varchar(64)[] <@ tags', (tags,)
+          )
 
         res = cur.fetchall()
         cur.close()
