@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { toastInfo } from 'components/Toast';
+import { useRef, useState } from 'react';
+import { toastInfo, toastSuccess } from 'components/Toast';
 import AddMetadataSteps from 'components/Images/AddMetadataSteps';
 
 import { Grid } from '@mui/material';
@@ -24,19 +24,19 @@ import {
 import FormikCustomIdInput from 'components/Inputs/formik/custom/FormikCustomIdInput';
 import FormikCustomAmountInput from 'components/Inputs/formik/custom/FormikCustomAmountInput';
 import useFacesApi from 'hooks/api/useFacesApi';
+import { Id, toast } from 'react-toastify';
 
 const TransitionFaces: React.FC = () => {
   const [openMetadataSteps, setOpenMetadataSteps] = useState<boolean>(false);
   const { generateTransitions, saveFaceSerie } = useFacesApi();
+  const [isSerieSaved, setIsSerieSaved] = useState<boolean>(false);
+  const savingSerieToastId = useRef<Id | null>(null);
 
   const {
     mutate: mutateGenerateTransitions,
     isLoading: isLoadingTransitions,
     data: transitionFacesSerie
   } = useMutation(generateTransitions, {
-    onSuccess: data => {
-      console.log(data);
-    },
     onError: error => {
       if (error instanceof ApiError) {
         toastError(error.toString());
@@ -76,7 +76,9 @@ const TransitionFaces: React.FC = () => {
   const { mutate: mutateSaveFaceSerie, isLoading: isLoadingSaveSerie } =
     useMutation(saveFaceSerie, {
       onSuccess: data => {
-        console.log(data);
+        setIsSerieSaved(true);
+        toast.dismiss(savingSerieToastId.current!);
+        toastSuccess(`Serie with id ${transitionFacesSerie!.id} saved successfully`);
       },
       onError: error => {
         if (error instanceof ApiError) {
@@ -102,7 +104,7 @@ const TransitionFaces: React.FC = () => {
 
   const onMetadataStepsDone = (metadata: Record<string, any>) => {
     setOpenMetadataSteps(false);
-    toastInfo(`Saving serie with id ${transitionFacesSerie!.id!}...`);
+    savingSerieToastId.current = toast.info(`Saving serie with id ${transitionFacesSerie!.id!}...`);
     mutateSaveFaceSerie({
       id: transitionFacesSerie!.id!,
       metadata
@@ -160,7 +162,7 @@ const TransitionFaces: React.FC = () => {
                   loading={isLoadingTransitions}
                 />
                 {!isLoadingTransitions && TransitionFacesImages}
-                {!isLoadingTransitions && transitionFacesCount > 0 && (
+                {!isSerieSaved && !isLoadingTransitions && transitionFacesCount > 0 && (
                   <CtaButton
                     label="Save Serie"
                     type="button"

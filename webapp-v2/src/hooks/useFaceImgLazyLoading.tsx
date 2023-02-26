@@ -22,9 +22,6 @@ const useFaceImgLazyLoading = (props: UseFaceImgLazyLoadingProps) => {
     isLoading: isLoadingGetFaceImage,
     data: faceImageUrl
   } = useMutation(getFaceImage, {
-    onSuccess: data => {
-      console.log(data);
-    },
     onError: error => {
       if (error instanceof ApiError) {
         toastError(

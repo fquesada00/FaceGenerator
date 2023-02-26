@@ -28,9 +28,6 @@ const RandomFaces: React.FC = () => {
     isLoading,
     data: faces
   } = useMutation(generateFaces, {
-    onSuccess: data => {
-      console.log(data);
-    },
     onError: error => {
       if (error instanceof ApiError) {
         toastError(error.toString());

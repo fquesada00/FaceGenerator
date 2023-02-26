@@ -28,9 +28,6 @@ const InterchangeFacesFeatures: React.FC = () => {
     isLoading: isLoadingInterchange,
     data: interchangedFaces
   } = useMutation(interchangeFacesFeatures, {
-    onSuccess: data => {
-      console.log(data);
-    },
     onError: error => {
       if (error instanceof ApiError) {
         toastError(error.toString());

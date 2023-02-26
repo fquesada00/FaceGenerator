@@ -69,9 +69,6 @@ const PickImageButton = (props: PickImageButtonProps) => {
     isLoading: isLoadingAllFaces,
     data: allFaces
   } = useMutation(searchFaces, {
-    onSuccess: data => {
-      console.log(data);
-    },
     onError: error => {
       if (error instanceof ApiError) {
         toastError(error.toString());

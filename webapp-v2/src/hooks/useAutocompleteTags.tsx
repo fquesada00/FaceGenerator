@@ -21,9 +21,6 @@ const useAutocompleteTags = (props: AutocompleteTags) => {
     isLoading: isLoadingTags,
     data: tags
   } = useMutation(getAllTags, {
-    onSuccess: data => {
-      console.log(data);
-    },
     onError: error => {
       if (error instanceof ApiError) {
         toastError(error.toString());

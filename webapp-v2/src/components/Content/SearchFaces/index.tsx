@@ -27,9 +27,6 @@ const SearchFaces: React.FC = () => {
     isLoading: isLoadingSearch,
     data: filteredFaces
   } = useMutation(searchFaces, {
-    onSuccess: data => {
-      console.log(data);
-    },
     onError: error => {
       if (error instanceof ApiError) {
         toastError(error.toString());
@@ -47,9 +44,6 @@ const SearchFaces: React.FC = () => {
     isLoading: isLoadingShowAll,
     data: allFaces
   } = useMutation(searchFaces, {
-    onSuccess: data => {
-      console.log(data);
-    },
     onError: error => {
       if (error instanceof ApiError) {
         toastError(error.toString());

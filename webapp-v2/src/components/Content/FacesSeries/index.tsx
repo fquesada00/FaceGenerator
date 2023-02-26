@@ -41,9 +41,6 @@ const FacesSeries = () => {
     isLoading: isLoadingSearch,
     data: filteredFacesSeries
   } = useMutation(getFacesSeries, {
-    onSuccess: data => {
-      console.log(data);
-    },
     onError: error => {
       if (error instanceof ApiError) {
         toastError(error.toString());
@@ -66,9 +63,6 @@ const FacesSeries = () => {
     isLoading: isLoadingShowAll,
     data: allFacesSeries
   } = useMutation(getFacesSeries, {
-    onSuccess: data => {
-      console.log(data);
-    },
     onError: error => {
       if (error instanceof ApiError) {
         toastError(error.toString());

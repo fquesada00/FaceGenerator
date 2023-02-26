@@ -50,9 +50,6 @@ const FaceFeaturesModification: React.FC = () => {
     isLoading: isLoadingModifyFace,
     data: modifiedFace
   } = useMutation(modifyFaceFeatures, {
-    onSuccess: data => {
-      console.log(data);
-    },
     onError: error => {
       if (error instanceof ApiError) {
         toastError(error.toString());

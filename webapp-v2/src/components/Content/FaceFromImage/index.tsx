@@ -34,9 +34,6 @@ const FaceFromImage: React.FC = () => {
     isLoading: isLoadingFaceFromImage,
     data: faceFromImage
   } = useMutation(generateFaceFromImage, {
-    onSuccess: data => {
-      console.log(data);
-    },
     onError: error => {
       if (error instanceof ApiError) {
         toastError(error.toString());
