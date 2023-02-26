@@ -5,7 +5,6 @@ import {
   DialogContent,
   DialogTitle
 } from '@mui/material';
-import CircularProgress from '@mui/material/CircularProgress';
 import clsx from 'clsx';
 import ImagePicker from 'components/ImagePicker';
 import { toastError } from 'components/Toast';
@@ -16,6 +15,7 @@ import ApiError from 'services/api/Error';
 import { IApiFaceFilters } from 'services/api/models';
 import CtaButton from '..';
 import useFacesApi from 'hooks/api/useFacesApi';
+import CenteredCircularLoader from 'components/Loaders/CenteredCircularLoader';
 
 type PickImageButtonProps = {
   onPick?: (faceId: string) => void;
@@ -112,7 +112,7 @@ const PickImageButton = (props: PickImageButtonProps) => {
       />
       <Dialog open={open}>
         <DialogTitle>Pick a face</DialogTitle>
-        <DialogContent style={{ padding: '0.1rem' }}>
+        <DialogContent style={{ padding: '0.5rem' }}>
           <div className="flex mb-4 justify-center">
             <div className="w-11/12 ">
               {!isLoadingAllFaces && !isLoadingTags && Autocomplete}
@@ -120,12 +120,7 @@ const PickImageButton = (props: PickImageButtonProps) => {
           </div>
           {!isLoadingAllFaces && !isLoadingTags && MemoizedImagePicker}
           {isLoadingAllFaces && (
-            <div
-              className="justify-center items-center flex"
-              style={{ width: '10rem', height: '5rem' }}
-            >
-              <CircularProgress color="primary" />
-            </div>
+            <CenteredCircularLoader className='h-20 w-40' />
           )}
         </DialogContent>
         <DialogActions>

@@ -10,6 +10,7 @@ import useFacesApi from 'hooks/api/useFacesApi';
 import ImagePlaceholder from './ImagePlaceholder';
 import AddMetadataSteps from './AddMetadataSteps';
 import { toast, Id } from 'react-toastify';
+import useFaceImgLazyLoading from 'hooks/useFaceImgLazyLoading';
 
 type ImageTemplateProps = {
   src?: string;
@@ -25,7 +26,7 @@ type ImageTemplateProps = {
 };
 
 function ImageTemplate(props: ImageTemplateProps) {
-  const { saveFace, getFaceImage } = useFacesApi();
+  const { saveFace } = useFacesApi();
   const {
     src,
     alt,
@@ -88,27 +89,7 @@ function ImageTemplate(props: ImageTemplateProps) {
     setOpenMetadataSteps(false);
   };
 
-  const {
-    mutate: mutateGetFaceImage,
-    isLoading: isLoadingGetFaceImage,
-    data: faceImageUrl
-  } = useMutation(getFaceImage, {
-    onSuccess: data => {
-      console.log(data);
-    },
-    onError: error => {
-      if (error instanceof ApiError) {
-        toastError(
-          `Error getting face image with id ${faceId}. ${error.toString()}`
-        );
-      }
-    }
-  });
-
-  useEffect(() => {
-    mutateGetFaceImage(faceId!);
-  }, []);
-
+  const { ref, faceImageUrl } = useFaceImgLazyLoading({ faceId });
 
   const CardContentComponent = useMemo(() => {
     if (!src || !faceImageUrl) {
@@ -121,7 +102,6 @@ function ImageTemplate(props: ImageTemplateProps) {
           src={faceImageUrl}
           alt={alt}
           className={clsx('w-full', imgHeightClassName ?? 'h-40')}
-          loading="lazy"
           style={{ objectFit: 'cover' }}
         />
         <CardActions className="flex content-center justify-center space-x-6">
@@ -130,7 +110,11 @@ function ImageTemplate(props: ImageTemplateProps) {
           </Typography> */}
           {!disableDownload && (
             <IconButton onClick={onDownload}>
-              <a ref={downloadRef} href={faceImageUrl} download={`face_${faceId}.png`} />
+              <a
+                ref={downloadRef}
+                href={faceImageUrl}
+                download={`face_${faceId}.png`}
+              />
               <DownloadIcon />
             </IconButton>
           )}
@@ -159,6 +143,7 @@ function ImageTemplate(props: ImageTemplateProps) {
   return (
     <>
       <Card
+        ref={ref}
         className={clsx(
           cardWidthClassName ?? 'w-48',
           cardHeightClassName ?? 'h-52',
