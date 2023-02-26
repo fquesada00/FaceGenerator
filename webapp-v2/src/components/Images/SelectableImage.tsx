@@ -17,19 +17,19 @@ function SelectableImage(props: SelectableImageProps) {
   const { src, alt, selected, onClick, className, faceId } = props;
 
   const theme = useTheme();
-  const { ref, faceImageUrl, isLoadingGetFaceImage } = useFaceImgLazyLoading({
+  const { ref, faceImage, isLoadingGetFaceImage } = useFaceImgLazyLoading({
     faceId
   });
 
   const Content = useMemo(() => {
-    if (isLoadingGetFaceImage || !faceImageUrl) {
+    if (isLoadingGetFaceImage || !faceImage) {
       return <CenteredCircularLoader className='h-full w-full'/>;
     }
 
     return (
       <React.Fragment>
         <img
-          src={faceImageUrl}
+          src={faceImage.url}
           alt={alt}
           className='w-full h-full'
           // className={clsx('w-full', 'h-28')}
@@ -45,7 +45,7 @@ function SelectableImage(props: SelectableImageProps) {
         </Box>
       </React.Fragment>
     );
-  }, [faceImageUrl, alt, faceId, selected, isLoadingGetFaceImage]);
+  }, [faceImage, alt, faceId, selected, isLoadingGetFaceImage]);
 
   return (
     <div

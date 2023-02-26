@@ -1,9 +1,9 @@
-import { Card, CardActions, IconButton, Typography } from '@mui/material';
+import { Card, CardActions, IconButton } from '@mui/material';
 import DownloadIcon from '@mui/icons-material/Download';
 import SaveIcon from '@mui/icons-material/Save';
 import clsx from 'clsx';
-import { Fragment, useEffect, useMemo, useRef, useState } from 'react';
-import { toastError, toastInfo, toastSuccess } from 'components/Toast';
+import { useEffect, useMemo, useRef, useState } from 'react';
+import { toastError, toastSuccess } from 'components/Toast';
 import { useMutation } from 'react-query';
 import ApiError from 'services/api/Error';
 import useFacesApi from 'hooks/api/useFacesApi';
@@ -11,6 +11,7 @@ import ImagePlaceholder from './ImagePlaceholder';
 import AddMetadataSteps from './AddMetadataSteps';
 import { toast, Id } from 'react-toastify';
 import useFaceImgLazyLoading from 'hooks/useFaceImgLazyLoading';
+import { IApiFaceImage } from 'services/api/models';
 
 type ImageTemplateProps = {
   src?: string;
@@ -23,6 +24,7 @@ type ImageTemplateProps = {
   disableDownload?: boolean;
   disableSave?: boolean;
   placeholderText?: string;
+  onLoaded?: (faceImg: IApiFaceImage) => void;
 };
 
 function ImageTemplate(props: ImageTemplateProps) {
@@ -37,7 +39,8 @@ function ImageTemplate(props: ImageTemplateProps) {
     placeholderText,
     imgHeightClassName,
     cardHeightClassName,
-    cardWidthClassName
+    cardWidthClassName,
+    onLoaded
   } = props;
 
   const downloadRef = useRef<HTMLAnchorElement | null>(null);
@@ -89,17 +92,23 @@ function ImageTemplate(props: ImageTemplateProps) {
     setOpenMetadataSteps(false);
   };
 
-  const { ref, faceImageUrl } = useFaceImgLazyLoading({ faceId });
+  const { ref, faceImage } = useFaceImgLazyLoading({ faceId });
+
+  useEffect(() => {
+    if (faceImage) {
+      onLoaded?.(faceImage);
+    }
+  }, [faceImage, onLoaded]);
 
   const CardContentComponent = useMemo(() => {
-    if (!src || !faceImageUrl) {
+    if (!src || !faceImage) {
       return <ImagePlaceholder text={placeholderText} />;
     }
 
     return (
       <>
         <img
-          src={faceImageUrl}
+          src={faceImage.url}
           alt={alt}
           className={clsx('w-full', imgHeightClassName ?? 'h-40')}
           style={{ objectFit: 'cover' }}
@@ -112,7 +121,7 @@ function ImageTemplate(props: ImageTemplateProps) {
             <IconButton onClick={onDownload}>
               <a
                 ref={downloadRef}
-                href={faceImageUrl}
+                href={faceImage.url}
                 download={`face_${faceId}.png`}
               />
               <DownloadIcon />
@@ -136,7 +145,7 @@ function ImageTemplate(props: ImageTemplateProps) {
     onSave,
     placeholderText,
     imgHeightClassName,
-    faceImageUrl,
+    faceImage,
     isSaved
   ]);
 

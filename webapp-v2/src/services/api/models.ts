@@ -48,3 +48,8 @@ export interface IApiAuth {
   accessToken: string;
   roles: number[];
 }
+
+export interface IApiFaceImage {
+  url: string;
+  blob: Blob;
+}

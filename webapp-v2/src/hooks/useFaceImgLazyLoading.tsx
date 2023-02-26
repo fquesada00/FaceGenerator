@@ -20,7 +20,7 @@ const useFaceImgLazyLoading = (props: UseFaceImgLazyLoadingProps) => {
   const {
     mutate: mutateGetFaceImage,
     isLoading: isLoadingGetFaceImage,
-    data: faceImageUrl
+    data: faceImage
   } = useMutation(getFaceImage, {
     onError: error => {
       if (error instanceof ApiError) {
@@ -32,14 +32,14 @@ const useFaceImgLazyLoading = (props: UseFaceImgLazyLoadingProps) => {
   });
 
   useEffect(() => {
-    if (isInViewport && faceId && !faceImageUrl) {
+    if (isInViewport && faceId && !faceImage) {
       mutateGetFaceImage(faceId);
     }
-  }, [isInViewport, faceId, mutateGetFaceImage, faceImageUrl]);
+  }, [isInViewport, faceId, mutateGetFaceImage, faceImage]);
 
   return {
     ref,
-    faceImageUrl,
+    faceImage,
     isLoadingGetFaceImage
   };
 };

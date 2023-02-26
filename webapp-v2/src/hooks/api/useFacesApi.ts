@@ -8,6 +8,7 @@ import {
   IApiFace,
   IApiFaceFeatures,
   IApiFaceFilters,
+  IApiFaceImage,
   IApiFaceSerie
 } from 'services/api/models';
 
@@ -51,7 +52,7 @@ const useFacesApi = () => {
   );
 
   const getFaceImage = useCallback(
-    async (id: string): Promise<string> => {
+    async (id: string): Promise<IApiFaceImage> => {
       try {
         const response = await api.get<Blob>(
           `${FACES_API_PREFIX}/${id}/image`,
@@ -60,7 +61,11 @@ const useFacesApi = () => {
             responseType: 'blob'
           }
         );
-        return URL.createObjectURL(response);
+
+        return {
+          url: URL.createObjectURL(response),
+          blob: response
+        };
       } catch (error) {
         throw new ApiError('Get face', getErrorMessage(error));
       }
