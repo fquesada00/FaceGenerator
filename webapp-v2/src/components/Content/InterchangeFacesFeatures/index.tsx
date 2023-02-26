@@ -82,7 +82,7 @@ const InterchangeFacesFeatures: React.FC = () => {
                     name="firstId"
                   />
                   <PickImageButton
-                    onDone={faceId => setFieldValue('firstId', faceId ?? 0)}
+                    onDone={faceId => setFieldValue('firstId', faceId ?? '0')}
                     pickedFaceId={values.firstId}
                   />
                 </Grid>
@@ -93,7 +93,7 @@ const InterchangeFacesFeatures: React.FC = () => {
                     name="secondId"
                   />
                   <PickImageButton
-                    onDone={faceId => setFieldValue('secondId', faceId ?? 0)}
+                    onDone={faceId => setFieldValue('secondId', faceId ?? '0')}
                     pickedFaceId={values.secondId}
                   />
                 </Grid>

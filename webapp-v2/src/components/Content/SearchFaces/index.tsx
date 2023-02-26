@@ -18,7 +18,7 @@ import FormikAutoCompleteTags from 'components/Inputs/formik/FormikAutoCompleteT
 import useFacesApi from 'hooks/api/useFacesApi';
 
 const SearchFaces: React.FC = () => {
-  const { searchFaces, getAllFaces } = useFacesApi();
+  const { searchFaces } = useFacesApi();
 
   const [hideAll, setHideAll] = useState<boolean>(true);
 
@@ -46,7 +46,7 @@ const SearchFaces: React.FC = () => {
     mutate: mutateGetAllFaces,
     isLoading: isLoadingShowAll,
     data: allFaces
-  } = useMutation(getAllFaces, {
+  } = useMutation(searchFaces, {
     onSuccess: data => {
       console.log(data);
     },

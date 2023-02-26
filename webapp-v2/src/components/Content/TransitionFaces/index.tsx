@@ -135,7 +135,7 @@ const TransitionFaces: React.FC = () => {
                     name="firstId"
                   />
                   <PickImageButton
-                    onDone={faceId => setFieldValue('firstId', faceId ?? 0)}
+                    onDone={faceId => setFieldValue('firstId', faceId ?? '0')}
                     pickedFaceId={values.firstId}
                   />
                 </Grid>
@@ -146,7 +146,7 @@ const TransitionFaces: React.FC = () => {
                     name="secondId"
                   />
                   <PickImageButton
-                    onDone={faceId => setFieldValue('secondId', faceId ?? 0)}
+                    onDone={faceId => setFieldValue('secondId', faceId ?? '0')}
                     pickedFaceId={values.secondId}
                   />
                 </Grid>
@@ -175,7 +175,7 @@ const TransitionFaces: React.FC = () => {
                     onCancel={onMetadataStepsCancel}
                     tagsStepProps={{
                       stepTitle: 'Add tags to the serie',
-                      stepDescription: `The tags will be added only to the serie. The faces will not be affected but they will be saved without tags unless you add them.
+                      stepDescription: `The tags will be added to the serie and its faces, unless they are already saved.
                       Feel free to close this modal and save the faces individually with tags.`
                     }}
                   />

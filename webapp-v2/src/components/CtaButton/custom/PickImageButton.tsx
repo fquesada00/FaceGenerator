@@ -18,15 +18,15 @@ import CtaButton from '..';
 import useFacesApi from 'hooks/api/useFacesApi';
 
 type PickImageButtonProps = {
-  onPick?: (faceId: number) => void;
-  onDone?: (faceId: number | null) => void;
+  onPick?: (faceId: string) => void;
+  onDone?: (faceId: string | null) => void;
   onClose?: () => void;
   className?: string;
-  pickedFaceId?: number;
+  pickedFaceId?: string;
 };
 
 const PickImageButton = (props: PickImageButtonProps) => {
-  const { getAllFaces } = useFacesApi();
+  const { searchFaces } = useFacesApi();
   const { onPick, onDone, onClose, className, pickedFaceId = null } = props;
 
   const [open, setOpen] = useState(false);
@@ -50,11 +50,11 @@ const PickImageButton = (props: PickImageButtonProps) => {
     handleClose();
   };
 
-  const [selectedFaceId, setSelectedFaceId] = useState<number | null>(
+  const [selectedFaceId, setSelectedFaceId] = useState<string | null>(
     pickedFaceId
   );
 
-  const handlePick = (faceId: number) => {
+  const handlePick = (faceId: string) => {
     onPick?.(faceId);
     setSelectedFaceId(faceId);
   };
@@ -68,7 +68,7 @@ const PickImageButton = (props: PickImageButtonProps) => {
     mutate: mutateGetAllFaces,
     isLoading: isLoadingAllFaces,
     data: allFaces
-  } = useMutation(getAllFaces, {
+  } = useMutation(searchFaces, {
     onSuccess: data => {
       console.log(data);
     },

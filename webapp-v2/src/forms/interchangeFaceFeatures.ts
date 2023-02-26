@@ -1,20 +1,18 @@
 import * as Yup from 'yup';
 
 export interface InterchangeFaceFeaturesFormValues {
-  firstId: number;
-  secondId: number;
+  firstId: string;
+  secondId: string;
 }
 
 export const initialValues: InterchangeFaceFeaturesFormValues = {
-  firstId: 0,
-  secondId: 0
+  firstId: '0',
+  secondId: '0'
 };
 
 export const interchangeFaceFeaturesSchema = Yup.object().shape({
-  firstId: Yup.number()
-    .required('First ID is required')
-    .min(1, 'First ID must be greater than 0'),
-  secondId: Yup.number()
+  firstId: Yup.string()
+    .required('First ID is required'),
+  secondId: Yup.string()
     .required('Second ID is required')
-    .min(1, 'Second ID must be greater than 0')
 });

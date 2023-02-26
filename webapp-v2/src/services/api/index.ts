@@ -1,4 +1,4 @@
-import { AxiosInstance } from 'axios';
+import { AxiosInstance, ResponseType } from 'axios';
 
 export const API_PREFIX = '/api';
 export const FACES_API_PREFIX = `${API_PREFIX}/faces`;
@@ -9,18 +9,20 @@ type ApiMethodParams = {
   body?: any;
   headers?: { [key: string]: any };
   withCredentials?: boolean;
+  responseType?: ResponseType;
 };
 
 const apiProvider = (client: AxiosInstance) => ({
   get: async <T>(
     url: string,
-    { query, headers, withCredentials }: ApiMethodParams = {}
+    { query, headers, withCredentials, responseType }: ApiMethodParams = {}
   ) => {
     try {
       const { data: responseData } = await client.get(url, {
         params: query,
         headers,
-        withCredentials
+        withCredentials,
+        responseType
       });
       return responseData as T;
     } catch (error) {

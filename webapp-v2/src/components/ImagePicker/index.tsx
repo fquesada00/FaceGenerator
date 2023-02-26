@@ -5,8 +5,8 @@ import { IApiFace } from 'services/api/models';
 
 type ImagePickerProps = {
   faces: IApiFace[];
-  selectedFaceId: number | null;
-  onPick: (faceId: number) => void;
+  selectedFaceId: string | null;
+  onPick: (faceId: string) => void;
 };
 
 function ImagePicker(props: ImagePickerProps) {

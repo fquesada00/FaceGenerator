@@ -4,7 +4,7 @@ import clsx from 'clsx';
 type SelectableImageProps = {
   src: string;
   alt: string;
-  faceId: number;
+  faceId: string;
   selected: boolean;
   onClick: () => void;
   className?: string;
