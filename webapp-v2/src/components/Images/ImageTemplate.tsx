@@ -166,6 +166,10 @@ function ImageTemplate(props: ImageTemplateProps) {
           open={openMetadataSteps}
           onDone={onMetadataStepsDone}
           onCancel={onMetadataStepsCancel}
+          tagsStepProps={{
+            stepDescription:
+              'If you do not find the tag you are looking for, you can type it in the input field and press enter to add it.'
+          }}
         />
       )}
     </>
