@@ -112,7 +112,8 @@ def generateFaces(amount: int = 1, current_user: User = Depends(get_current_user
     return {"result":service.generate_random_images(amount)}
 
 @api_router.get('/faces', response_model=ApiResponse[List[Face]])
-def getFaces(tags: List[str] = Query(None), current_user: User = Depends(get_current_user)):
+def getFaces(tags: str = Query(None), current_user: User = Depends(get_current_user)):
+    tags = tags.split(',') if tags else []
     return {'result':service.get_images_from_database(tags)}
 
 @api_router.get('/faces/transition', response_model=ApiResponse[FaceSerie])
@@ -129,8 +130,9 @@ def generateFaceFromImage(image: UploadFile = File(), current_user: User = Depen
     return {'result':service.img_to_latent(image.file.read())}
 
 @api_router.get('/faces/series', response_model=ApiResponse[List[FaceSerie]])
-def getSeries(tags: List[str] = Query(None), current_user: User = Depends(get_current_user)):
+def getSeries(tags: str = Query(None), current_user: User = Depends(get_current_user)):
     print("Getting series...")
+    tags = tags.split(',') if tags else []
     return {'result': service.get_series_by_tags(tags)}
 
 class SaveRequest(BaseModel):
@@ -140,7 +142,7 @@ def saveSerie(serie_id: str, body:SaveRequest, current_user: User = Depends(get_
     service.save_serie(serie_id, body.tags)
     return {'result': serie_id}
 
-@api_router.get('/faces/{id}', response_class=ImageResponse)
+@api_router.get('/faces/{id}/image', response_class=ImageResponse)
 def getFace(id: str, response: Response, current_user: User = Depends(get_current_user)):
     image_path = service.get_image_path(id)
     return FileResponse(image_path, media_type="image/png", headers={'Cache-Control': 'max-age=86400'})
