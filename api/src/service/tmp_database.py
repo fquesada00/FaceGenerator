@@ -4,12 +4,13 @@ from redis import Redis
 class TmpDB:
     def __init__(self):
         self.redis = Redis(host=settings.TMP_DB_HOST, port=settings.TMP_DB_PORT, db=0)
+        self._expire = settings.TMP_DB_MINUTES_EXPIRATION * 60
     
     def __get_faces_key(self):
         return 'faces'
 
     def __get_expire(self):
-        return settings.TMP_DB_MINUTES_EXPIRATION
+        return self._expire
     
     def __build_composite_key(self, key: str, id: str):
         return key + ':' + id
