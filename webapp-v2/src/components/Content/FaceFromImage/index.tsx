@@ -57,13 +57,13 @@ const FaceFromImage: React.FC = () => {
     ({ imageFile }: ImagePickerProps) => {
       if (!imageFile) {
         return (
-          <div className="flex flex-col items-center justify-center w-full h-full">
+          <div className='flex flex-col items-center justify-center w-full h-full'>
             <div
-              className="w-24 h-24 rounded-full border-stone-900"
+              className='w-24 h-24 rounded-full border-stone-900'
               style={{ borderWidth: '0.25rem' }}
             >
-              <div className="flex flex-col items-center justify-center w-full h-full">
-                <img src={AddSvg} alt="Add SVG" />
+              <div className='flex flex-col items-center justify-center w-full h-full'>
+                <img src={AddSvg} alt='Add SVG' />
               </div>
             </div>
           </div>
@@ -73,11 +73,11 @@ const FaceFromImage: React.FC = () => {
       const imageSrc = URL.createObjectURL(imageFile);
 
       return (
-        <div className="w-full h-full">
+        <div className='w-full h-full'>
           <img
-            className="w-full h-full"
+            className='w-full h-full'
             src={imageSrc}
-            alt="Your face image"
+            alt='Your face image'
             style={{ objectFit: 'cover' }}
           />
         </div>
@@ -90,7 +90,7 @@ const FaceFromImage: React.FC = () => {
     <div>
       <ContentHeader
         title={paths.faceFromImage.title}
-        subtitle="Upload a face image to generate a face from it. The image should be in .jpg or .png format. The generated one is located in the latent space of the NN."
+        subtitle='Upload a face image to generate a face from it. The image should be in .jpg or .png format. The generated one is located in the latent space of the NN.'
       />
       <div className={clsx(inputsClasses.container)}>
         <Grid container>
@@ -102,9 +102,9 @@ const FaceFromImage: React.FC = () => {
             lg={6}
             xl={6}
             container
-            direction="column"
-            alignItems="center"
-            justifyContent="center"
+            direction='column'
+            alignItems='center'
+            justifyContent='center'
           >
             <Formik
               initialValues={initialValues}
@@ -114,7 +114,7 @@ const FaceFromImage: React.FC = () => {
               {({ setFieldValue, setTouched, values }) => (
                 <Form>
                   <Box
-                    className="rounded-lg border-stone-900"
+                    className='rounded-lg border-stone-900'
                     style={{ borderWidth: '0.25rem' }}
                     onClick={onClickImage}
                     sx={{
@@ -135,10 +135,10 @@ const FaceFromImage: React.FC = () => {
                     }}
                   >
                     <input
-                      type="file"
-                      name="image"
-                      accept="image/jpeg, image/png"
-                      className="hidden"
+                      type='file'
+                      name='image'
+                      accept='image/jpeg, image/png'
+                      className='hidden'
                       onClick={() => setTouched({ image: true })}
                       onChange={() => {
                         if (inputRef?.current?.files?.length === 0) {
@@ -153,15 +153,15 @@ const FaceFromImage: React.FC = () => {
                     <ImagePicker imageFile={values.image} />
                   </Box>
                   <ErrorMessage
-                    name="image"
+                    name='image'
                     render={message => (
-                      <div className="text-red-600 mt-2">{message}</div>
+                      <div className='text-red-600 mt-2'>{message}</div>
                     )}
                   />
                   <CtaButton
-                    type="submit"
-                    label="Generate"
-                    className="mt-8 mb-8"
+                    type='submit'
+                    label='Generate'
+                    className='mt-8 mb-8'
                     loading={isLoadingFaceFromImage}
                   />
                 </Form>
@@ -176,8 +176,8 @@ const FaceFromImage: React.FC = () => {
             lg={6}
             xl={6}
             container
-            direction="column"
-            alignItems="center"
+            direction='column'
+            alignItems='center'
           >
             <Box
               sx={{
@@ -199,11 +199,11 @@ const FaceFromImage: React.FC = () => {
             >
               <ImageTemplate
                 src={faceFromImage?.image}
-                alt="Generated face"
-                placeholderText="Your generated face will appear here"
-                cardHeightClassName="h-full"
-                cardWidthClassName="w-full"
-                imgHeightClassName="h-5/6"
+                alt='Generated face'
+                placeholderText='Your generated face will appear here'
+                cardHeightClassName='h-full'
+                cardWidthClassName='w-full'
+                imgHeightClassName='h-5/6'
               />
             </Box>
           </Grid>

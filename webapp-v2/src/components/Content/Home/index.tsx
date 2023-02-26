@@ -25,52 +25,52 @@ const Home: React.FC = () => {
     <Grid container spacing={2}>
       <Grid item xs={12} sm={12} md={6} lg={6} xl={6}>
         <ContentHeader
-          title="Welcome to Face Generator"
+          title='Welcome to Face Generator'
           subtitle={renderSubtitle}
         />
-        <ul className="pl-4">
+        <ul className='pl-4'>
           <FeatureListItem
             title={paths.randomFaces.title}
-            description="Generate an amount of random faces."
+            description='Generate an amount of random faces.'
             path={paths.randomFaces.path}
           />
           <FeatureListItem
             title={paths.searchFaces.title}
-            description="Search for faces using an id. Also displays all generated images."
+            description='Search for faces using an id. Also displays all generated images.'
             path={paths.searchFaces.path}
           />
           <FeatureListItem
             title={paths.transitionFaces.title}
-            description="Generate an amount of faces (transitions) between two faces."
+            description='Generate an amount of faces (transitions) between two faces.'
             path={paths.transitionFaces.path}
           />
           <FeatureListItem
             title={paths.faceFromImage.title}
-            description="Generate a face from an image."
+            description='Generate a face from an image.'
             path={paths.faceFromImage.path}
           />
           <FeatureListItem
             title={paths.faceFeaturesModification.title}
-            description="Modify the features of a generated face."
+            description='Modify the features of a generated face.'
             path={paths.faceFeaturesModification.path}
           />
           <FeatureListItem
             title={paths.interchangeFacesFeatures.title}
-            description="Interchange the features of two faces."
+            description='Interchange the features of two faces.'
             path={paths.interchangeFacesFeatures.path}
           />
           <FeatureListItem
             title={paths.facesSeries.title}
-            description="View all the saved faces series."
+            description='View all the saved faces series.'
             path={paths.facesSeries.path}
           />
         </ul>
-        <div className="mt-4">
-          <Typography variant="subtitle1" sx={{ fontWeight: 'medium' }}>
+        <div className='mt-4'>
+          <Typography variant='subtitle1' sx={{ fontWeight: 'medium' }}>
             You can find more information about the project in the&nbsp;
             <Link
               to={paths.about.path}
-              className="underline text-blue-600 hover:text-blue-800 visited:text-purple-600"
+              className='underline text-blue-600 hover:text-blue-800 visited:text-purple-600'
             >
               <strong>About</strong>
             </Link>
@@ -86,9 +86,9 @@ const Home: React.FC = () => {
         lg={6}
         xl={6}
         container
-        direction="column"
-        alignItems="center"
-        justifyContent="center"
+        direction='column'
+        alignItems='center'
+        justifyContent='center'
       >
         <Box
           sx={{
@@ -110,7 +110,7 @@ const Home: React.FC = () => {
         >
           <img
             src={faces}
-            alt="Faces"
+            alt='Faces'
             style={{ height: 'inherit', width: 'inherit' }}
           />
         </Box>

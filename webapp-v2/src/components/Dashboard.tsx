@@ -37,7 +37,7 @@ const Dashboard: React.FC<React.PropsWithChildren> = () => {
   return (
     <Box sx={{ display: 'flex' }}>
       <CssBaseline />
-      <AppBar position="absolute" open={open}>
+      <AppBar position='absolute' open={open}>
         <Toolbar
           sx={{
             pr: '24px' // keep right padding when drawer closed
@@ -55,9 +55,9 @@ const Dashboard: React.FC<React.PropsWithChildren> = () => {
             }}
           >
             <IconButton
-              edge="start"
-              color="inherit"
-              aria-label="open drawer"
+              edge='start'
+              color='inherit'
+              aria-label='open drawer'
               onClick={toggleDrawer}
               sx={{
                 marginRight: '36px',
@@ -68,9 +68,9 @@ const Dashboard: React.FC<React.PropsWithChildren> = () => {
             </IconButton>
           </Box>
           <Typography
-            component="h1"
-            variant="h6"
-            color="inherit"
+            component='h1'
+            variant='h6'
+            color='inherit'
             noWrap
             sx={{ flexGrow: 1 }}
           >
@@ -81,7 +81,7 @@ const Dashboard: React.FC<React.PropsWithChildren> = () => {
           </IconButton>
         </Toolbar>
       </AppBar>
-      <Drawer variant="permanent" open={open}>
+      <Drawer variant='permanent' open={open}>
         <Toolbar
           sx={{
             display: 'flex',
@@ -95,12 +95,12 @@ const Dashboard: React.FC<React.PropsWithChildren> = () => {
           </IconButton>
         </Toolbar>
         <Divider />
-        <List component="nav">
+        <List component='nav'>
           <DrawerContent />
         </List>
       </Drawer>
       <Box
-        component="main"
+        component='main'
         sx={{
           backgroundColor: theme =>
             theme.palette.mode === 'light'
@@ -112,7 +112,7 @@ const Dashboard: React.FC<React.PropsWithChildren> = () => {
         }}
       >
         <Toolbar />
-        <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
+        <Container maxWidth='lg' sx={{ mt: 4, mb: 4 }}>
           <Outlet />
           <CustomToastContainer />
         </Container>

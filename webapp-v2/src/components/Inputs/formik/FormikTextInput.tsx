@@ -16,7 +16,7 @@ function FormikTextInput(props: FormikTextInputProps) {
       {...field}
       fullWidth
       label={label}
-      type="string"
+      type='string'
       value={field.value}
       onChange={e => {
         if (e.target.value === '') return; // Ignore 'e', '+', '-', etc.

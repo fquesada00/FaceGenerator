@@ -75,8 +75,8 @@ const InterchangeFacesFeatures: React.FC = () => {
                 <Grid item xs={12} sm={6} md={6} lg={6} xl={6}>
                   <FormikCustomIdInput
                     required
-                    label="First ID"
-                    name="firstId"
+                    label='First ID'
+                    name='firstId'
                   />
                   <PickImageButton
                     onDone={faceId => setFieldValue('firstId', faceId ?? '0')}
@@ -86,8 +86,8 @@ const InterchangeFacesFeatures: React.FC = () => {
                 <Grid item xs={12} sm={6} md={6} lg={6} xl={6}>
                   <FormikCustomIdInput
                     required
-                    label="Second ID"
-                    name="secondId"
+                    label='Second ID'
+                    name='secondId'
                   />
                   <PickImageButton
                     onDone={faceId => setFieldValue('secondId', faceId ?? '0')}
@@ -96,9 +96,9 @@ const InterchangeFacesFeatures: React.FC = () => {
                 </Grid>
               </Grid>
               <CtaButton
-                type="submit"
-                label="Generate"
-                className="mt-8"
+                type='submit'
+                label='Generate'
+                className='mt-8'
                 loading={isLoadingInterchange}
               />
               {!isLoadingInterchange && InterchangedFacesImages}

@@ -9,11 +9,11 @@ function ContentHeader(props: ContentHeaderProps) {
   const { title, subtitle } = props;
 
   return (
-    <div className="flex flex-col items-start justify-start w-full">
-      <Typography component="span" variant="h4" sx={{ fontWeight: '700' }}>
+    <div className='flex flex-col items-start justify-start w-full'>
+      <Typography component='span' variant='h4' sx={{ fontWeight: '700' }}>
         {title}
       </Typography>
-      <Typography component="span" variant="body1" sx={{ fontWeight: '500' }}>
+      <Typography component='span' variant='body1' sx={{ fontWeight: '500' }}>
         {subtitle}
       </Typography>
     </div>

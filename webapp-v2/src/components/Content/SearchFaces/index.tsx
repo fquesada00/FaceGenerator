@@ -91,22 +91,22 @@ const SearchFaces: React.FC = () => {
       >
         <Form>
           <div className={clsx(inputsClasses.container)}>
-            <div className="flex justify-center">
-              <div className="w-11/12">
-                <FormikAutoCompleteTags name="tags" label="Search tags" />
+            <div className='flex justify-center'>
+              <div className='w-11/12'>
+                <FormikAutoCompleteTags name='tags' label='Search tags' />
               </div>
             </div>
             <CtaButton
-              type="submit"
-              label="Search"
-              className="mt-8"
+              type='submit'
+              label='Search'
+              className='mt-8'
               loading={isLoadingSearch}
             />
             {!isLoadingSearch && filteredFaces && SearchFacesImages}
             <CtaButton
               onClick={onShowAll}
               label={`${!hideAll ? 'Hide' : 'Show'} all`}
-              className="mt-4"
+              className='mt-4'
               loading={isLoadingShowAll}
             />
             {!hideAll && !isLoadingShowAll && AllFacesImages}

@@ -11,8 +11,6 @@ export const initialValues: InterchangeFaceFeaturesFormValues = {
 };
 
 export const interchangeFaceFeaturesSchema = Yup.object().shape({
-  firstId: Yup.string()
-    .required('First ID is required'),
-  secondId: Yup.string()
-    .required('Second ID is required')
+  firstId: Yup.string().required('First ID is required'),
+  secondId: Yup.string().required('Second ID is required')
 });

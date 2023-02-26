@@ -19,7 +19,7 @@ function NumericInput(props: NumericInputProps) {
     <TextField
       fullWidth
       label={label}
-      type="number"
+      type='number'
       value={!value ? '' : value}
       onChange={e => {
         const newValue = parseInt(e.target.value);

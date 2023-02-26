@@ -113,8 +113,8 @@ function ImageTemplate(props: ImageTemplateProps) {
           className={clsx('w-full', imgHeightClassName ?? 'h-40')}
           style={{ objectFit: 'cover' }}
         />
-        <CardActions className="flex content-center justify-center space-x-6">
-          {/* <Typography gutterBottom variant="h6" component="span">
+        <CardActions className='flex content-center justify-center space-x-6'>
+          {/* <Typography gutterBottom variant='h6' component='span'>
             ID {faceId}
           </Typography> */}
           {!disableDownload && (

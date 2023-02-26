@@ -120,7 +120,7 @@ const FaceFeaturesModification: React.FC = () => {
         {({ setFieldValue, values }) => (
           <Form>
             <div className={clsx(inputsClasses.container)}>
-              <FormikCustomIdInput name="id" required />
+              <FormikCustomIdInput name='id' required />
               <PickImageButton
                 onDone={faceId => setFieldValue('id', faceId ?? 0)}
                 pickedFaceId={values.id}
@@ -133,7 +133,7 @@ const FaceFeaturesModification: React.FC = () => {
                   md={6}
                   lg={6}
                   xl={6}
-                  className="overflow-y-auto pr-1 pb-1"
+                  className='overflow-y-auto pr-1 pb-1'
                 >
                   <Box
                     sx={{
@@ -153,62 +153,62 @@ const FaceFeaturesModification: React.FC = () => {
                       }
                     }}
                   >
-                    <FeatureModificationSection title="General" first>
+                    <FeatureModificationSection title='General' first>
                       <FormikNumericInput
-                        name="age"
-                        label="Age"
+                        name='age'
+                        label='Age'
                         required={false}
                         min={-MAX_AGE}
                         max={MAX_AGE}
                       />
                       <FormikCustomSlider
-                        title="Gender"
-                        name="gender"
+                        title='Gender'
+                        name='gender'
                         LeftIcon={<FemaleIcon />}
                         RightIcon={<MaleIcon />}
                       />
                     </FeatureModificationSection>
-                    <FeatureModificationSection title="Face orientation">
+                    <FeatureModificationSection title='Face orientation'>
                       <FormikCustomSlider
-                        title="Vertical"
-                        name="faceOrientationVertical"
+                        title='Vertical'
+                        name='faceOrientationVertical'
                       />
                       <FormikCustomSlider
-                        title="Horizontal"
-                        name="faceOrientationHorizontal"
+                        title='Horizontal'
+                        name='faceOrientationHorizontal'
                       />
                     </FeatureModificationSection>
-                    <FeatureModificationSection title="Eyes">
-                      <FormikCustomSlider title="Distance" name="eyeDistance" />
+                    <FeatureModificationSection title='Eyes'>
+                      <FormikCustomSlider title='Distance' name='eyeDistance' />
                       <FormikCustomSlider
-                        title="Distance to Eye Brows"
-                        name="eyebrowsDistance"
+                        title='Distance to Eye Brows'
+                        name='eyebrowsDistance'
                       />
-                      <FormikCustomSlider title="Ratio" name="eyesRatio" />
-                      <FormikCustomSlider title="Open" name="eyesOpen" />
-                      <FormikCustomSlider title="Roll" name="eyesRoll" />
+                      <FormikCustomSlider title='Ratio' name='eyesRatio' />
+                      <FormikCustomSlider title='Open' name='eyesOpen' />
+                      <FormikCustomSlider title='Roll' name='eyesRoll' />
                     </FeatureModificationSection>
-                    <FeatureModificationSection title="Mouth">
+                    <FeatureModificationSection title='Mouth'>
                       <FormikCustomSlider
-                        title="Lip Ratio"
-                        name="mouthLipRatio"
+                        title='Lip Ratio'
+                        name='mouthLipRatio'
                       />
-                      <FormikCustomSlider title="Open" name="mouthOpen" />
-                      <FormikCustomSlider title="Ratio" name="mouthRatio" />
-                      <FormikCustomSlider title="Smile" name="mouthSmile" />
+                      <FormikCustomSlider title='Open' name='mouthOpen' />
+                      <FormikCustomSlider title='Ratio' name='mouthRatio' />
+                      <FormikCustomSlider title='Smile' name='mouthSmile' />
                     </FeatureModificationSection>
-                    <FeatureModificationSection title="Nose">
+                    <FeatureModificationSection title='Nose'>
                       <FormikCustomSlider
-                        title="Distance to Mouth"
-                        name="noseDistance"
+                        title='Distance to Mouth'
+                        name='noseDistance'
                       />
-                      <FormikCustomSlider title="Ratio" name="noseRatio" />
-                      <FormikCustomSlider title="Tip" name="noseTip" />
+                      <FormikCustomSlider title='Ratio' name='noseRatio' />
+                      <FormikCustomSlider title='Tip' name='noseTip' />
                     </FeatureModificationSection>
                   </Box>
                 </Grid>
                 <Grid item xs={12} sm={6} md={6} lg={6} xl={6}>
-                  <div className="mt-8 justify-center flex items-center w-full">
+                  <div className='mt-8 justify-center flex items-center w-full'>
                     <Box
                       sx={{
                         width: {
@@ -229,20 +229,20 @@ const FaceFeaturesModification: React.FC = () => {
                     >
                       <ImageTemplate
                         src={modifiedFace?.image}
-                        alt="Modified face"
-                        placeholderText="Your modified face will be displayed here"
-                        cardHeightClassName="h-full"
-                        cardWidthClassName="w-full"
-                        imgHeightClassName="h-5/6"
+                        alt='Modified face'
+                        placeholderText='Your modified face will be displayed here'
+                        cardHeightClassName='h-full'
+                        cardWidthClassName='w-full'
+                        imgHeightClassName='h-5/6'
                       />
                     </Box>
                   </div>
                 </Grid>
               </Grid>
               <CtaButton
-                type="submit"
-                label="Generate"
-                className="mt-8"
+                type='submit'
+                label='Generate'
+                className='mt-8'
                 loading={isLoadingModifyFace}
               />
             </div>

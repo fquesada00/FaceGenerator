@@ -78,7 +78,9 @@ const TransitionFaces: React.FC = () => {
       onSuccess: data => {
         setIsSerieSaved(true);
         toast.dismiss(savingSerieToastId.current!);
-        toastSuccess(`Serie with id ${transitionFacesSerie!.id} saved successfully`);
+        toastSuccess(
+          `Serie with id ${transitionFacesSerie!.id} saved successfully`
+        );
       },
       onError: error => {
         if (error instanceof ApiError) {
@@ -104,7 +106,9 @@ const TransitionFaces: React.FC = () => {
 
   const onMetadataStepsDone = (metadata: Record<string, any>) => {
     setOpenMetadataSteps(false);
-    savingSerieToastId.current = toast.info(`Saving serie with id ${transitionFacesSerie!.id!}...`);
+    savingSerieToastId.current = toast.info(
+      `Saving serie with id ${transitionFacesSerie!.id!}...`
+    );
     mutateSaveFaceSerie({
       id: transitionFacesSerie!.id!,
       metadata
@@ -133,8 +137,8 @@ const TransitionFaces: React.FC = () => {
                 <Grid item xs={12} sm={6} md={6} lg={6} xl={6}>
                   <FormikCustomIdInput
                     required
-                    label="First ID"
-                    name="firstId"
+                    label='First ID'
+                    name='firstId'
                   />
                   <PickImageButton
                     onDone={faceId => setFieldValue('firstId', faceId ?? '0')}
@@ -144,8 +148,8 @@ const TransitionFaces: React.FC = () => {
                 <Grid item xs={12} sm={6} md={6} lg={6} xl={6}>
                   <FormikCustomIdInput
                     required
-                    label="Second ID"
-                    name="secondId"
+                    label='Second ID'
+                    name='secondId'
                   />
                   <PickImageButton
                     onDone={faceId => setFieldValue('secondId', faceId ?? '0')}
@@ -153,23 +157,25 @@ const TransitionFaces: React.FC = () => {
                   />
                 </Grid>
               </Grid>
-              <div className="mt-8">
-                <FormikCustomAmountInput name="amount" />
+              <div className='mt-8'>
+                <FormikCustomAmountInput name='amount' />
                 <CtaButton
-                  type="submit"
-                  label="Generate"
-                  className="mt-8"
+                  type='submit'
+                  label='Generate'
+                  className='mt-8'
                   loading={isLoadingTransitions}
                 />
                 {!isLoadingTransitions && TransitionFacesImages}
-                {!isSerieSaved && !isLoadingTransitions && transitionFacesCount > 0 && (
-                  <CtaButton
-                    label="Save Serie"
-                    type="button"
-                    className="mt-8"
-                    onClick={onSaveSerie}
-                  />
-                )}
+                {!isSerieSaved &&
+                  !isLoadingTransitions &&
+                  transitionFacesCount > 0 && (
+                    <CtaButton
+                      label='Save Serie'
+                      type='button'
+                      className='mt-8'
+                      onClick={onSaveSerie}
+                    />
+                  )}
                 {openMetadataSteps && (
                   <AddMetadataSteps
                     open={openMetadataSteps}

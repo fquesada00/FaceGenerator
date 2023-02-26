@@ -23,10 +23,10 @@ const RequireAuth: React.FC<RequireAuthProps> = ({
     }
 
     if (auth.accessToken) {
-      return <Navigate to="/faces" state={{ from: location }} replace />;
+      return <Navigate to='/faces' state={{ from: location }} replace />;
     }
 
-    return <Navigate to="/login" state={{ from: location }} replace />;
+    return <Navigate to='/login' state={{ from: location }} replace />;
   }, [roles, allowedRoles, auth, location]);
 
   return <ComponentOrNavigate />;

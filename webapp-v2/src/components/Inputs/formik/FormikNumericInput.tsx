@@ -18,7 +18,7 @@ function FormikNumericInput(props: FormikNumericInputProps) {
       {...field}
       fullWidth
       label={label}
-      type="number"
+      type='number'
       value={field.value}
       onChange={e => {
         if (e.target.value === '') return; // Ignore 'e', '+', '-', etc.

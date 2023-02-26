@@ -42,8 +42,7 @@ export const initialValues: ModifyFaceFeaturesFormValues = {
 };
 
 export const modifyFaceFeaturesSchema = Yup.object().shape({
-  id: Yup.string()
-    .required('ID is required'),
+  id: Yup.string().required('ID is required'),
   age: Yup.number()
     .min(-MAX_AGE, `Age must be greater than or equal to ${MIN_AGE}`)
     .max(MAX_AGE, `Age must be less than or equal to ${MAX_AGE}`),

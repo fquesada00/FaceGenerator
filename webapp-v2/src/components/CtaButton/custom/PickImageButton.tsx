@@ -104,14 +104,14 @@ const PickImageButton = (props: PickImageButtonProps) => {
     <>
       <CtaButton
         onClick={handleClickOpen}
-        label="Pick face"
+        label='Pick face'
         className={clsx('mt-2', className)}
       />
       <Dialog open={open}>
         <DialogTitle>Pick a face</DialogTitle>
         <DialogContent style={{ padding: '0.5rem' }}>
-          <div className="flex mb-4 justify-center">
-            <div className="w-11/12 ">
+          <div className='flex mb-4 justify-center'>
+            <div className='w-11/12 '>
               {!isLoadingAllFaces && !isLoadingTags && Autocomplete}
             </div>
           </div>

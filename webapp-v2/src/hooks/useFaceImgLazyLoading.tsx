@@ -16,7 +16,7 @@ const useFaceImgLazyLoading = (props: UseFaceImgLazyLoadingProps) => {
 
   const ref = useRef<HTMLDivElement | null>(null);
   const isInViewport = useIsInViewport({ element: ref, rootMargin });
-  
+
   const {
     mutate: mutateGetFaceImage,
     isLoading: isLoadingGetFaceImage,

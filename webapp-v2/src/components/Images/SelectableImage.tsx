@@ -23,7 +23,7 @@ function SelectableImage(props: SelectableImageProps) {
 
   const Content = useMemo(() => {
     if (isLoadingGetFaceImage || !faceImage) {
-      return <CenteredCircularLoader className='h-full w-full'/>;
+      return <CenteredCircularLoader className='h-full w-full' />;
     }
 
     return (
@@ -39,7 +39,7 @@ function SelectableImage(props: SelectableImageProps) {
           className={clsx('flex', 'justify-center')}
           sx={{ backgroundColor: selected ? 'success.main' : 'secondary.main' }}
         >
-          {/* <Typography gutterBottom variant="subtitle1" component="span">
+          {/* <Typography gutterBottom variant='subtitle1' component='span'>
             ID {faceId}
           </Typography> */}
         </Box>
@@ -57,10 +57,7 @@ function SelectableImage(props: SelectableImageProps) {
         className
       )}
     >
-      <Card
-        className='w-32 h-36'
-        onClick={selected ? undefined : onClick}
-      >
+      <Card className='w-32 h-36' onClick={selected ? undefined : onClick}>
         {Content}
       </Card>
     </div>

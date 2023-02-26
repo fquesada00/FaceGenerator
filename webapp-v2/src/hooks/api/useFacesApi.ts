@@ -213,7 +213,10 @@ const useFacesApi = () => {
           query['tags'] = tags.join(',');
         }
 
-        const response = await api.get<ApiResponse>(`${FACES_API_PREFIX}/series`, { query });
+        const response = await api.get<ApiResponse>(
+          `${FACES_API_PREFIX}/series`,
+          { query }
+        );
         return response.result;
       } catch (error) {
         throw new ApiError('Get faces series', getErrorMessage(error));

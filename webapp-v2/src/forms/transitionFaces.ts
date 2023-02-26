@@ -13,10 +13,8 @@ export const initialValues: TransitionFacesFormValues = {
 };
 
 export const transitionFacesSchema = Yup.object().shape({
-  firstId: Yup.string()
-    .required('First ID is required'),
-  secondId: Yup.string()
-    .required('Second ID is required'),
+  firstId: Yup.string().required('First ID is required'),
+  secondId: Yup.string().required('Second ID is required'),
   amount: Yup.number()
     .required('Amount is required')
     .min(1, 'Amount must be greater than 0')

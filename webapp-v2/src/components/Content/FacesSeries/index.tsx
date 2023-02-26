@@ -110,15 +110,15 @@ const FacesSeries = () => {
       >
         <Form>
           <div className={clsx(inputsClasses.container)}>
-            <div className="flex justify-center">
-              <div className="w-11/12">
-                <FormikAutoCompleteTags name="tags" label="Search tags" />
+            <div className='flex justify-center'>
+              <div className='w-11/12'>
+                <FormikAutoCompleteTags name='tags' label='Search tags' />
               </div>
             </div>
-            <div className="flex mt-8">
+            <div className='flex mt-8'>
               <CtaButton
-                type="submit"
-                label="Search"
+                type='submit'
+                label='Search'
                 loading={isLoadingSearch}
               />
               <CtaButton
@@ -135,7 +135,7 @@ const FacesSeries = () => {
               />
             </div>
             {!isLoadingSearch && filteredFacesSeries && FilteredFacesSeries}
-            <div className="flex mt-4">
+            <div className='flex mt-4'>
               <CtaButton
                 onClick={onShowAll}
                 label={`${!hideAll ? 'Hide' : 'Show'} all`}
@@ -148,7 +148,6 @@ const FacesSeries = () => {
                 loading={isLoadingShowAll}
               />
             </div>
-
             {!hideAll && !isLoadingShowAll && FacesSeries}
           </div>
         </Form>

@@ -79,12 +79,12 @@ const FaceSerie = (props: FaceSerieProps) => {
       sx={{ backgroundColor: 'rgba(0, 0, 0, 0.075)' }}
     >
       <CardContent style={{ paddingBottom: '0.5rem', paddingTop: '0.5rem' }}>
-        <div className="flex justify-between px-8">
-          <Typography variant="h5" component="h2" className="flex">
-            <strong className="flex items-center">ID: {serie.id}</strong>
+        <div className='flex justify-between px-8'>
+          <Typography variant='h5' component='h2' className='flex'>
+            <strong className='flex items-center'>ID: {serie.id}</strong>
           </Typography>
           <IconButton
-            aria-label="expand face serie"
+            aria-label='expand face serie'
             onClick={() => setOpen(!open)}
             style={{ color: 'black' }}
           >
@@ -95,23 +95,23 @@ const FaceSerie = (props: FaceSerieProps) => {
           <Grid
             container
             spacing={2}
-            className="justify-center flex items-center pb-2"
+            className='justify-center flex items-center pb-2'
             style={{ marginTop: 0 }}
           >
             {Faces}
           </Grid>
         )}
       </CardContent>
-      <CardActions className="flex content-center justify-center space-x-6 mb-2">
+      <CardActions className='flex content-center justify-center space-x-6 mb-2'>
         <CtaButton
-          type="button"
-          label="Download Serie"
+          type='button'
+          label='Download Serie'
           onClick={handleDownload}
-          className="w-48"
+          className='w-48'
         />
         <a
           ref={downloadRef}
-          className="hidden"
+          className='hidden'
           download={`serie_${serie.id}`}
         />
       </CardActions>

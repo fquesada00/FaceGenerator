@@ -18,8 +18,8 @@ function CtaButton(props: CtaButtonProps) {
     <div className={clsx(contentClasses.cta, className)}>
       <LoadingButton
         loading={loading}
-        variant="contained"
-        color="primary"
+        variant='contained'
+        color='primary'
         fullWidth
         onClick={onClick}
         type={type}

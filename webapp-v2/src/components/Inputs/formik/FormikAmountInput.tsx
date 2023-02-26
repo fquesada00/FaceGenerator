@@ -12,7 +12,7 @@ function FormikAmountInput(props: FormikAmountInputProps) {
   return (
     <FormikNumericInput
       name={name}
-      label="Amount"
+      label='Amount'
       required
       min={min}
       max={max}
