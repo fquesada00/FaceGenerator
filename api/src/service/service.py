@@ -60,7 +60,7 @@ class GeneratorService(metaclass=SingletonMeta):
         return database.get_image_path(face_id)
         
     def get_image_endpoint(self, face_id: str):
-        return settings.FULL_HOST + settings.API_PATH + '/faces/' + face_id
+        return settings.FULL_HOST + settings.API_PATH + '/faces/' + face_id + '/image'
 
     def get_images_from_database(self, tags=None):
         values = database.get_face_by_tags(tags)
@@ -104,7 +104,7 @@ class GeneratorService(metaclass=SingletonMeta):
             id = database.insert_face(image, z)
             face = {
                 'id': id,
-                'image': settings.FULL_HOST + settings.API_PATH + '/faces/' + id,
+                'image': self.get_image_endpoint(id)
             }
             images.append(face)
         return images
