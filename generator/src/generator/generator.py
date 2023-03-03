@@ -130,7 +130,7 @@ class Generator:
         all_imgs = []
         all_zs = []
         
-        steps = np.linspace(0, 1, num_interps, endpoint=False)[1::]
+        steps = np.linspace(0, 1, num_interps + 1, endpoint=False)[1::]
         
         for curr_step in steps:
             interpolated_latent_code = self.linear_interpolate(z1, z2, curr_step)
