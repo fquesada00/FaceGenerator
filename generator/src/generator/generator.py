@@ -1,7 +1,6 @@
 import sys
-from os import mkdir, path, getenv
+from os import getenv
 from pathlib import Path
-import io
 from src.face_frame import face_frame_correction
 
 PROJECT_PATH = getenv("PROJECT_PATH")
@@ -18,8 +17,6 @@ os.environ["PYRO_LOGLEVEL"] = "DEBUG"
 import Pyro4
 import numpy as np
 from PIL import Image
-import base64
-from tqdm import tqdm
 import pickle
 from src.generator.align_face import align_face    
 from src.face_image import FaceImage
@@ -75,8 +72,8 @@ class Generator:
         images = self.Gs.components.synthesis.run(w, **self.Gs_kwargs)
         return images[0]
 
-    def linear_interpolate(self, code1, code2, alpha):
-        return code1 * alpha + code2 * (1 - alpha)
+    def linear_interpolate(self, from_val, to_val, step):
+        return from_val * (1 - step) + to_val * step # as steps gets closer to 1, result gets closer to to_val
 
     def img_to_latent(self, img: FaceImage):
         img = img.to_image()
@@ -129,15 +126,14 @@ class Generator:
         z1 = self.unravel(z1)
         z2 = self.unravel(z2)
 
-        step_size = 1.0/num_interps
     
         all_imgs = []
         all_zs = []
         
-        amounts = np.arange(0, 1, step_size)
+        steps = np.linspace(0, 1, num_interps, endpoint=False)[1::]
         
-        for alpha in tqdm(amounts):
-            interpolated_latent_code = self.linear_interpolate(z2, z1, alpha)
+        for curr_step in steps:
+            interpolated_latent_code = self.linear_interpolate(z1, z2, curr_step)
             image = self.generate_image_from_z(interpolated_latent_code)
             interp_latent_image = Image.fromarray(image).resize((self.result_size, self.result_size))
             interp_latent_image = FaceImage.from_image(interp_latent_image)
