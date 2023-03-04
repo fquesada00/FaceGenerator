@@ -6,7 +6,6 @@ from PIL import Image
 import torch
 from src.nets.MobileNetV2_unet import MobileNetV2_unet
 from torchvision import transforms
-from tqdm import tqdm
 
 
 # load pre-trained model and weights
@@ -73,7 +72,7 @@ def face_frame_correction(target_image, latent_code, Gs, Gs_kwargs):
     images.append(target_image.copy())
     images.append(image)
 
-    for i in tqdm(range(steps)):
+    for i in range(steps):
         old_code = latent_code.copy()
         t = i/10000
         noise_strength = dlatent_std * initial_noise_factor * max(0.0, 1.0 - t / noise_ramp_length) ** 2
