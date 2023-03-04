@@ -8,6 +8,7 @@ import {
   IApiFace,
   IApiFaceFeatures,
   IApiFaceFilters,
+  IApiFaceImage,
   IApiFaceSerie
 } from 'services/api/models';
 
@@ -31,24 +32,14 @@ const useFacesApi = () => {
     [api]
   );
 
-  const getAllFaces = useCallback(
-    async (filters: IApiFaceFilters): Promise<IApiFace[]> => {
-      try {
-        const response = await api.get<ApiResponse>(`${FACES_API_PREFIX}`);
-        return response.result;
-      } catch (error) {
-        throw new ApiError('Show all faces', getErrorMessage(error));
-      }
-    },
-    [api]
-  );
-
   const searchFaces = useCallback(
     async (filters: IApiFaceFilters): Promise<IApiFace[]> => {
       try {
-        // filters to query param
-        const query = new URLSearchParams();
-        filters.tags?.forEach(tag => query.append('tags', tag));
+        const query: { [key: string]: any } = {};
+        if (filters.tags && filters.tags.length > 0) {
+          query['tags'] = filters.tags.join(',');
+        }
+
         const response = await api.get<ApiResponse>(`${FACES_API_PREFIX}`, {
           query
         });
@@ -61,12 +52,20 @@ const useFacesApi = () => {
   );
 
   const getFaceImage = useCallback(
-    async (id: number) => {
+    async (id: string): Promise<IApiFaceImage> => {
       try {
-        const response = await api.get<ApiResponse>(
-          `${FACES_API_PREFIX}/${id}`
+        const response = await api.get<Blob>(
+          `${FACES_API_PREFIX}/${id}/image`,
+          {
+            headers: { Accept: 'image/png' },
+            responseType: 'blob'
+          }
         );
-        return response.result;
+
+        return {
+          url: URL.createObjectURL(response),
+          blob: response
+        };
       } catch (error) {
         throw new ApiError('Get face', getErrorMessage(error));
       }
@@ -80,8 +79,8 @@ const useFacesApi = () => {
       toId,
       amount
     }: {
-      fromId: number;
-      toId: number;
+      fromId: string;
+      toId: string;
       amount: number;
     }): Promise<IApiFaceSerie> => {
       try {
@@ -121,7 +120,7 @@ const useFacesApi = () => {
   );
 
   const interchangeFacesFeatures = useCallback(
-    async ({ firstId, secondId }: { firstId: number; secondId: number }) => {
+    async ({ firstId, secondId }: { firstId: string; secondId: string }) => {
       try {
         // await sleep(2000);
         const response = await api.get<ApiResponse>(
@@ -141,7 +140,7 @@ const useFacesApi = () => {
   );
 
   const saveFace = useCallback(
-    async ({ id, metadata }: { id: number; metadata: Record<string, any> }) => {
+    async ({ id, metadata }: { id: string; metadata: Record<string, any> }) => {
       try {
         const response = await api.post<ApiResponse>(
           `${FACES_API_PREFIX}/${id}`,
@@ -161,7 +160,7 @@ const useFacesApi = () => {
       id,
       faceFeatures
     }: {
-      id: number;
+      id: string;
       faceFeatures: IApiFaceFeatures;
     }): Promise<IApiFace> => {
       try {
@@ -191,7 +190,7 @@ const useFacesApi = () => {
   }, [api]);
 
   const saveFaceSerie = useCallback(
-    async ({ id, metadata }: { id: number; metadata: Record<string, any> }) => {
+    async ({ id, metadata }: { id: string; metadata: Record<string, any> }) => {
       try {
         const response = await api.post<ApiResponse>(
           `${FACES_API_PREFIX}/series/${id}`,
@@ -209,9 +208,16 @@ const useFacesApi = () => {
   const getFacesSeries = useCallback(
     async (tags: string[]): Promise<IApiFaceSerie[]> => {
       try {
-        // const response = await api.get<ApiResponse>(`${FACES_API_PREFIX}/series`, { query:{ tags }});
-        // return response.result;
-        return datasource.series;
+        const query: { [key: string]: any } = {};
+        if (tags && tags.length > 0) {
+          query['tags'] = tags.join(',');
+        }
+
+        const response = await api.get<ApiResponse>(
+          `${FACES_API_PREFIX}/series`,
+          { query }
+        );
+        return response.result;
       } catch (error) {
         throw new ApiError('Get faces series', getErrorMessage(error));
       }
@@ -221,7 +227,6 @@ const useFacesApi = () => {
 
   return {
     generateFaces,
-    getAllFaces,
     searchFaces,
     getFaceImage,
     generateTransitions,

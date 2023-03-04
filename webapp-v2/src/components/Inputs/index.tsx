@@ -29,7 +29,7 @@ function Input<T extends unknown>(props: InputProps<T>) {
       value={value}
       type={type}
       onChange={onChange}
-      variant="outlined"
+      variant='outlined'
       required={required}
       inputProps={inputProps}
       error={error}

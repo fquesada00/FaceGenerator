@@ -28,9 +28,6 @@ const RandomFaces: React.FC = () => {
     isLoading,
     data: faces
   } = useMutation(generateFaces, {
-    onSuccess: data => {
-      console.log(data);
-    },
     onError: error => {
       if (error instanceof ApiError) {
         toastError(error.toString());
@@ -69,11 +66,11 @@ const RandomFaces: React.FC = () => {
       >
         <Form>
           <div className={clsx(inputsClasses.container)}>
-            <FormikCustomAmountInput name="randomFaces" />
+            <FormikCustomAmountInput name='randomFaces' />
             <CtaButton
-              type="submit"
-              label="Generate"
-              className="mt-8"
+              type='submit'
+              label='Generate'
+              className='mt-8'
               loading={isLoading}
             />
             {!isLoading && FacesImages}

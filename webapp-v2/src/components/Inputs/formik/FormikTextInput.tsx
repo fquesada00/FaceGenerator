@@ -1,24 +1,22 @@
 import { TextField } from '@mui/material';
-import { useField, FieldProps, FieldHookConfig } from 'formik';
+import { useField, FieldHookConfig } from 'formik';
 
-type FormikNumericInputProps = {
+type FormikTextInputProps = {
   label: string;
   required: boolean;
-  min?: number;
-  max?: number;
 } & FieldHookConfig<any>;
 
-function FormikNumericInput(props: FormikNumericInputProps) {
+function FormikTextInput(props: FormikTextInputProps) {
   const [field, meta] = useField(props);
 
-  const { label, required = false, min, max } = props;
+  const { label, required = false } = props;
 
   return (
     <TextField
       {...field}
       fullWidth
       label={label}
-      type='number'
+      type='string'
       value={field.value}
       onChange={e => {
         if (e.target.value === '') return; // Ignore 'e', '+', '-', etc.
@@ -28,12 +26,8 @@ function FormikNumericInput(props: FormikNumericInputProps) {
       required={required}
       error={meta.touched && !!meta.error}
       helperText={meta.touched && meta.error}
-      inputProps={{
-        min,
-        max
-      }}
     />
   );
 }
 
-export default FormikNumericInput;
+export default FormikTextInput;

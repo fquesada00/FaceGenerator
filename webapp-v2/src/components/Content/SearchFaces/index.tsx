@@ -18,7 +18,7 @@ import FormikAutoCompleteTags from 'components/Inputs/formik/FormikAutoCompleteT
 import useFacesApi from 'hooks/api/useFacesApi';
 
 const SearchFaces: React.FC = () => {
-  const { searchFaces, getAllFaces } = useFacesApi();
+  const { searchFaces } = useFacesApi();
 
   const [hideAll, setHideAll] = useState<boolean>(true);
 
@@ -27,9 +27,6 @@ const SearchFaces: React.FC = () => {
     isLoading: isLoadingSearch,
     data: filteredFaces
   } = useMutation(searchFaces, {
-    onSuccess: data => {
-      console.log(data);
-    },
     onError: error => {
       if (error instanceof ApiError) {
         toastError(error.toString());
@@ -46,10 +43,7 @@ const SearchFaces: React.FC = () => {
     mutate: mutateGetAllFaces,
     isLoading: isLoadingShowAll,
     data: allFaces
-  } = useMutation(getAllFaces, {
-    onSuccess: data => {
-      console.log(data);
-    },
+  } = useMutation(searchFaces, {
     onError: error => {
       if (error instanceof ApiError) {
         toastError(error.toString());
@@ -97,22 +91,22 @@ const SearchFaces: React.FC = () => {
       >
         <Form>
           <div className={clsx(inputsClasses.container)}>
-            <div className="flex justify-center">
-              <div className="w-11/12">
-                <FormikAutoCompleteTags name="tags" label="Search tags" />
+            <div className='flex justify-center'>
+              <div className='w-11/12'>
+                <FormikAutoCompleteTags name='tags' label='Search tags' />
               </div>
             </div>
             <CtaButton
-              type="submit"
-              label="Search"
-              className="mt-8"
+              type='submit'
+              label='Search'
+              className='mt-8'
               loading={isLoadingSearch}
             />
             {!isLoadingSearch && filteredFaces && SearchFacesImages}
             <CtaButton
               onClick={onShowAll}
               label={`${!hideAll ? 'Hide' : 'Show'} all`}
-              className="mt-4"
+              className='mt-4'
               loading={isLoadingShowAll}
             />
             {!hideAll && !isLoadingShowAll && AllFacesImages}

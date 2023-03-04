@@ -16,13 +16,10 @@ class Settings(BaseSettings):
     DB_PASSWORD: str = None
     DB_NAME: str = None
 
-    # FastAPI
-    API_HOST: str = None
-    API_PORT: int = None
-
-    # Redis
-    REDIS_HOST: str = None
-    REDIS_PORT: int = None
+    # Temporary storage
+    TMP_DB_HOST: str = None
+    TMP_DB_PORT: int = None
+    TMP_DB_MINUTES_EXPIRATION: int = 30
 
     # Host
     HOST_IP: str = None
