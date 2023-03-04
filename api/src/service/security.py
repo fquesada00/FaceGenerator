@@ -6,10 +6,8 @@ from fastapi.security import OAuth2PasswordBearer
 from jose import JWTError, jwt
 from passlib.context import CryptContext
 from pydantic import BaseModel
-
-
 from src.service.service import GeneratorService
-from src.service.config import settings
+from src.service.settings import settings
 
 #security
 SECRET_KEY = settings.SECRET_KEY

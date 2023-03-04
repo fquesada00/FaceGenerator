@@ -64,7 +64,7 @@ const Login: React.FC = () => {
   }, [persist]);
 
   return (
-    <Container component="main" maxWidth="xs">
+    <Container component='main' maxWidth='xs'>
       <CssBaseline />
       <Box
         sx={{
@@ -77,7 +77,7 @@ const Login: React.FC = () => {
         <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
           <LockOutlinedIcon />
         </Avatar>
-        <Typography component="h1" variant="h5">
+        <Typography component='h1' variant='h5'>
           Sign in
         </Typography>
         <Formik
@@ -88,12 +88,12 @@ const Login: React.FC = () => {
           {({ values, handleChange, touched, errors }) => (
             <Box component={Form} noValidate sx={{ mt: 1 }}>
               <TextField
-                margin="normal"
+                margin='normal'
                 required
                 fullWidth
-                id="email"
-                label="Username"
-                name="username"
+                id='email'
+                label='Username'
+                name='username'
                 value={values.username}
                 onChange={handleChange}
                 error={touched.username && Boolean(errors.username)}
@@ -101,29 +101,29 @@ const Login: React.FC = () => {
                 autoFocus
               />
               <TextField
-                margin="normal"
+                margin='normal'
                 required
                 fullWidth
-                name="password"
-                label="Password"
-                type="password"
-                id="password"
-                autoComplete="current-password"
+                name='password'
+                label='Password'
+                type='password'
+                id='password'
+                autoComplete='current-password'
                 value={values.password}
                 onChange={handleChange}
                 error={touched.password && Boolean(errors.password)}
                 helperText={touched.password && errors.password}
               />
               <FormControlLabel
-                control={<Checkbox value="remember" color="primary" />}
-                label="Remember me"
+                control={<Checkbox value='remember' color='primary' />}
+                label='Remember me'
                 checked={persist}
                 onChange={() => setPersist(!persist)}
               />
               <Button
-                type="submit"
+                type='submit'
                 fullWidth
-                variant="contained"
+                variant='contained'
                 sx={{ mt: 3, mb: 2 }}
               >
                 Sign In

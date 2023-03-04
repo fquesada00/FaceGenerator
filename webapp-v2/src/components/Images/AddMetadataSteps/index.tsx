@@ -67,10 +67,10 @@ const AddMetadataSteps = (props: AddMetadataStepsProps) => {
   }, [step, addTagsTitle, addTagsContent, addTagsData]);
 
   return (
-    <Dialog open={open} onClose={onCancel} fullWidth maxWidth="sm">
+    <Dialog open={open} onClose={onCancel} fullWidth maxWidth='sm'>
       <DialogTitle>{title}</DialogTitle>
       <DialogContent>{content}</DialogContent>
-      <DialogActions className="justify-around">
+      <DialogActions className='justify-around'>
         {step > 0 && (
           <Button onClick={() => onStepChange(step - 1)}>Back</Button>
         )}

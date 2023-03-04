@@ -14,15 +14,15 @@ function FeatureModificationSection(props: FeatureModificationSectionProps) {
 
   return (
     <Card className={clsx('w-full p-2', !first ? 'mt-8' : '')}>
-      <Typography variant="h5" component="h2">
+      <Typography variant='h5' component='h2'>
         {title}
       </Typography>
       {subtitle && (
-        <Typography variant="body2" component="p">
+        <Typography variant='body2' component='p'>
           {subtitle}
         </Typography>
       )}
-      <Grid container spacing={1} style={{ marginTop: 0 }} alignItems="center">
+      <Grid container spacing={1} style={{ marginTop: 0 }} alignItems='center'>
         {Children.map(children, child => (
           <Grid
             item
@@ -31,7 +31,7 @@ function FeatureModificationSection(props: FeatureModificationSectionProps) {
             md={6}
             lg={6}
             xl={6}
-            className="justify-center flex items-center"
+            className='justify-center flex items-center'
           >
             {child}
           </Grid>

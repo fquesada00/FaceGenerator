@@ -4,7 +4,7 @@ export type ApiResponse = {
 };
 
 export interface IApiFace {
-  id: number;
+  id: string;
   image: string;
 }
 
@@ -40,12 +40,16 @@ export interface IApiFaceFilters {
 }
 
 export interface IApiFaceSerie {
-  id: number;
+  id: string;
   faces: IApiFace[];
-  tags?: string[];
 }
 
 export interface IApiAuth {
   accessToken: string;
   roles: number[];
+}
+
+export interface IApiFaceImage {
+  url: string;
+  blob: Blob;
 }

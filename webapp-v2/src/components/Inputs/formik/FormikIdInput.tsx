@@ -1,4 +1,4 @@
-import FormikNumericInput from './FormikNumericInput';
+import FormikTextInput from './FormikTextInput';
 
 type FormikIdInputProps = {
   name: string;
@@ -10,12 +10,7 @@ function FormikIdInput(props: FormikIdInputProps) {
   const { name, required = false, label } = props;
 
   return (
-    <FormikNumericInput
-      name={name}
-      label={label ?? 'ID'}
-      required={required}
-      min={1}
-    />
+    <FormikTextInput name={name} label={label ?? 'ID'} required={required} />
   );
 }
 

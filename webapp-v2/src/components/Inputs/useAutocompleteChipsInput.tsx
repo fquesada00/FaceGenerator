@@ -47,8 +47,8 @@ const useAutocompleteChipsInput = (props: AutocompleteChipsInputProps) => {
         renderOption={(props, option, { selected }) => (
           <li {...props}>
             <Checkbox
-              icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
-              checkedIcon={<CheckBoxIcon fontSize="small" />}
+              icon={<CheckBoxOutlineBlankIcon fontSize='small' />}
+              checkedIcon={<CheckBoxIcon fontSize='small' />}
               style={{ marginRight: 8 }}
               checked={selected}
             />
@@ -57,13 +57,13 @@ const useAutocompleteChipsInput = (props: AutocompleteChipsInputProps) => {
         )}
         renderTags={(value: readonly string[], getTagProps) =>
           value.map((option: string, index: number) => (
-            <Chip variant="filled" label={option} {...getTagProps({ index })} />
+            <Chip variant='filled' label={option} {...getTagProps({ index })} />
           ))
         }
         renderInput={params => (
           <TextField
             {...params}
-            variant="outlined"
+            variant='outlined'
             placeholder={label}
             {...formikAutoCompleteTagsProps?.textFieldProps}
           />

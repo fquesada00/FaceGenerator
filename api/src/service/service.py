@@ -10,7 +10,7 @@ import os
 import Pyro4
 from Pyro4.util import SerializerBase
 from src.service.utils import SingletonMeta
-from src.service.config import settings
+from src.service.settings import settings
 
 database = GeneratorDB()
 
@@ -51,37 +51,41 @@ class GeneratorService(metaclass=SingletonMeta):
             return encoded_img
         else:
             return byte_arr.getvalue()
+
     def get_image_by_id(self, face_id: int):
         image: Image = self.generate_face(face_id)
         return self.image_to_bytes(image, encoded=False) 
 
+    def get_image_path(self, face_id: int):
+        return database.get_image_path(face_id)
+        
+    def get_image_endpoint(self, face_id: str):
+        return settings.FULL_HOST + settings.API_PATH + '/faces/' + face_id + '/image'
+
     def get_images_from_database(self, tags=None):
-        values = database.fetch(tags)
+        values = database.get_face_by_tags(tags)
         faces = []
         for value in values:
             #image = self.generator.generate_image_from_latent_vector(value['z'])
             #image = FaceImage.to_image(image)
             face = {
-                'image': settings.FULL_HOST + settings.API_PATH + '/faces/' + str(value['id']),
+                'image': self.get_image_endpoint(value['id']),
                 'id': value['id'],
-                'z': value['z']
+                'tags': value['tags']
             }
             faces.append(face)
         return faces
 
     def save_image(self, id, tags=None):
         print("Saving image...")
-        #decode base64 id
-        z = self.cache[int(id)]
-        return database.insert_z(z, tags)
+        database.save_face(id, tags)
+        # return database.insert_z(z, tags)
 
     def get_tags(self):
         return database.get_tags()
 
-
     def get_user_by_username(self, username: str):
         return database.get_user_by_username(username)
-
 
     #generator methods   
     def generate_face(self, id: int):
@@ -93,22 +97,22 @@ class GeneratorService(metaclass=SingletonMeta):
     def generate_random_images(self, qty: int):
         print("Generating random images...")
         images = []
-        for i in range(qty):
+        for _ in range(qty):
             seed = np.random.randint(30000)
             face_image, z = self.generator.generate_random_image(seed)
             image = face_image.to_image()
+            id = database.insert_face(image, z)
             face = {
-                'z': z,
-                'id': self.add_to_cache(z),
-                'image': self.image_to_bytes(image)
+                'id': id,
+                'image': self.get_image_endpoint(id)
             }
             images.append(face)
         return images
 
-    def generate_transition(self, id_img1: int, id_img2: int, qty: int = None):
+    def generate_transition(self, id1: str, id2: str, qty: int = None):
         print("Generating transition...")
-        z1 = database.fetch_z_by_id(id=id_img1)
-        z2 = database.fetch_z_by_id(id=id_img2)
+        z1 = database.fetch_z_by_id(id=id1)
+        z2 = database.fetch_z_by_id(id=id2)
 
         if qty is None:
             imgs, zs = self.generator.generate_transition(z1, z2)
@@ -116,31 +120,51 @@ class GeneratorService(metaclass=SingletonMeta):
             imgs, zs = self.generator.generate_transition(z1, z2, qty)
 
         faces = []
+        ids = []
         for img,z in zip(imgs,zs):
             img = FaceImage.to_image(img)
+            id = database.insert_face(img, z)
+
+            ids.append(id)
+
             face = {
-                'z': z,
-                'id': self.add_to_cache(z),
-                'image': self.image_to_bytes(img)
+                'id': id,
+                'image': self.get_image_endpoint(id)
             }
+
             faces.append(face)
-        return faces
+
+        # add the last face
+        ids.append(id2)
+        faces.append({
+            'id': id2,
+            'image': self.get_image_endpoint(id2)
+        })
+
+        serie_id = database.insert_serie(ids)
+
+        return faces, serie_id
 
     def img_to_latent(self, img_bytes:bytes):
         print("Locating face in latent space...")
         data = BytesIO(img_bytes)
         img = Image.open(data)
         img = FaceImage.from_image(img)
+
         imgs, zs = self.generator.img_to_latent(img)
+
         faces = []
         for img,z in zip(imgs,zs):
             img = FaceImage.to_image(img)
+            id = database.insert_face(img, z)
+
             face = {
-                'z': z,
-                'id': self.add_to_cache(z),
-                'image': self.image_to_bytes(img)
+                'id': id,
+                'image': self.get_image_endpoint(id)
             }
+
             faces.append(face)
+
         return faces
 
     def base64_to_latent(self, base64str):
@@ -158,32 +182,60 @@ class GeneratorService(metaclass=SingletonMeta):
             }
             faces.append(face)
         return faces
-
     
-    def change_features(self, id_img: int, features: dict):
+    def change_features(self, id: str, features: dict):
         print("Modifying face...")
-        z = database.fetch_z_by_id(id=id_img)
-        
+        z = database.fetch_z_by_id(id=id)
         new_img, new_z = self.generator.change_features(z, features)
         new_img = FaceImage.to_image(new_img)
+
+        id = database.insert_face(new_img, new_z)
+
         return {
-            'z': new_z,
-            'id': self.add_to_cache(new_z),
-            'image': self.image_to_bytes(new_img)
+            'id': id,
+            'image': self.get_image_endpoint(id)
         }
 
-    def mix_styles(self, id1, id2):
+    def mix_styles(self, id1: str, id2: str):
         z1 = database.fetch_z_by_id(id=id1)
         z2 = database.fetch_z_by_id(id=id2)
+        
         imgs, zs = self.generator.mix_styles(z1, z2)
+
         faces = []
-        for img,z in zip(imgs,zs):
+        for img, z in zip(imgs, zs):
             img = FaceImage.to_image(img)
+            id = database.insert_face(img, z)
+
             face = {
-                'z': z,
-                'id': self.add_to_cache(z),
-                'image': self.image_to_bytes(img)
+                'id': id,
+                'image': self.get_image_endpoint(id)
             }
+
             faces.append(face)
+
         return faces
 
+    def get_series_by_tags(self, tags):
+        values = database.get_series_by_tags(tags)
+        series = []
+        
+        for serie in values:
+            faces = []
+
+            for id in serie['images_id']:
+                faces.append({
+                    'id': id,
+                    'image': self.get_image_endpoint(id)
+                })
+
+            series.append({
+                'id': serie['id'],
+                'tags': serie['tags'],
+                'faces': faces
+            })
+
+        return series
+
+    def save_serie(self, id: str, tags: list):
+        return database.save_serie(id, tags)

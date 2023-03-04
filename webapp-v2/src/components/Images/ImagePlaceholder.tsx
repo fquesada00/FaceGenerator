@@ -22,7 +22,7 @@ function ImagePlaceholder(props: ImagePlaceholderProps) {
       )}
       style={{ borderWidth: '0.25rem' }}
     >
-      <Typography variant="h6" component="span" textAlign="center">
+      <Typography variant='h6' component='span' textAlign='center'>
         {text ?? 'You will see an image here'}
       </Typography>
     </div>

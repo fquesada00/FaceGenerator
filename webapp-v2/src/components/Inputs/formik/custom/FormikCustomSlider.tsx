@@ -35,18 +35,18 @@ function FormikCustomSlider(props: FormikCustomSliderProps) {
   const [field, meta, helpers] = useField(name);
 
   return (
-    <div className="w-48 m-2">
+    <div className='w-48 m-2'>
       <Typography gutterBottom sx={{ textAlign: 'center' }}>
         {title}
       </Typography>
-      <Stack spacing={2} direction="row" sx={{ mb: 1 }} alignItems="center">
+      <Stack spacing={2} direction='row' sx={{ mb: 1 }} alignItems='center'>
         {LeftIcon}
         <Slider
           min={min}
           max={max}
           step={step}
-          size="small"
-          valueLabelDisplay="auto"
+          size='small'
+          valueLabelDisplay='auto'
           defaultValue={middle}
           {...field}
         />

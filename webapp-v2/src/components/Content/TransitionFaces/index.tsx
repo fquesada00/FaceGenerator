@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { toastInfo } from 'components/Toast';
+import { useRef, useState } from 'react';
+import { toastInfo, toastSuccess } from 'components/Toast';
 import AddMetadataSteps from 'components/Images/AddMetadataSteps';
 
 import { Grid } from '@mui/material';
@@ -24,19 +24,19 @@ import {
 import FormikCustomIdInput from 'components/Inputs/formik/custom/FormikCustomIdInput';
 import FormikCustomAmountInput from 'components/Inputs/formik/custom/FormikCustomAmountInput';
 import useFacesApi from 'hooks/api/useFacesApi';
+import { Id, toast } from 'react-toastify';
 
 const TransitionFaces: React.FC = () => {
   const [openMetadataSteps, setOpenMetadataSteps] = useState<boolean>(false);
   const { generateTransitions, saveFaceSerie } = useFacesApi();
+  const [isSerieSaved, setIsSerieSaved] = useState<boolean>(false);
+  const savingSerieToastId = useRef<Id | null>(null);
 
   const {
     mutate: mutateGenerateTransitions,
     isLoading: isLoadingTransitions,
     data: transitionFacesSerie
   } = useMutation(generateTransitions, {
-    onSuccess: data => {
-      console.log(data);
-    },
     onError: error => {
       if (error instanceof ApiError) {
         toastError(error.toString());
@@ -76,7 +76,11 @@ const TransitionFaces: React.FC = () => {
   const { mutate: mutateSaveFaceSerie, isLoading: isLoadingSaveSerie } =
     useMutation(saveFaceSerie, {
       onSuccess: data => {
-        console.log(data);
+        setIsSerieSaved(true);
+        toast.dismiss(savingSerieToastId.current!);
+        toastSuccess(
+          `Serie with id ${transitionFacesSerie!.id} saved successfully`
+        );
       },
       onError: error => {
         if (error instanceof ApiError) {
@@ -102,7 +106,9 @@ const TransitionFaces: React.FC = () => {
 
   const onMetadataStepsDone = (metadata: Record<string, any>) => {
     setOpenMetadataSteps(false);
-    toastInfo(`Saving serie with id ${transitionFacesSerie!.id!}...`);
+    savingSerieToastId.current = toast.info(
+      `Saving serie with id ${transitionFacesSerie!.id!}...`
+    );
     mutateSaveFaceSerie({
       id: transitionFacesSerie!.id!,
       metadata
@@ -131,43 +137,45 @@ const TransitionFaces: React.FC = () => {
                 <Grid item xs={12} sm={6} md={6} lg={6} xl={6}>
                   <FormikCustomIdInput
                     required
-                    label="First ID"
-                    name="firstId"
+                    label='First ID'
+                    name='firstId'
                   />
                   <PickImageButton
-                    onDone={faceId => setFieldValue('firstId', faceId ?? 0)}
+                    onDone={faceId => setFieldValue('firstId', faceId ?? '0')}
                     pickedFaceId={values.firstId}
                   />
                 </Grid>
                 <Grid item xs={12} sm={6} md={6} lg={6} xl={6}>
                   <FormikCustomIdInput
                     required
-                    label="Second ID"
-                    name="secondId"
+                    label='Second ID'
+                    name='secondId'
                   />
                   <PickImageButton
-                    onDone={faceId => setFieldValue('secondId', faceId ?? 0)}
+                    onDone={faceId => setFieldValue('secondId', faceId ?? '0')}
                     pickedFaceId={values.secondId}
                   />
                 </Grid>
               </Grid>
-              <div className="mt-8">
-                <FormikCustomAmountInput name="amount" />
+              <div className='mt-8'>
+                <FormikCustomAmountInput name='amount' />
                 <CtaButton
-                  type="submit"
-                  label="Generate"
-                  className="mt-8"
+                  type='submit'
+                  label='Generate'
+                  className='mt-8'
                   loading={isLoadingTransitions}
                 />
                 {!isLoadingTransitions && TransitionFacesImages}
-                {!isLoadingTransitions && transitionFacesCount > 0 && (
-                  <CtaButton
-                    label="Save Serie"
-                    type="button"
-                    className="mt-8"
-                    onClick={onSaveSerie}
-                  />
-                )}
+                {!isSerieSaved &&
+                  !isLoadingTransitions &&
+                  transitionFacesCount > 0 && (
+                    <CtaButton
+                      label='Save Serie'
+                      type='button'
+                      className='mt-8'
+                      onClick={onSaveSerie}
+                    />
+                  )}
                 {openMetadataSteps && (
                   <AddMetadataSteps
                     open={openMetadataSteps}
@@ -175,7 +183,7 @@ const TransitionFaces: React.FC = () => {
                     onCancel={onMetadataStepsCancel}
                     tagsStepProps={{
                       stepTitle: 'Add tags to the serie',
-                      stepDescription: `The tags will be added only to the serie. The faces will not be affected but they will be saved without tags unless you add them.
+                      stepDescription: `The tags will be added to the serie and its faces, unless they are already saved.
                       Feel free to close this modal and save the faces individually with tags.`
                     }}
                   />
