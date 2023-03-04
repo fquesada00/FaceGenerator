@@ -186,9 +186,7 @@ class GeneratorService(metaclass=SingletonMeta):
     def change_features(self, id: str, features: dict):
         print("Modifying face...")
         z = database.fetch_z_by_id(id=id)
-        print(np.size(z))
         new_img, new_z = self.generator.change_features(z, features)
-        print(np.size(new_z))
         new_img = FaceImage.to_image(new_img)
 
         id = database.insert_face(new_img, new_z)
