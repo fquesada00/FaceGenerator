@@ -18,6 +18,7 @@ interface FormikCustomSliderProps {
   max?: number;
   middle?: number;
   step?: number;
+  onChangeCommitted?: () => void;
 }
 
 function FormikCustomSlider(props: FormikCustomSliderProps) {
@@ -29,7 +30,8 @@ function FormikCustomSlider(props: FormikCustomSliderProps) {
     step = STEP_FEATURE_SLIDER_VALUE,
     title,
     LeftIcon = <RemoveIcon />,
-    RightIcon = <AddIcon />
+    RightIcon = <AddIcon />,
+    onChangeCommitted
   } = props;
 
   const [field, meta, helpers] = useField(name);
@@ -48,6 +50,7 @@ function FormikCustomSlider(props: FormikCustomSliderProps) {
           size='small'
           valueLabelDisplay='auto'
           defaultValue={middle}
+          onChangeCommitted={onChangeCommitted}
           {...field}
         />
         {RightIcon}
