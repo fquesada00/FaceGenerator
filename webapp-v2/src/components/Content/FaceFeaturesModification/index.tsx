@@ -285,7 +285,7 @@ const FaceFeaturesModification: React.FC = () => {
                       }}
                     >
                       <ImageTemplate
-                        src={modifiedFace?.image}
+                        faceId={modifiedFace?.id}
                         alt='Modified face'
                         placeholderText='Your modified face will be displayed here'
                         cardHeightClassName='h-full'

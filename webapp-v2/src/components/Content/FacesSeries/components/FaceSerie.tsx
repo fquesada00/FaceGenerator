@@ -41,7 +41,6 @@ const FaceSerie = (props: FaceSerieProps) => {
       return (
         <Grid item key={face.id}>
           <ImageTemplate
-            src={face.image}
             alt={`Face ${face.id}`}
             faceId={face.id}
             disableSave
