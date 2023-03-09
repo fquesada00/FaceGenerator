@@ -160,6 +160,9 @@ const useFacesApi = () => {
       faceFeatures: IApiFaceFeatures;
     }): Promise<IApiFace> => {
       try {
+        if (id === '0') {
+          throw new Error('Face id is missing');
+        }
         // await sleep(2000);
         const response = await api.put<ApiResponse>(
           `${FACES_API_PREFIX}/${id}`,
