@@ -32,10 +32,10 @@ const useFaceImgLazyLoading = (props: UseFaceImgLazyLoadingProps) => {
   });
 
   useEffect(() => {
-    if (isInViewport && faceId && !faceImage) {
+    if (isInViewport && faceId) {
       mutateGetFaceImage(faceId);
     }
-  }, [isInViewport, faceId, mutateGetFaceImage, faceImage]);
+  }, [isInViewport, faceId, mutateGetFaceImage]);
 
   return {
     ref,

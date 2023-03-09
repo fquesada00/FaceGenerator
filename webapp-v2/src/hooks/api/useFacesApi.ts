@@ -104,11 +104,7 @@ const useFacesApi = () => {
         // send image file
         const formData = new FormData();
         formData.append('image', image);
-        // const response = await api.post<ApiResponse>(`${FACES_API_PREFIX}/image`,  { body:formData, headers:{ 'Content-Type': 'multipart/form-data' }});
-        const response = await api.post<ApiResponse>(
-          `http://localhost:5000/faces/image`,
-          { body: formData, headers: { 'Content-Type': 'multipart/form-data' } }
-        );
+        const response = await api.post<ApiResponse>(`${FACES_API_PREFIX}/image`, { body: formData, headers: { 'Content-Type': 'multipart/form-data' } });
 
         return response.result;
         return datasource.faces[0];

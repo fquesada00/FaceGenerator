@@ -198,7 +198,7 @@ const FaceFromImage: React.FC = () => {
               }}
             >
               <ImageTemplate
-                src={faceFromImage?.image}
+                faceId={faceFromImage?.id}
                 alt='Generated face'
                 placeholderText='Your generated face will appear here'
                 cardHeightClassName='h-full'

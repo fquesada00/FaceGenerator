@@ -16,7 +16,6 @@ function Images(props: ImagesProps) {
       {faces.map((face: IApiFace, index) => (
         <Grid item key={face.id}>
           <ImageTemplate
-            src={face.image}
             alt={`Face ${index + 1}`}
             faceId={face.id}
             disableDownload={disableDownload}
