@@ -31,12 +31,15 @@ class Generator:
         self.latent_vectors = self.get_control_latent_vectors('src/generator/stylegan2directions')
 
         self.Gs, self.noise_vars, self.Gs_kwargs = self.load_model()
+        self.truncation_psi = 0.7
+        self.w_avg = self.Gs.get_var('dlatent_avg')
+        self.w_shape = self.Gs.components.synthesis.input_shape[1:]
 
-    def flatten(self, z):
-        return np.ravel(z).tolist()
+    def flatten(self, w):
+        return np.ravel(w).tolist()
 
-    def unravel(self, z):
-        return np.reshape(z, (1, *self.Gs.input_shape[1:]))
+    def unravel(self, w):
+        return np.reshape(w, (1, *self.w_shape))
 
     def load_model(self):
         _G, _D, Gs = pretrained_networks.load_networks(self.network_pkl)
@@ -54,19 +57,11 @@ class Generator:
     def generate_random_image(self, rand_seed):
         '''returns the image and its latent code'''
         z = np.random.RandomState(rand_seed).randn(1, *self.Gs.input_shape[1:]) # [minibatch, component]
-        random_image = self.generate_image_from_z(z)
+        w = self.Gs.components.mapping.run(z, None) # [minibatch, layer, component]
+        w = self.w_avg + (w - self.w_avg) * self.truncation_psi # [minibatch, layer, component]
+        random_image = self.generate_image_from_w(w)
         image = Image.fromarray(random_image)
-        return FaceImage.from_image(image), self.flatten(z)
-
-    def generate_image_from_latent_vector(self, latent_vector):
-        image = self.generate_image_from_z(latent_vector)
-        image = Image.fromarray(image)
-        return FaceImage.from_image(image)
-
-    def generate_image_from_z(self, z):
-        z = self.unravel(z)
-        images = self.Gs.run(z, None, **self.Gs_kwargs)
-        return images[0]
+        return FaceImage.from_image(image), self.flatten(w)
 
     def generate_image_from_w(self, w):
         images = self.Gs.components.synthesis.run(w, **self.Gs_kwargs)
@@ -122,44 +117,42 @@ class Generator:
     
         return all_final_latents[0]
 
-    def generate_transition(self, z1, z2, num_interps=50):
-        z1 = self.unravel(z1)
-        z2 = self.unravel(z2)
-
+    def generate_transition(self, w1, w2, num_interps=50):
+        w1 = self.unravel(w1)
+        w2 = self.unravel(w2)
     
         all_imgs = []
-        all_zs = []
+        all_ws = []
         
         steps = np.linspace(0, 1, num_interps + 1, endpoint=False)[1::]
         
         for curr_step in steps:
-            interpolated_latent_code = self.linear_interpolate(z1, z2, curr_step)
-            image = self.generate_image_from_z(interpolated_latent_code)
+            interpolated_latent_code = self.linear_interpolate(w1, w2, curr_step)
+            image = self.generate_image_from_w(interpolated_latent_code)
             interp_latent_image = Image.fromarray(image).resize((self.result_size, self.result_size))
             interp_latent_image = FaceImage.from_image(interp_latent_image)
             all_imgs.append(interp_latent_image)
-            all_zs.append(self.flatten(interpolated_latent_code))
-        return all_imgs, all_zs
+            all_ws.append(self.flatten(interpolated_latent_code))
+        return all_imgs, all_ws
         
-    def change_features(self, z, features_amounts_dict: dict):
-        z = self.unravel(z)
-        modified_latent_code = self.Gs.components.mapping.run(z, None)
+    def change_features(self, w, features_amounts_dict: dict):
+        w = self.unravel(w)
         for feature_name, amount in features_amounts_dict.items():
-            modified_latent_code += self.latent_vectors[feature_name] * amount
-        image = self.generate_image_from_w(modified_latent_code)
+            w += self.latent_vectors[feature_name] * amount
+        image = self.generate_image_from_w(w)
         latent_img = Image.fromarray(image).resize((self.result_size, self.result_size))
         latent_img = FaceImage.from_image(latent_img)
-        return latent_img, self.flatten(modified_latent_code)
+        return latent_img, self.flatten(w)
 
-    def mix_styles(self, z1, z2):
-        z1 = self.unravel(z1)
-        z2 = self.unravel(z2)
-        z1_copy = z1.copy()
-        z2_copy = z2.copy()
-        z1[0][6:] = z2_copy[0][6:]
-        z2[0][6:] = z1_copy[0][6:]
-        image1 = Image.fromarray(self.generate_image_from_z(z1)).resize((self.result_size, self.result_size))
-        image2 = Image.fromarray(self.generate_image_from_z(z2)).resize((self.result_size, self.result_size))
+    def mix_styles(self, w1, w2):
+        w1 = self.unravel(w1)
+        w2 = self.unravel(w2)
+        w1_copy = w1.copy()
+        w2_copy = w2.copy()
+        w1[0][6:] = w2_copy[0][6:]
+        w2[0][6:] = w1_copy[0][6:]
+        image1 = Image.fromarray(self.generate_image_from_w(w1)).resize((self.result_size, self.result_size))
+        image2 = Image.fromarray(self.generate_image_from_w(w2)).resize((self.result_size, self.result_size))
         image1 = FaceImage.from_image(image1)
         image2 = FaceImage.from_image(image2)
-        return [image1, image2], [self.flatten(z1), self.flatten(z2)]
+        return [image1, image2], [self.flatten(w1), self.flatten(w2)]
