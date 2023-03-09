@@ -1,5 +1,5 @@
 import ContentHeader from 'components/ContentHeader';
-import { useMemo, useState } from 'react';
+import { useCallback, useMemo, useRef, useState } from 'react';
 import { Form, Formik } from 'formik';
 import paths from 'routes/paths';
 import inputsClasses from 'components/Inputs/styles/Inputs.module.scss';
@@ -10,7 +10,7 @@ import { toastError } from 'components/Toast';
 import { useMutation } from 'react-query';
 import ApiError from 'services/api/Error';
 import CtaButton from 'components/CtaButton';
-import { Box, Grid } from '@mui/material';
+import { Box, Button, Grid } from '@mui/material';
 import MaleIcon from '@mui/icons-material/Male';
 import FemaleIcon from '@mui/icons-material/Female';
 import { IApiFaceFeatures } from 'services/api/models';
@@ -25,12 +25,13 @@ import FormikNumericInput from 'components/Inputs/formik/FormikNumericInput';
 import { MAX_AGE, MIN_AGE } from 'constants/constants';
 import FormikCustomSlider from 'components/Inputs/formik/custom/FormikCustomSlider';
 import useFacesApi from 'hooks/api/useFacesApi';
-import useSlider from './hooks/useSlider';
-import useAgeInput from './hooks/useAgeInput';
 import FeatureModificationSection from './components/FeatureModificationSection';
+import CenteredCircularLoader from 'components/Loaders/CenteredCircularLoader';
 
 const FaceFeaturesModification: React.FC = () => {
   const { modifyFaceFeatures } = useFacesApi();
+
+  const submitButtonRef = useRef<HTMLButtonElement>(null);
 
   const renderSubtitle = useMemo(
     () => (
@@ -106,6 +107,10 @@ const FaceFeaturesModification: React.FC = () => {
     mutateModifyFaceFeatures({ id, faceFeatures });
   };
 
+  const onChangeCommitted = () => {
+    submitButtonRef.current?.click();
+  };
+
   return (
     <div>
       <ContentHeader
@@ -133,16 +138,17 @@ const FaceFeaturesModification: React.FC = () => {
                   md={6}
                   lg={6}
                   xl={6}
-                  className='overflow-y-auto pr-1 pb-1'
+                  className='flex justify-center relative'
                 >
                   <Box
+                    className='overflow-y-auto pr-3 py-3'
                     sx={{
                       width: {
-                        xs: '13rem',
-                        sm: '18rem',
-                        md: '22rem',
-                        lg: '24rem',
-                        xl: '28rem'
+                        xs: '15rem',
+                        sm: '20rem',
+                        md: '24rem',
+                        lg: '26rem',
+                        xl: '30rem'
                       },
                       height: {
                         xs: '18rem',
@@ -153,6 +159,14 @@ const FaceFeaturesModification: React.FC = () => {
                       }
                     }}
                   >
+                    {isLoadingModifyFace && (
+                      <div
+                        style={{ width: 'inherit', height: 'inherit' }}
+                        className='absolute bg-black bg-opacity-30 z-10'
+                      >
+                        <CenteredCircularLoader className='w-full h-full' />
+                      </div>
+                    )}
                     <FeatureModificationSection title='General' first>
                       <FormikNumericInput
                         name='age'
@@ -160,50 +174,93 @@ const FaceFeaturesModification: React.FC = () => {
                         required={false}
                         min={-MAX_AGE}
                         max={MAX_AGE}
+                        onChangeCommitted={onChangeCommitted}
                       />
                       <FormikCustomSlider
                         title='Gender'
                         name='gender'
                         LeftIcon={<FemaleIcon />}
                         RightIcon={<MaleIcon />}
+                        onChangeCommitted={onChangeCommitted}
                       />
                     </FeatureModificationSection>
                     <FeatureModificationSection title='Face orientation'>
                       <FormikCustomSlider
                         title='Vertical'
                         name='faceOrientationVertical'
+                        onChangeCommitted={onChangeCommitted}
                       />
                       <FormikCustomSlider
                         title='Horizontal'
                         name='faceOrientationHorizontal'
+                        onChangeCommitted={onChangeCommitted}
                       />
                     </FeatureModificationSection>
                     <FeatureModificationSection title='Eyes'>
-                      <FormikCustomSlider title='Distance' name='eyeDistance' />
+                      <FormikCustomSlider
+                        title='Distance'
+                        name='eyeDistance'
+                        onChangeCommitted={onChangeCommitted}
+                      />
                       <FormikCustomSlider
                         title='Distance to Eye Brows'
                         name='eyebrowsDistance'
+                        onChangeCommitted={onChangeCommitted}
                       />
-                      <FormikCustomSlider title='Ratio' name='eyesRatio' />
-                      <FormikCustomSlider title='Open' name='eyesOpen' />
-                      <FormikCustomSlider title='Roll' name='eyesRoll' />
+                      <FormikCustomSlider
+                        title='Ratio'
+                        name='eyesRatio'
+                        onChangeCommitted={onChangeCommitted}
+                      />
+                      <FormikCustomSlider
+                        title='Open'
+                        name='eyesOpen'
+                        onChangeCommitted={onChangeCommitted}
+                      />
+                      <FormikCustomSlider
+                        title='Roll'
+                        name='eyesRoll'
+                        onChangeCommitted={onChangeCommitted}
+                      />
                     </FeatureModificationSection>
                     <FeatureModificationSection title='Mouth'>
                       <FormikCustomSlider
                         title='Lip Ratio'
                         name='mouthLipRatio'
+                        onChangeCommitted={onChangeCommitted}
                       />
-                      <FormikCustomSlider title='Open' name='mouthOpen' />
-                      <FormikCustomSlider title='Ratio' name='mouthRatio' />
-                      <FormikCustomSlider title='Smile' name='mouthSmile' />
+                      <FormikCustomSlider
+                        title='Open'
+                        name='mouthOpen'
+                        onChangeCommitted={onChangeCommitted}
+                      />
+                      <FormikCustomSlider
+                        title='Ratio'
+                        name='mouthRatio'
+                        onChangeCommitted={onChangeCommitted}
+                      />
+                      <FormikCustomSlider
+                        title='Smile'
+                        name='mouthSmile'
+                        onChangeCommitted={onChangeCommitted}
+                      />
                     </FeatureModificationSection>
                     <FeatureModificationSection title='Nose'>
                       <FormikCustomSlider
                         title='Distance to Mouth'
                         name='noseDistance'
+                        onChangeCommitted={onChangeCommitted}
                       />
-                      <FormikCustomSlider title='Ratio' name='noseRatio' />
-                      <FormikCustomSlider title='Tip' name='noseTip' />
+                      <FormikCustomSlider
+                        title='Ratio'
+                        name='noseRatio'
+                        onChangeCommitted={onChangeCommitted}
+                      />
+                      <FormikCustomSlider
+                        title='Tip'
+                        name='noseTip'
+                        onChangeCommitted={onChangeCommitted}
+                      />
                     </FeatureModificationSection>
                   </Box>
                 </Grid>
@@ -239,12 +296,7 @@ const FaceFeaturesModification: React.FC = () => {
                   </div>
                 </Grid>
               </Grid>
-              <CtaButton
-                type='submit'
-                label='Generate'
-                className='mt-8'
-                loading={isLoadingModifyFace}
-              />
+              <Button type='submit' className='hidden' ref={submitButtonRef} />
             </div>
           </Form>
         )}

@@ -12,7 +12,6 @@ sys.path.insert(0, PROJECT_PATH + "/generator/src/stylegan2")
 import numpy as np
 from PIL import Image
 import base64
-from tqdm import tqdm
 
 def get_image(seed):
     try:
@@ -48,19 +47,17 @@ class Generator:
         z = np.random.randint(0,9999)
         return [get_image(z)], [[z]]
 
-    def generate_transition(self, z1, z2, num_interps=50):
-        step_size = 1.0/num_interps
-    
+    def generate_transition(self, z1, z2, num_interps=50):    
         all_imgs = []
         all_zs = []
         
-        amounts = np.arange(0, 1, step_size)
+        steps = np.linspace(0, 1, num_interps + 1)
         
-        for alpha in tqdm(amounts):
-            image = get_image(alpha)
+        for curr_step in steps:
+            image = get_image(curr_step)
             interp_latent_image = image.resize((self.result_size, self.result_size))
             all_imgs.append(interp_latent_image)
-            all_zs.append([alpha])
+            all_zs.append([curr_step])
         return all_imgs, all_zs
         
     def change_features(self, z, features_amounts_dict: dict):

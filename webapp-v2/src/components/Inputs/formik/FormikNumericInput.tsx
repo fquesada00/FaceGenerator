@@ -6,12 +6,13 @@ type FormikNumericInputProps = {
   required: boolean;
   min?: number;
   max?: number;
+  onChangeCommitted?: (value: number) => void;
 } & FieldHookConfig<any>;
 
 function FormikNumericInput(props: FormikNumericInputProps) {
   const [field, meta] = useField(props);
 
-  const { label, required = false, min, max } = props;
+  const { label, required = false, min, max, onChangeCommitted } = props;
 
   return (
     <TextField
@@ -23,6 +24,7 @@ function FormikNumericInput(props: FormikNumericInputProps) {
       onChange={e => {
         if (e.target.value === '') return; // Ignore 'e', '+', '-', etc.
         field.onChange(e);
+        onChangeCommitted?.(Number(e.target.value));
       }}
       onBlur={field.onBlur}
       required={required}
