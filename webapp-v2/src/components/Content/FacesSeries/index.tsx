@@ -135,7 +135,7 @@ const FacesSeries = () => {
               />
             </div>
             {!isLoadingSearch && filteredFacesSeries && FilteredFacesSeries}
-            <div className='flex mt-4'>
+            <div className='flex mt-8'>
               <CtaButton
                 onClick={onShowAll}
                 label={`${!hideAll ? 'Hide' : 'Show'} all`}

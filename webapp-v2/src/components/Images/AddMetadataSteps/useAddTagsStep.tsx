@@ -9,7 +9,8 @@ const useAddTagsSteps = (props: MetadataStepProps) => {
   const { stepTitle = 'Add tags to the image', stepDescription } = props;
 
   const { Autocomplete, selectedTags, isLoadingTags } = useAutocompleteTags({
-    label: 'Search tags'
+    label: 'Search tags',
+    removeEmptyTag: true
   });
 
   const title = useMemo(() => {
