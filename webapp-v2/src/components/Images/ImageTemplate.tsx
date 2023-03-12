@@ -14,7 +14,6 @@ import useFaceImgLazyLoading from 'hooks/useFaceImgLazyLoading';
 import { IApiFaceImage } from 'services/api/models';
 
 type ImageTemplateProps = {
-  src?: string;
   alt: string;
   faceId?: string;
   className?: string;
@@ -30,7 +29,6 @@ type ImageTemplateProps = {
 function ImageTemplate(props: ImageTemplateProps) {
   const { saveFace } = useFacesApi();
   const {
-    src,
     alt,
     faceId,
     className,
@@ -101,7 +99,7 @@ function ImageTemplate(props: ImageTemplateProps) {
   }, [faceImage, onLoaded]);
 
   const CardContentComponent = useMemo(() => {
-    if (!src || !faceImage) {
+    if (!faceImage) {
       return <ImagePlaceholder text={placeholderText} />;
     }
 
@@ -136,7 +134,6 @@ function ImageTemplate(props: ImageTemplateProps) {
       </>
     );
   }, [
-    src,
     alt,
     faceId,
     disableDownload,
