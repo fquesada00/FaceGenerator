@@ -19,9 +19,21 @@ import {
   InterchangeFaceFeaturesFormValues
 } from 'forms/interchangeFaceFeatures';
 import useFacesApi from 'hooks/api/useFacesApi';
+import interchangeFeaturesJson from 'assets/data/interchange_features.json';
 
 const InterchangeFacesFeatures: React.FC = () => {
   const { interchangeFacesFeatures } = useFacesApi();
+
+  const renderSubtitle = useMemo(
+    () => (
+      <div>
+        {interchangeFeaturesJson.subtitle}
+        <br />
+        The results will be displayed below.
+      </div>
+    ),
+    [interchangeFeaturesJson]
+  );
 
   const {
     mutate: mutateInterchangeFacesFeatures,
@@ -38,17 +50,6 @@ const InterchangeFacesFeatures: React.FC = () => {
   const { images: InterchangedFacesImages } = useRenderImages({
     faces: interchangedFaces
   });
-
-  const renderSubtitle = useMemo(
-    () => (
-      <div>
-        Interchange the features (styles) of two faces.
-        <br />
-        The results will be displayed below.
-      </div>
-    ),
-    []
-  );
 
   const onSubmit = ({
     firstId,

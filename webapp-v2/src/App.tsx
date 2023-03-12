@@ -5,6 +5,7 @@ import { QueryClient, QueryClientProvider } from 'react-query';
 import router from './router';
 import mdTheme from './theme';
 import AuthProvider from 'context/AuthProvider';
+import 'locales';
 
 const queryClient = new QueryClient();
 

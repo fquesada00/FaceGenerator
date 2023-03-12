@@ -1,0 +1,27 @@
+{
+  "title": "Welcome to Face Generator",
+  "subtitle": "This is a web application that allows you to generate faces using a GAN model. More specifically, it uses a StyleGAN2 model trained on the ... dataset.",
+  "features": {
+    "random_faces": {
+      "description": "Generate an amount of random faces."
+    },
+    "search_faces": {
+      "description": "Search for faces using an id. Also displays all generated images."
+    },
+    "transition_faces": {
+      "description": "Generate an amount of faces (transitions) between two faces."
+    },
+    "face_from_image": {
+      "description": "Generate a face from an image."
+    },
+    "features_modification": {
+      "description": "Modify the features of a generated face."
+    },
+    "interchange_features": {
+      "description": "Interchange the features of two faces."
+    },
+    "faces_series": {
+      "description": "View all the saved faces series."
+    }
+  }
+}
