@@ -12,8 +12,8 @@ export const AuthContext = createContext({} as AuthContextProps);
 
 export function AuthProvider({ children }: React.PropsWithChildren) {
   const [auth, setAuth] = useState<IApiAuth>({ accessToken: '', roles: [] });
-  const [persist, setPersist] = useState(
-    JSON.parse(localStorage.getItem('persist') || '{}') || false
+  const [persist, setPersist] = useState<boolean>(
+    JSON.parse(localStorage.getItem('persist') || 'false') || false
   );
   return (
     <AuthContext.Provider value={{ auth, setAuth, persist, setPersist }}>

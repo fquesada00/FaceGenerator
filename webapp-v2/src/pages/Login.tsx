@@ -33,9 +33,6 @@ const Login: React.FC = () => {
     isLoading: isLoadingLogin,
     data: loginData
   } = useMutation(login, {
-    onSuccess: data => {
-      console.log('data', data);
-    },
     onError: error => {
       if (error instanceof ApiError) {
         toastError(error.toString());
