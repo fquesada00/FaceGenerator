@@ -4,11 +4,15 @@ from src.service.tmp_database import TmpDB
 from src.service.filesystem import FileSystem
 import uuid
 from src.service.settings import settings
+
+EMPTY_TAG = "empty"
+
 class GeneratorDB:
     def __init__(self):
         self.db = psycopg2.connect(dbname=settings.DB_NAME, host=settings.DB_HOST, port=settings.DB_PORT, user=settings.DB_USER, password=settings.DB_PASSWORD)
         self.tmp_db = TmpDB()
         self.fs = FileSystem()
+        self.empty_tag = EMPTY_TAG
 
     def __generate_id(self):
         return str(uuid.uuid4())
@@ -25,6 +29,10 @@ class GeneratorDB:
             return None
         
         self.tmp_db.remove_face(id)
+
+        # remove empty tag as we only use it if no other tags are present
+        if self.empty_tag in tags:
+            tags.remove(self.empty_tag)
 
         cur = self.db.cursor()
         cur.execute('SELECT insert_image(%s, %s, %s)', (id, z, tags))
@@ -52,6 +60,10 @@ class GeneratorDB:
         if faces_id == None:
             return None
         
+        # remove empty tag as we only use it if no other tags are present
+        if self.empty_tag in tags:
+            tags.remove(self.empty_tag)
+
         for face_id in faces_id:
             if not self.face_exists(face_id):
               self.save_face(face_id, tags)
