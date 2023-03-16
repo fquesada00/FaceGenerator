@@ -12,7 +12,6 @@ class GeneratorDB:
         self.db = psycopg2.connect(dbname=settings.DB_NAME, host=settings.DB_HOST, port=settings.DB_PORT, user=settings.DB_USER, password=settings.DB_PASSWORD)
         self.tmp_db = TmpDB()
         self.fs = FileSystem()
-        self.empty_tag = EMPTY_TAG
 
     def __generate_id(self):
         return str(uuid.uuid4())
@@ -31,8 +30,8 @@ class GeneratorDB:
         self.tmp_db.remove_face(id)
 
         # remove empty tag as we only use it if no other tags are present
-        if self.empty_tag in tags:
-            tags.remove(self.empty_tag)
+        if EMPTY_TAG in tags:
+            tags.remove(EMPTY_TAG)
 
         cur = self.db.cursor()
         cur.execute('SELECT insert_image(%s, %s, %s)', (id, z, tags))
@@ -61,8 +60,8 @@ class GeneratorDB:
             return None
         
         # remove empty tag as we only use it if no other tags are present
-        if self.empty_tag in tags:
-            tags.remove(self.empty_tag)
+        if EMPTY_TAG in tags:
+            tags.remove(EMPTY_TAG)
 
         for face_id in faces_id:
             if not self.face_exists(face_id):
