@@ -1,10 +1,8 @@
 import clsx from 'clsx';
-import { useMemo, useState } from 'react';
+import { useMemo } from 'react';
 import { Formik, Form } from 'formik';
 import { MIN_FACES, MAX_FACES } from 'constants/constants';
-
 import inputsClasses from 'components/Inputs/styles/Inputs.module.scss';
-import CustomAmountInput from 'components/Inputs/custom/CustomAmountInput';
 import CtaButton from 'components/CtaButton';
 import ContentHeader from 'components/ContentHeader';
 import paths from 'routes/paths';
@@ -19,9 +17,22 @@ import {
   initialValues
 } from 'forms/randomFaces';
 import useFacesApi from 'hooks/api/useFacesApi';
+import { useTranslation } from 'react-i18next';
 
 const RandomFaces: React.FC = () => {
+  const { t } = useTranslation('randomFaces');
   const { generateFaces } = useFacesApi();
+
+  const renderSubtitle = useMemo(
+    () => (
+      <div>
+        {t('subtitle', { min: MIN_FACES, max: MAX_FACES })}
+        <br />
+        The results will be displayed below.
+      </div>
+    ),
+    []
+  );
 
   const {
     mutate,
@@ -34,18 +45,6 @@ const RandomFaces: React.FC = () => {
       }
     }
   });
-
-  const renderSubtitle = useMemo(
-    () => (
-      <div>
-        Enter the amount of faces (between {MIN_FACES} and {MAX_FACES}) that you
-        want to see.
-        <br />
-        The results will be displayed below.
-      </div>
-    ),
-    []
-  );
 
   const { images: FacesImages } = useRenderImages({ faces });
 

@@ -1,0 +1,3 @@
+{
+  "subtitle": "Upload a face image to generate a face from it. The image should be in .jpg or .png format. The generated one is located in the latent space of the NN."
+}

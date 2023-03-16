@@ -6,13 +6,8 @@ import AboutSection from './components/AboutSection';
 
 const About: React.FC = () => {
   const renderSubtitle = useMemo(
-    () => (
-      <div>
-        Here you can find information about the project, its purpose and the
-        technologies used. Along with . . .
-      </div>
-    ),
-    []
+    () => <div>{aboutJson.subtitle}</div>,
+    [aboutJson]
   );
 
   const AboutAuthors: React.FC = useCallback(
