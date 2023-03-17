@@ -23,7 +23,6 @@ create table if not exists image_tags (
     primary key (image_id, tag_id)
 );
 
--- insert function, #tags converted to lower case
 create or replace function insert_image(_id varchar(64), _z float[], _tags varchar(64)[])
     returns void
     as $$
@@ -32,9 +31,10 @@ create or replace function insert_image(_id varchar(64), _z float[], _tags varch
     begin
         insert into images (id, z) values (_id, _z);
 
-        -- if no tags, return
+        -- if no tags, add 'no tag'
         if array_length(_tags, 1) is null then
-            return;
+            insert into image_tags (image_id, tag_id)
+            select _id, id from tags where tag = 'empty';
         end if;
 
         _tags = array_agg(lower(tag_name)) from unnest(_tags) tag_name;
@@ -45,7 +45,9 @@ create or replace function insert_image(_id varchar(64), _z float[], _tags varch
         where not exists (select 1 from tags where tag = tag_name);
 
         -- insert the missing tags
-        insert into tags (tag) select * from unnest(missing_tags);
+        if array_length(missing_tags, 1) is not null then
+            insert into tags (tag) select * from unnest(missing_tags);
+        end if;
 
         -- now insert the image tags
         insert into image_tags (image_id, tag_id)
@@ -80,9 +82,10 @@ create or replace function insert_serie(_id varchar(64), _images_id varchar(64)[
     begin
         insert into series (id, images_id) values (_id, _images_id);
 
-        -- if no tags, return
+        -- if no tags, add 'no tag'
         if array_length(_tags, 1) is null then
-            return;
+            insert into series_tags (series_id, tag_id)
+            select _id, id from tags where tag = 'empty';
         end if;
 
         _tags = array_agg(lower(tag_name)) from unnest(_tags) tag_name;
@@ -93,7 +96,9 @@ create or replace function insert_serie(_id varchar(64), _images_id varchar(64)[
         where not exists (select 1 from tags where tag = tag_name);
 
         -- insert the missing tags
-        insert into tags (tag) select * from unnest(missing_tags);
+        if array_length(missing_tags, 1) is not null then
+            insert into tags (tag) select * from unnest(missing_tags);
+        end if;
 
         -- now insert the image tags
         insert into series_tags (series_id, tag_id)
@@ -108,5 +113,6 @@ create or replace view series_tags_view as
   left join tags on series_tags.tag_id = tags.id
   group by series.id;
 
-
 INSERT into users(username, password, user_role) values ('admin','$2b$12$gzGWzT7IjxF3hjeCcc4hU.t6uNH3.Q9wZ0mo6YmXrirJxdebD16wO',0);
+
+insert into tags (tag) values ('empty');

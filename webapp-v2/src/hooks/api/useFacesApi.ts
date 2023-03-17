@@ -182,14 +182,21 @@ const useFacesApi = () => {
     [api]
   );
 
-  const getAllTags = useCallback(async (): Promise<string[]> => {
-    try {
-      const response = await api.get<ApiResponse>(`${API_PREFIX}/tags`);
-      return response.result;
-    } catch (error) {
-      throw new ApiError('Get all tags', getErrorMessage(error));
-    }
-  }, [api]);
+  const getAllTags = useCallback(
+    async (removeEmptyTag: boolean = false): Promise<string[]> => {
+      try {
+        const response = await api.get<ApiResponse>(`${API_PREFIX}/tags`);
+        if (removeEmptyTag) {
+          return response.result.filter((tag: string) => tag !== 'empty');
+        }
+
+        return response.result;
+      } catch (error) {
+        throw new ApiError('Get all tags', getErrorMessage(error));
+      }
+    },
+    [api]
+  );
 
   const saveFaceSerie = useCallback(
     async ({ id, metadata }: { id: string; metadata: Record<string, any> }) => {

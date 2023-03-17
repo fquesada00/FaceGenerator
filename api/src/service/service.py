@@ -121,6 +121,14 @@ class GeneratorService(metaclass=SingletonMeta):
 
         faces = []
         ids = []
+        
+        # add first face
+        ids.append(id1)
+        faces.append({
+            'id': id1,
+            'image': self.get_image_endpoint(id1)
+        })
+        
         for img,z in zip(imgs,zs):
             img = FaceImage.to_image(img)
             id = database.insert_face(img, z)
