@@ -130,8 +130,8 @@ def interchangeFaces(id1: str, id2: str, current_user: User = Depends(get_curren
     return {'result':service.mix_styles(id1, id2)}
 
 @api_router.post('/faces/image', response_model=ApiResponse[List[Face]])
-def generateFaceFromImage(image: UploadFile = File(), current_user: User = Depends(get_current_user)):
-    return {'result':service.img_to_latent(image.file.read())}
+def generateFaceFromImage(steps:int =1000, image: UploadFile = File(), current_user: User = Depends(get_current_user)):
+    return {'result':service.img_to_latent(image.file.read(), steps)}
 
 @api_router.get('/faces/series', response_model=ApiResponse[List[FaceSerie]])
 def getSeries(tags: str = Query(None), current_user: User = Depends(get_current_user)):

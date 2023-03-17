@@ -21,10 +21,23 @@ import pickle
 from src.generator.align_face import align_face    
 from src.face_image import FaceImage
 
+from src.stylegan2.training import misc
+import src.stylegan2.projector as projector
+import tensorflow as tf
+from src.stylegan2.training import dataset
+
+
+
 @Pyro4.expose
 class Generator:
 
     def __init__(self, network_pkl='gdrive:networks/stylegan2-ffhq-config-f.pkl'):
+    
+        #limit ram usage
+        # import resource
+        # _max = 1024
+        # resource.setrlimit(resource.RLIMIT_AS, (_max, _max))
+
         self.fps = 20
         self.result_size = 640
         self.network_pkl = network_pkl
@@ -34,6 +47,7 @@ class Generator:
         self.truncation_psi = 0.7
         self.w_avg = self.Gs.get_var('dlatent_avg')
         self.w_shape = self.Gs.components.synthesis.input_shape[1:]
+        
 
     def flatten(self, w):
         return np.ravel(w).tolist()
@@ -70,35 +84,52 @@ class Generator:
     def linear_interpolate(self, from_val, to_val, step):
         return from_val * (1 - step) + to_val * step # as steps gets closer to 1, result gets closer to to_val
 
-    def img_to_latent(self, img: FaceImage):
+    
+
+
+    def img_to_latent(self, img: FaceImage, steps=1000):
+        
         img = img.to_image()
         img = img.convert('RGB')
-        aligned_imgs_path = Path('aligned_imgs')
-        if not aligned_imgs_path.exists():
-            aligned_imgs_path.mkdir()
-        img_name = 'image0000'
-        result = align_face(img)
-        if result is None:
-            return None, None
-        result.save(aligned_imgs_path/('aligned_'+img_name+'.png'))
-        dataset_tool.create_from_images('datasets_stylegan2/custom_imgs', aligned_imgs_path, 1)
-        epoching_custom_run_projector.project_real_images(self.Gs, 'custom_imgs', 'datasets_stylegan2', 1, 2)
+        aligned_face = align_face(img)
+        target = aligned_face
         
-        all_result_folders = list(Path('results').iterdir())
-        all_result_folders.sort()
-        last_result_folder = all_result_folders[-1]
-        all_step_pngs = [x for x in last_result_folder.iterdir() if x.name.endswith('png') and 'image{0:04d}'.format(0) in x.name]
-        all_step_pngs.sort()
 
-        target_image = Image.open(all_step_pngs[-1]).resize((self.result_size, self.result_size))
-        best_aproximation = Image.open(all_step_pngs[-2]).resize((self.result_size, self.result_size))
-        latent_code = self.get_final_latents()
+        #create dataset 
+        os.makedirs('dataset', exist_ok=True)
+        target.save('dataset/image0000.png')
+        dataset_tool.create_from_images('datasets_stylegan2/custom_imgs', 'dataset', 1)
 
-        zs, images = face_frame_correction(target_image, latent_code, self.Gs, self.Gs_kwargs)
+        #load images
+        proj= projector.Projector()
+        proj.set_network(self.Gs)
+        proj.num_steps = steps
+        dataset_obj = dataset.load_dataset(data_dir="datasets_stylegan2", tfrecord_dir="custom_imgs", max_label_size=0, repeat=False, shuffle_mb=0)
+        images, _labels = dataset_obj.get_minibatch_np(1)
+        images = misc.adjust_dynamic_range(images, [0, 255], [-1, 1])
+
+        #run projector
+        proj.start(images)
+        while proj.get_cur_step() < proj.num_steps:
+            print('\r%d / %d ... ' % (proj.get_cur_step(), proj.num_steps), end='', flush=True)
+            proj.step()
+            
+                
+        print('\r%-30s\r' % '', end='', flush=True)
         
-        _zs = [self.flatten(z) for z in zs]
+        #get latent vector
+        w = proj.get_dlatents()
+        image = self.generate_image_from_w(w)
 
-        return images, _zs
+        #ws, images =face_frame_correction(image,w,self.Gs, self.Gs_kwargs)
+
+        #free up memory
+        tf.reset_default_graph()
+        tf.keras.backend.clear_session()
+
+
+        image = Image.fromarray(image)
+        return [FaceImage.from_image(image)], [self.flatten(w)]
 
     def get_final_latents(self):
         all_results = list(Path('results/').iterdir())
@@ -156,3 +187,4 @@ class Generator:
         image1 = FaceImage.from_image(image1)
         image2 = FaceImage.from_image(image2)
         return [image1, image2], [self.flatten(w1), self.flatten(w2)]
+
