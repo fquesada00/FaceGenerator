@@ -12,6 +12,7 @@ from src.service.models import *
 from src.service.security import *
 from fastapi.staticfiles import StaticFiles
 from src.service.settings import settings
+import os
 
 #models
 T = TypeVar('T')
@@ -55,7 +56,7 @@ class Modifiers(BaseModel):
 
 service = GeneratorService()
 
-app = FastAPI(responses={422: {"model": Error}})
+app = FastAPI(responses={422: {"model": Error}}, docs_url="/api/docs", redoc_url="/api/redoc")
 # create a router for /api
 api_router = APIRouter(prefix=settings.API_PATH)
 
@@ -65,6 +66,8 @@ async def assets_middleware(request: Request, call_next):
         # FIXME: improve this as nested routes are not supported
         if request.url.path.startswith("/faces") or request.url.path.startswith("/about"):
             response =  RedirectResponse(url=f'{settings.WEB_PATH}/static/index.html')
+        elif request.url.path.startswith("/openapi.json"):
+            return await call_next(request)
         else:
             response =  RedirectResponse(url=f'{settings.WEB_PATH}/static{request.url.path}')
         return response
@@ -78,6 +81,7 @@ async def validation_exception_handler(request: Request, exc: RequestValidationE
         content=jsonable_encoder({"error": exc.errors()}),
     )
 
+os.makedirs('dist', exist_ok=True)
 app.mount('/static', StaticFiles(directory='dist/', html=True), name="static")
 
 #routes
@@ -126,8 +130,8 @@ def interchangeFaces(id1: str, id2: str, current_user: User = Depends(get_curren
     return {'result':service.mix_styles(id1, id2)}
 
 @api_router.post('/faces/image', response_model=ApiResponse[List[Face]])
-def generateFaceFromImage(image: UploadFile = File(), current_user: User = Depends(get_current_user)):
-    return {'result':service.img_to_latent(image.file.read())}
+def generateFaceFromImage(steps:int =1000, image: UploadFile = File(), current_user: User = Depends(get_current_user)):
+    return {'result':service.img_to_latent(image.file.read(), steps)}
 
 @api_router.get('/faces/series', response_model=ApiResponse[List[FaceSerie]])
 def getSeries(tags: str = Query(None), current_user: User = Depends(get_current_user)):
