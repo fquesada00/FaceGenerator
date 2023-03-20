@@ -5,7 +5,6 @@ import {
   DialogContent,
   DialogTitle
 } from '@mui/material';
-import CircularProgress from '@mui/material/CircularProgress';
 import clsx from 'clsx';
 import ImagePicker from 'components/ImagePicker';
 import { toastError } from 'components/Toast';
@@ -13,19 +12,21 @@ import useAutocompleteTags from 'hooks/useAutocompleteTags';
 import { Fragment, useEffect, useMemo, useState } from 'react';
 import { useMutation } from 'react-query';
 import ApiError from 'services/api/Error';
-import { getAllFaces } from 'services/api/FaceGeneratorApi';
 import { IApiFaceFilters } from 'services/api/models';
 import CtaButton from '..';
+import useFacesApi from 'hooks/api/useFacesApi';
+import CenteredCircularLoader from 'components/Loaders/CenteredCircularLoader';
 
 type PickImageButtonProps = {
-  onPick?: (faceId: number) => void;
-  onDone?: (faceId: number | null) => void;
+  onPick?: (faceId: string) => void;
+  onDone?: (faceId: string | null) => void;
   onClose?: () => void;
   className?: string;
-  pickedFaceId?: number;
+  pickedFaceId?: string;
 };
 
-function PickImageButton(props: PickImageButtonProps) {
+const PickImageButton = (props: PickImageButtonProps) => {
+  const { searchFaces } = useFacesApi();
   const { onPick, onDone, onClose, className, pickedFaceId = null } = props;
 
   const [open, setOpen] = useState(false);
@@ -49,11 +50,11 @@ function PickImageButton(props: PickImageButtonProps) {
     handleClose();
   };
 
-  const [selectedFaceId, setSelectedFaceId] = useState<number | null>(
+  const [selectedFaceId, setSelectedFaceId] = useState<string | null>(
     pickedFaceId
   );
 
-  const handlePick = (faceId: number) => {
+  const handlePick = (faceId: string) => {
     onPick?.(faceId);
     setSelectedFaceId(faceId);
   };
@@ -67,10 +68,7 @@ function PickImageButton(props: PickImageButtonProps) {
     mutate: mutateGetAllFaces,
     isLoading: isLoadingAllFaces,
     data: allFaces
-  } = useMutation(getAllFaces, {
-    onSuccess: data => {
-      console.log(data);
-    },
+  } = useMutation(searchFaces, {
     onError: error => {
       if (error instanceof ApiError) {
         toastError(error.toString());
@@ -106,25 +104,20 @@ function PickImageButton(props: PickImageButtonProps) {
     <>
       <CtaButton
         onClick={handleClickOpen}
-        label="Pick face"
+        label='Pick face'
         className={clsx('mt-2', className)}
       />
       <Dialog open={open}>
         <DialogTitle>Pick a face</DialogTitle>
-        <DialogContent style={{ padding: '0.1rem' }}>
-          <div className="flex mb-4 justify-center">
-            <div className="w-11/12 ">
+        <DialogContent style={{ padding: '0.5rem' }}>
+          <div className='flex mb-4 justify-center'>
+            <div className='w-11/12 '>
               {!isLoadingAllFaces && !isLoadingTags && Autocomplete}
             </div>
           </div>
           {!isLoadingAllFaces && !isLoadingTags && MemoizedImagePicker}
           {isLoadingAllFaces && (
-            <div
-              className="justify-center items-center flex"
-              style={{ width: '10rem', height: '5rem' }}
-            >
-              <CircularProgress color="primary" />
-            </div>
+            <CenteredCircularLoader className='h-20 w-40' />
           )}
         </DialogContent>
         <DialogActions>
@@ -134,6 +127,6 @@ function PickImageButton(props: PickImageButtonProps) {
       </Dialog>
     </>
   );
-}
+};
 
 export default PickImageButton;

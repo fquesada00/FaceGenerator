@@ -5,15 +5,15 @@ import { IApiFace } from 'services/api/models';
 
 type ImagePickerProps = {
   faces: IApiFace[];
-  selectedFaceId: number | null;
-  onPick: (faceId: number) => void;
+  selectedFaceId: string | null;
+  onPick: (faceId: string) => void;
 };
 
 function ImagePicker(props: ImagePickerProps) {
   const { faces, selectedFaceId, onPick } = props;
 
   return (
-    <Grid container alignItems="center" justifyContent="center">
+    <Grid container alignItems='center' justifyContent='center'>
       {faces.map(face => (
         <SelectableImage
           key={face.id}
@@ -22,7 +22,7 @@ function ImagePicker(props: ImagePickerProps) {
           faceId={face.id}
           selected={selectedFaceId === face.id}
           onClick={() => onPick(face.id)}
-          className="m-1"
+          className='m-1'
         />
       ))}
     </Grid>

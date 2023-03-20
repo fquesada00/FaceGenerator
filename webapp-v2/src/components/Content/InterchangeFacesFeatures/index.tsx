@@ -11,7 +11,6 @@ import { toastError } from 'components/Toast';
 import useRenderImages from 'hooks/useRenderImages';
 import { useMutation } from 'react-query';
 import ApiError from 'services/api/Error';
-import { interchangeFacesFeatures } from 'services/api/FaceGeneratorApi';
 import PickImageButton from 'components/CtaButton/custom/PickImageButton';
 import FormikCustomIdInput from 'components/Inputs/formik/custom/FormikCustomIdInput';
 import {
@@ -19,16 +18,28 @@ import {
   interchangeFaceFeaturesSchema,
   InterchangeFaceFeaturesFormValues
 } from 'forms/interchangeFaceFeatures';
+import useFacesApi from 'hooks/api/useFacesApi';
+import interchangeFeaturesJson from 'assets/data/interchange_features.json';
 
 const InterchangeFacesFeatures: React.FC = () => {
+  const { interchangeFacesFeatures } = useFacesApi();
+
+  const renderSubtitle = useMemo(
+    () => (
+      <div>
+        {interchangeFeaturesJson.subtitle}
+        <br />
+        The results will be displayed below.
+      </div>
+    ),
+    [interchangeFeaturesJson]
+  );
+
   const {
     mutate: mutateInterchangeFacesFeatures,
     isLoading: isLoadingInterchange,
     data: interchangedFaces
   } = useMutation(interchangeFacesFeatures, {
-    onSuccess: data => {
-      console.log(data);
-    },
     onError: error => {
       if (error instanceof ApiError) {
         toastError(error.toString());
@@ -39,17 +50,6 @@ const InterchangeFacesFeatures: React.FC = () => {
   const { images: InterchangedFacesImages } = useRenderImages({
     faces: interchangedFaces
   });
-
-  const renderSubtitle = useMemo(
-    () => (
-      <div>
-        Interchange the features (styles) of two faces.
-        <br />
-        The results will be displayed below.
-      </div>
-    ),
-    []
-  );
 
   const onSubmit = ({
     firstId,
@@ -76,30 +76,30 @@ const InterchangeFacesFeatures: React.FC = () => {
                 <Grid item xs={12} sm={6} md={6} lg={6} xl={6}>
                   <FormikCustomIdInput
                     required
-                    label="First ID"
-                    name="firstId"
+                    label='First ID'
+                    name='firstId'
                   />
                   <PickImageButton
-                    onDone={faceId => setFieldValue('firstId', faceId ?? 0)}
+                    onDone={faceId => setFieldValue('firstId', faceId ?? '0')}
                     pickedFaceId={values.firstId}
                   />
                 </Grid>
                 <Grid item xs={12} sm={6} md={6} lg={6} xl={6}>
                   <FormikCustomIdInput
                     required
-                    label="Second ID"
-                    name="secondId"
+                    label='Second ID'
+                    name='secondId'
                   />
                   <PickImageButton
-                    onDone={faceId => setFieldValue('secondId', faceId ?? 0)}
+                    onDone={faceId => setFieldValue('secondId', faceId ?? '0')}
                     pickedFaceId={values.secondId}
                   />
                 </Grid>
               </Grid>
               <CtaButton
-                type="submit"
-                label="Generate"
-                className="mt-8"
+                type='submit'
+                label='Generate'
+                className='mt-8'
                 loading={isLoadingInterchange}
               />
               {!isLoadingInterchange && InterchangedFacesImages}

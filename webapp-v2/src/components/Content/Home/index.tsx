@@ -5,67 +5,68 @@ import { Link } from 'react-router-dom';
 import paths from 'routes/paths';
 import faces from 'assets/faces.jpg';
 import FeatureListItem from './components/FeatureListItem';
+import homeJson from 'assets/data/home.json';
 
 const Home: React.FC = () => {
   const renderSubtitle = useMemo(
     () => (
       <div>
-        This is a web application that allows you to generate faces using a GAN
-        model. More specifically, it uses a StyleGAN2 model trained on the ...
-        dataset.
+        {homeJson.subtitle}
         <br />
         <br />
         Here is a list of the features that are currently available:
       </div>
     ),
-    []
+    [homeJson]
   );
 
   return (
     <Grid container spacing={2}>
       <Grid item xs={12} sm={12} md={6} lg={6} xl={6}>
-        <ContentHeader
-          title="Welcome to Face Generator"
-          subtitle={renderSubtitle}
-        />
-        <ul className="pl-4">
+        <ContentHeader title={homeJson.title} subtitle={renderSubtitle} />
+        <ul className='pl-4'>
           <FeatureListItem
-            title="Random faces"
-            description="Generate an amount of random faces."
+            title={paths.randomFaces.title}
+            description={homeJson.features.random_faces.description}
             path={paths.randomFaces.path}
           />
           <FeatureListItem
-            title="Search faces"
-            description="Search for faces using an id. Also displays all generated images."
+            title={paths.searchFaces.title}
+            description={homeJson.features.search_faces.description}
             path={paths.searchFaces.path}
           />
           <FeatureListItem
-            title="Transition faces"
-            description="Generate an amount of faces (transitions) between two faces."
+            title={paths.transitionFaces.title}
+            description={homeJson.features.transition_faces.description}
             path={paths.transitionFaces.path}
           />
           <FeatureListItem
-            title="Face from image"
-            description="Generate a face from an image."
+            title={paths.faceFromImage.title}
+            description={homeJson.features.face_from_image.description}
             path={paths.faceFromImage.path}
           />
           <FeatureListItem
-            title="Modify face features"
-            description="Modify the features of a generated face."
+            title={paths.faceFeaturesModification.title}
+            description={homeJson.features.features_modification.description}
             path={paths.faceFeaturesModification.path}
           />
           <FeatureListItem
-            title="Interchange features"
-            description="Interchange the features of two faces."
+            title={paths.interchangeFacesFeatures.title}
+            description={homeJson.features.interchange_features.description}
             path={paths.interchangeFacesFeatures.path}
           />
+          <FeatureListItem
+            title={paths.facesSeries.title}
+            description={homeJson.features.faces_series.description}
+            path={paths.facesSeries.path}
+          />
         </ul>
-        <div className="mt-4">
-          <Typography variant="subtitle1" sx={{ fontWeight: 'medium' }}>
+        <div className='mt-4'>
+          <Typography variant='subtitle1' sx={{ fontWeight: 'medium' }}>
             You can find more information about the project in the&nbsp;
             <Link
               to={paths.about.path}
-              className="underline text-blue-600 hover:text-blue-800 visited:text-purple-600"
+              className='underline text-blue-600 hover:text-blue-800 visited:text-purple-600'
             >
               <strong>About</strong>
             </Link>
@@ -81,9 +82,9 @@ const Home: React.FC = () => {
         lg={6}
         xl={6}
         container
-        direction="column"
-        alignItems="center"
-        justifyContent="center"
+        direction='column'
+        alignItems='center'
+        justifyContent='center'
       >
         <Box
           sx={{
@@ -105,7 +106,7 @@ const Home: React.FC = () => {
         >
           <img
             src={faces}
-            alt="Faces"
+            alt='Faces'
             style={{ height: 'inherit', width: 'inherit' }}
           />
         </Box>

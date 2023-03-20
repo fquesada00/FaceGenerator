@@ -4,15 +4,21 @@ import { RouterProvider } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import router from './router';
 import mdTheme from './theme';
+import AuthProvider from 'context/AuthProvider';
+import 'locales';
 
 const queryClient = new QueryClient();
 
-const App = () => (
-  <ThemeProvider theme={mdTheme}>
-    <QueryClientProvider client={queryClient}>
-      <RouterProvider router={router} />
-    </QueryClientProvider>
-  </ThemeProvider>
-);
+function App() {
+  return (
+    <ThemeProvider theme={mdTheme}>
+      <QueryClientProvider client={queryClient}>
+        <AuthProvider>
+          <RouterProvider router={router} />
+        </AuthProvider>
+      </QueryClientProvider>
+    </ThemeProvider>
+  );
+}
 
 export default App;

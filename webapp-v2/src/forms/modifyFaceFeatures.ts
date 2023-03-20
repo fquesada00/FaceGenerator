@@ -2,7 +2,7 @@ import { MAX_AGE, MIN_AGE } from 'constants/constants';
 import * as Yup from 'yup';
 
 export interface ModifyFaceFeaturesFormValues {
-  id: number;
+  id: string;
   age: number;
   gender: number;
   faceOrientationVertical: number;
@@ -22,7 +22,7 @@ export interface ModifyFaceFeaturesFormValues {
 }
 
 export const initialValues: ModifyFaceFeaturesFormValues = {
-  id: 0,
+  id: '0',
   age: 0,
   gender: 0,
   faceOrientationVertical: 0,
@@ -42,9 +42,7 @@ export const initialValues: ModifyFaceFeaturesFormValues = {
 };
 
 export const modifyFaceFeaturesSchema = Yup.object().shape({
-  id: Yup.number()
-    .required('ID is required')
-    .min(1, 'ID must be greater than 0'),
+  id: Yup.string().required('ID is required'),
   age: Yup.number()
     .min(-MAX_AGE, `Age must be greater than or equal to ${MIN_AGE}`)
     .max(MAX_AGE, `Age must be less than or equal to ${MAX_AGE}`),

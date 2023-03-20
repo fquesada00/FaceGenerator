@@ -8,7 +8,6 @@ import paths from 'routes/paths';
 import { useMutation } from 'react-query';
 import { toastError } from 'components/Toast';
 import ApiError from 'services/api/Error';
-import { getAllFaces, searchFaces } from 'services/api/FaceGeneratorApi';
 import useRenderImages from 'hooks/useRenderImages';
 import {
   searchFacesFormSchema,
@@ -16,18 +15,30 @@ import {
   initialValues
 } from 'forms/searchFaces';
 import FormikAutoCompleteTags from 'components/Inputs/formik/FormikAutoCompleteTags';
+import useFacesApi from 'hooks/api/useFacesApi';
+import searchFacesJson from 'assets/data/search_faces.json';
 
 const SearchFaces: React.FC = () => {
+  const { searchFaces } = useFacesApi();
+
   const [hideAll, setHideAll] = useState<boolean>(true);
+
+  const renderSubtitle = useMemo(
+    () => (
+      <div>
+        {searchFacesJson.subtitle}
+        <br />
+        The results will be displayed below.
+      </div>
+    ),
+    [searchFacesJson]
+  );
 
   const {
     mutate: mutateSearchFaces,
     isLoading: isLoadingSearch,
     data: filteredFaces
   } = useMutation(searchFaces, {
-    onSuccess: data => {
-      console.log(data);
-    },
     onError: error => {
       if (error instanceof ApiError) {
         toastError(error.toString());
@@ -44,10 +55,7 @@ const SearchFaces: React.FC = () => {
     mutate: mutateGetAllFaces,
     isLoading: isLoadingShowAll,
     data: allFaces
-  } = useMutation(getAllFaces, {
-    onSuccess: data => {
-      console.log(data);
-    },
+  } = useMutation(searchFaces, {
     onError: error => {
       if (error instanceof ApiError) {
         toastError(error.toString());
@@ -59,17 +67,6 @@ const SearchFaces: React.FC = () => {
     faces: allFaces,
     disableSave: true
   });
-
-  const renderSubtitle = useMemo(
-    () => (
-      <div>
-        Lookup for the faces that you want to see.
-        <br />
-        The results will be displayed below.
-      </div>
-    ),
-    []
-  );
 
   const onShowAll = () => {
     if (!allFaces && hideAll) {
@@ -95,22 +92,22 @@ const SearchFaces: React.FC = () => {
       >
         <Form>
           <div className={clsx(inputsClasses.container)}>
-            <div className="flex justify-center">
-              <div className="w-11/12">
-                <FormikAutoCompleteTags name="tags" label="Search tags" />
+            <div className='flex justify-center'>
+              <div className='w-11/12'>
+                <FormikAutoCompleteTags name='tags' label='Search tags' />
               </div>
             </div>
             <CtaButton
-              type="submit"
-              label="Search"
-              className="mt-8"
+              type='submit'
+              label='Search'
+              className='mt-8'
               loading={isLoadingSearch}
             />
             {!isLoadingSearch && filteredFaces && SearchFacesImages}
             <CtaButton
               onClick={onShowAll}
               label={`${!hideAll ? 'Hide' : 'Show'} all`}
-              className="mt-4"
+              className='mt-4'
               loading={isLoadingShowAll}
             />
             {!hideAll && !isLoadingShowAll && AllFacesImages}

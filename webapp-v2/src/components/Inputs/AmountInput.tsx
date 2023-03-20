@@ -24,7 +24,7 @@ function AmountInput(props: AmountInputProps) {
   return (
     <NumericInput
       value={value === 0 ? undefined : value}
-      label="Amount"
+      label='Amount'
       onChange={n => {
         if (n < min || n > max) {
           const errorMessage = `Must be between ${min} and ${max}`;

@@ -1,0 +1,21 @@
+version: '3.1'
+
+services:
+  api:
+    build: 
+      context: .
+      dockerfile: Dockerfile
+    container_name: facegenerator_api
+    ports:
+      - 5000:5000
+    volumes:
+      - .:/api
+    entrypoint: uvicorn --host 0.0.0.0 --port 5000 --workers 1 --reload --log-level info --use-colors  face_generator:app
+    environment:
+      - PROJECT_PATH=
+    network_mode: host
+    deploy:
+      resources:
+        limits:
+          cpus: '0.50'
+          memory: 512MB

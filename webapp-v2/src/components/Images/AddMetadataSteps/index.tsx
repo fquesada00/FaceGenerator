@@ -9,19 +9,21 @@ import { useMemo, useState } from 'react';
 import useAddTagsStep from './useAddTagsStep';
 
 export interface MetadataStepProps {
-  step: number;
+  stepTitle?: string;
+  stepDescription?: string;
 }
 
 export type AddMetadataStepsProps = {
   onDone: (metadata: Record<string, any>) => void;
   onCancel: () => void;
   open: boolean;
+  tagsStepProps?: MetadataStepProps;
 };
 
 const TOTAL_STEPS = 1;
 
-function AddMetadataSteps(props: AddMetadataStepsProps) {
-  const { onDone, onCancel, open } = props;
+const AddMetadataSteps = (props: AddMetadataStepsProps) => {
+  const { onDone, onCancel, open, tagsStepProps = {} } = props;
 
   const [step, setStep] = useState(0);
   const [metadata, setMetadata] = useState<Record<string, any>>({
@@ -45,7 +47,7 @@ function AddMetadataSteps(props: AddMetadataStepsProps) {
     title: addTagsTitle,
     content: addTagsContent,
     data: addTagsData
-  } = useAddTagsStep({ step });
+  } = useAddTagsStep(tagsStepProps);
 
   const { title, content, data } = useMemo(() => {
     switch (step) {
@@ -65,10 +67,10 @@ function AddMetadataSteps(props: AddMetadataStepsProps) {
   }, [step, addTagsTitle, addTagsContent, addTagsData]);
 
   return (
-    <Dialog open={open} onClose={onCancel} fullWidth maxWidth="sm">
+    <Dialog open={open} onClose={onCancel} fullWidth maxWidth='sm'>
       <DialogTitle>{title}</DialogTitle>
       <DialogContent>{content}</DialogContent>
-      <DialogActions className="justify-around">
+      <DialogActions className='justify-around'>
         {step > 0 && (
           <Button onClick={() => onStepChange(step - 1)}>Back</Button>
         )}
@@ -86,6 +88,6 @@ function AddMetadataSteps(props: AddMetadataStepsProps) {
       </DialogActions>
     </Dialog>
   );
-}
+};
 
 export default AddMetadataSteps;

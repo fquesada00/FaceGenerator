@@ -3,6 +3,8 @@ version: '3.1'
 services:
   db:
     image: postgres:15
+    hostname: postgres
+    container_name: postgres
     environment:
       POSTGRES_USER: facegenerator
       POSTGRES_PASSWORD: facegenerator
@@ -12,3 +14,23 @@ services:
     volumes:
       - ./init_db.sql:/docker-entrypoint-initdb.d/init.sql
       - ./data:/var/lib/postgresql/data
+    network_mode: host
+    deploy:
+      resources:
+        limits:
+          cpus: '0.50'
+          memory: 512MB
+
+  tmp_db:
+    image: redis/redis-stack:latest
+    hostname: redis
+    container_name: redis
+    ports:
+      - 6379:6379
+    command: redis-server --appendonly no
+    network_mode: host
+    deploy:
+      resources:
+        limits:
+          cpus: '0.50'
+          memory: 512MB

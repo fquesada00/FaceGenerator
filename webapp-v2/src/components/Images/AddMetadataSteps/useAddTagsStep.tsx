@@ -1,25 +1,34 @@
 import { useMemo } from 'react';
-import { CircularProgress } from '@mui/material';
-import useAutocompleteTags from 'hooks/useAutocompleteTags';
 import { MetadataStepProps } from '.';
+import { Typography } from '@mui/material';
+import useAutocompleteTags from 'hooks/useAutocompleteTags';
+import React from 'react';
+import CenteredCircularLoader from 'components/Loaders/CenteredCircularLoader';
 
 const useAddTagsSteps = (props: MetadataStepProps) => {
+  const { stepTitle = 'Add tags to the image', stepDescription } = props;
+
   const { Autocomplete, selectedTags, isLoadingTags } = useAutocompleteTags({
-    label: 'Search tags'
+    label: 'Search tags',
+    removeEmptyTag: true
   });
 
-  const title = useMemo(() => <p>Add tags to the image</p>, []);
+  const title = useMemo(() => {
+    return (
+      <React.Fragment>
+        <p>{stepTitle}</p>
+        {stepDescription && (
+          <Typography variant='body1' color='textSecondary'>
+            {stepDescription}
+          </Typography>
+        )}
+      </React.Fragment>
+    );
+  }, [stepTitle]);
 
   const content = useMemo(() => {
     if (isLoadingTags) {
-      return (
-        <div
-          className="justify-center items-center flex w-full"
-          style={{ height: '5rem' }}
-        >
-          <CircularProgress />
-        </div>
-      );
+      return <CenteredCircularLoader className='w-full h-20' />;
     }
 
     return <div>{Autocomplete}</div>;

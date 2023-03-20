@@ -3,7 +3,7 @@ import 'react-toastify/dist/ReactToastify.css';
 
 export const CustomToastContainer: React.FC = () => (
   <ToastContainer
-    position="bottom-right"
+    position='bottom-right'
     autoClose={5000}
     hideProgressBar={false}
     newestOnTop={false}
@@ -12,7 +12,7 @@ export const CustomToastContainer: React.FC = () => (
     pauseOnFocusLoss
     draggable
     pauseOnHover
-    theme="colored"
+    theme='colored'
     style={{ fontSize: '1rem' }}
   />
 );

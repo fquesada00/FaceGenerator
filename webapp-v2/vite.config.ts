@@ -6,14 +6,15 @@ import tsconfigPaths from 'vite-tsconfig-paths'
 export default ({ mode }) => {
   process.env = { ...process.env, ...loadEnv(mode, process.cwd()) };
 
+  const apiProxyPathRegex = '^' + process.env.VITE_APP_BASE_PATH.replace('/', '\/').slice(0, -1) + '\/api\/';
+
   return defineConfig({
     plugins: [react(), tsconfigPaths()],
     server: {
       proxy: {
-        '^\/api\/': {
-          target: 'http://127.0.0.1:5000',
+        [apiProxyPathRegex]: {
+          target: process.env.VITE_API_URL,
           changeOrigin: true,
-          rewrite: (path) => path.replace(/^\/api\//, ''),
         },
       },
     },

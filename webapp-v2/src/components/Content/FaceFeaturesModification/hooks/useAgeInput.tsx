@@ -9,9 +9,9 @@ const useAgeInput = () => {
 
   const AgeInput = useMemo(
     () => (
-      <div className="w-48">
+      <div className='w-48'>
         <NumericInput
-          label="Age"
+          label='Age'
           value={age === 0 ? undefined : age}
           onChange={n => {
             if (n < MIN_AGE || n > MAX_AGE) {

@@ -1,36 +1,51 @@
+import { FormikAutoCompleteTagsProps } from 'components/Inputs/formik/models/FormikAutoCompleteTagsModels';
 import useAutocompleteChipsInput from 'components/Inputs/useAutocompleteChipsInput';
+import { useEffect } from 'react';
+import { useMutation } from 'react-query';
 import { toastError } from 'components/Toast';
-import { useQuery } from 'react-query';
 import ApiError from 'services/api/Error';
-import { getAllTags } from 'services/api/FaceGeneratorApi';
+import useFacesApi from './api/useFacesApi';
 
 type AutocompleteTags = {
   label?: string;
   allowUserInput?: boolean;
+  formikAutoCompleteTagsProps?: FormikAutoCompleteTagsProps;
+  removeEmptyTag?: boolean;
 };
 
 const useAutocompleteTags = (props: AutocompleteTags) => {
-  const { label = 'Tags', allowUserInput } = props;
+  const {
+    label = 'Tags',
+    allowUserInput,
+    formikAutoCompleteTagsProps,
+    removeEmptyTag = false
+  } = props;
+  const { getAllTags } = useFacesApi();
 
-  const { isLoading: isLoadingTags, data: tags } = useQuery(
-    'tags',
-    getAllTags,
-    {
-      onError: error => {
-        if (error instanceof ApiError) {
-          toastError(error.toString());
-        }
+  const {
+    mutate: mutateGetAllTags,
+    isLoading: isLoadingTags,
+    data: tags
+  } = useMutation(getAllTags, {
+    onError: error => {
+      if (error instanceof ApiError) {
+        toastError(error.toString());
       }
     }
-  );
+  });
 
   const { content: Autocomplete, value: selectedTags } =
     useAutocompleteChipsInput({
       options: tags,
       value: [],
-      label,
-      allowUserInput
+      label: label,
+      allowUserInput: allowUserInput,
+      formikAutoCompleteTagsProps
     });
+
+  useEffect(() => {
+    mutateGetAllTags(removeEmptyTag);
+  }, []);
 
   return {
     Autocomplete,

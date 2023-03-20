@@ -1,19 +1,21 @@
-import { Card, CardActions, IconButton, Typography } from '@mui/material';
+import { Card, CardActions, IconButton } from '@mui/material';
 import DownloadIcon from '@mui/icons-material/Download';
 import SaveIcon from '@mui/icons-material/Save';
 import clsx from 'clsx';
-import { Fragment, useMemo, useRef, useState } from 'react';
-import { toastError, toastInfo } from 'components/Toast';
+import { useEffect, useMemo, useRef, useState } from 'react';
+import { toastError, toastSuccess } from 'components/Toast';
 import { useMutation } from 'react-query';
 import ApiError from 'services/api/Error';
-import { saveFace } from 'services/api/FaceGeneratorApi';
+import useFacesApi from 'hooks/api/useFacesApi';
 import ImagePlaceholder from './ImagePlaceholder';
 import AddMetadataSteps from './AddMetadataSteps';
+import { toast, Id } from 'react-toastify';
+import useFaceImgLazyLoading from 'hooks/useFaceImgLazyLoading';
+import { IApiFaceImage } from 'services/api/models';
 
 type ImageTemplateProps = {
-  src?: string;
   alt: string;
-  faceId?: number;
+  faceId?: string;
   className?: string;
   imgHeightClassName?: string;
   cardHeightClassName?: string;
@@ -21,11 +23,12 @@ type ImageTemplateProps = {
   disableDownload?: boolean;
   disableSave?: boolean;
   placeholderText?: string;
+  onLoaded?: (faceImg: IApiFaceImage) => void;
 };
 
 function ImageTemplate(props: ImageTemplateProps) {
+  const { saveFace } = useFacesApi();
   const {
-    src,
     alt,
     faceId,
     className,
@@ -34,14 +37,16 @@ function ImageTemplate(props: ImageTemplateProps) {
     placeholderText,
     imgHeightClassName,
     cardHeightClassName,
-    cardWidthClassName
+    cardWidthClassName,
+    onLoaded
   } = props;
 
   const downloadRef = useRef<HTMLAnchorElement | null>(null);
   const [openMetadataSteps, setOpenMetadataSteps] = useState(false);
+  const [isSaved, setIsSaved] = useState(false);
+  const savingToastId = useRef<Id | null>(null);
 
   const onDownload = () => {
-    // TODO: https://developer.chrome.com/blog/chrome-65-deprecations/#block_cross-origin_wzxhzdk5a_download
     downloadRef?.current?.click();
   };
 
@@ -49,7 +54,9 @@ function ImageTemplate(props: ImageTemplateProps) {
     saveFace,
     {
       onSuccess: data => {
-        console.log(data);
+        setIsSaved(true);
+        toast.dismiss(savingToastId.current!);
+        toastSuccess(`Face with id ${faceId} saved successfully`);
       },
       onError: error => {
         if (error instanceof ApiError) {
@@ -72,7 +79,7 @@ function ImageTemplate(props: ImageTemplateProps) {
 
   const onMetadataStepsDone = (metadata: Record<string, any>) => {
     setOpenMetadataSteps(false);
-    toastInfo(`Saving face with id ${faceId!}...`);
+    savingToastId.current = toast.info(`Saving face with id ${faceId!}...`);
     mutateSaveFace({
       id: faceId!,
       metadata
@@ -83,33 +90,42 @@ function ImageTemplate(props: ImageTemplateProps) {
     setOpenMetadataSteps(false);
   };
 
-  const isBase64 = (src: string) => !src.startsWith('http');
+  const { ref, faceImage } = useFaceImgLazyLoading({ faceId });
+
+  useEffect(() => {
+    if (faceImage) {
+      onLoaded?.(faceImage);
+    }
+  }, [faceImage, onLoaded]);
 
   const CardContentComponent = useMemo(() => {
-    if (!src) {
+    if (!faceImage) {
       return <ImagePlaceholder text={placeholderText} />;
     }
 
     return (
       <>
         <img
-          src={(isBase64(src) ? 'data:image/png;base64, ' : '') + src}
+          src={faceImage.url}
           alt={alt}
           className={clsx('w-full', imgHeightClassName ?? 'h-40')}
-          loading="lazy"
           style={{ objectFit: 'cover' }}
         />
-        <CardActions className="flex content-center justify-center space-x-6">
-          {/* <Typography gutterBottom variant="h6" component="span">
+        <CardActions className='flex content-center justify-center space-x-6'>
+          {/* <Typography gutterBottom variant='h6' component='span'>
             ID {faceId}
           </Typography> */}
           {!disableDownload && (
             <IconButton onClick={onDownload}>
-              <a ref={downloadRef} href={src} download="image.jpg" />
+              <a
+                ref={downloadRef}
+                href={faceImage.url}
+                download={`face_${faceId}.png`}
+              />
               <DownloadIcon />
             </IconButton>
           )}
-          {!disableSave && (
+          {!disableSave && !isSaved && (
             <IconButton onClick={onSave}>
               <SaveIcon />
             </IconButton>
@@ -118,7 +134,6 @@ function ImageTemplate(props: ImageTemplateProps) {
       </>
     );
   }, [
-    src,
     alt,
     faceId,
     disableDownload,
@@ -126,12 +141,15 @@ function ImageTemplate(props: ImageTemplateProps) {
     onDownload,
     onSave,
     placeholderText,
-    imgHeightClassName
+    imgHeightClassName,
+    faceImage,
+    isSaved
   ]);
 
   return (
     <>
       <Card
+        ref={ref}
         className={clsx(
           cardWidthClassName ?? 'w-48',
           cardHeightClassName ?? 'h-52',
@@ -145,6 +163,10 @@ function ImageTemplate(props: ImageTemplateProps) {
           open={openMetadataSteps}
           onDone={onMetadataStepsDone}
           onCancel={onMetadataStepsCancel}
+          tagsStepProps={{
+            stepDescription:
+              'If you do not find the tag you are looking for, you can type it in the input field and press enter to add it.'
+          }}
         />
       )}
     </>
