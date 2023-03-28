@@ -121,6 +121,14 @@ class GeneratorService(metaclass=SingletonMeta):
 
         faces = []
         ids = []
+        
+        # add first face
+        ids.append(id1)
+        faces.append({
+            'id': id1,
+            'image': self.get_image_endpoint(id1)
+        })
+        
         for img,z in zip(imgs,zs):
             img = FaceImage.to_image(img)
             id = database.insert_face(img, z)
@@ -145,13 +153,13 @@ class GeneratorService(metaclass=SingletonMeta):
 
         return faces, serie_id
 
-    def img_to_latent(self, img_bytes:bytes):
+    def img_to_latent(self, img_bytes:bytes, steps = 1000):
         print("Locating face in latent space...")
         data = BytesIO(img_bytes)
         img = Image.open(data)
         img = FaceImage.from_image(img)
 
-        imgs, zs = self.generator.img_to_latent(img)
+        imgs, zs = self.generator.img_to_latent(img, steps)
 
         faces = []
         for img,z in zip(imgs,zs):

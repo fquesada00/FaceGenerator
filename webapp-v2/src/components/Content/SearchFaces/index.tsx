@@ -16,11 +16,23 @@ import {
 } from 'forms/searchFaces';
 import FormikAutoCompleteTags from 'components/Inputs/formik/FormikAutoCompleteTags';
 import useFacesApi from 'hooks/api/useFacesApi';
+import searchFacesJson from 'assets/data/search_faces.json';
 
 const SearchFaces: React.FC = () => {
   const { searchFaces } = useFacesApi();
 
   const [hideAll, setHideAll] = useState<boolean>(true);
+
+  const renderSubtitle = useMemo(
+    () => (
+      <div>
+        {searchFacesJson.subtitle}
+        <br />
+        The results will be displayed below.
+      </div>
+    ),
+    [searchFacesJson]
+  );
 
   const {
     mutate: mutateSearchFaces,
@@ -55,17 +67,6 @@ const SearchFaces: React.FC = () => {
     faces: allFaces,
     disableSave: true
   });
-
-  const renderSubtitle = useMemo(
-    () => (
-      <div>
-        Lookup for the faces that you want to see.
-        <br />
-        The results will be displayed below.
-      </div>
-    ),
-    []
-  );
 
   const onShowAll = () => {
     if (!allFaces && hideAll) {

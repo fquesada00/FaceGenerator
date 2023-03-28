@@ -1,6 +1,23 @@
-version: "2.2"
+version: "3.9"
+
 services:
-  web:
-    build: .
-    ports:
-      - "5000:5000"
+  generator:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - .:/app
+    environment:
+        - PROJECT_PATH=/app
+    entrypoint: python /app/server.py
+    deploy:
+        resources:
+          limits:
+            cpus: '0.50'
+            memory: '4G'
+          reservations:
+            devices:
+              - driver: nvidia
+                capabilities: [gpu]
+                count: 1
+    network_mode: host

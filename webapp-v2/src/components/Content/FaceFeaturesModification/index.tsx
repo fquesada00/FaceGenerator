@@ -27,6 +27,7 @@ import FormikCustomSlider from 'components/Inputs/formik/custom/FormikCustomSlid
 import useFacesApi from 'hooks/api/useFacesApi';
 import FeatureModificationSection from './components/FeatureModificationSection';
 import CenteredCircularLoader from 'components/Loaders/CenteredCircularLoader';
+import featuresModificationJson from 'assets/data/features_modification.json';
 
 const FaceFeaturesModification: React.FC = () => {
   const { modifyFaceFeatures } = useFacesApi();
@@ -36,14 +37,12 @@ const FaceFeaturesModification: React.FC = () => {
   const renderSubtitle = useMemo(
     () => (
       <div>
-        Change the face features of any of the saved faces. The features are
-        grouped by sections. You can change the value of each feature by using
-        the slider or by typing the value in the input field.
+        {featuresModificationJson.subtitle}
         <br />
         The results will be displayed below.
       </div>
     ),
-    []
+    [featuresModificationJson]
   );
 
   const {

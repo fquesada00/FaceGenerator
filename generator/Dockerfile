@@ -1,7 +1,9 @@
 FROM tensorflow/tensorflow:1.14.0-gpu-py3
-WORKDIR /api
-COPY . /api
-RUN pip install -r requirements.txt
-RUN python cli.py
-EXPOSE 5000
-CMD ["gunicorn", "--bind", "0.0.0.0:5000", "--workers", "3", "--timeout", "4800", "face_generator:app"]
+COPY requirements.txt /tmp/requirements.txt
+RUN apt-get update || echo "Done"
+RUN apt-get install -y cmake
+RUN apt-get install -y libgl1
+RUN pip3 install --upgrade pip --no-cache-dir
+RUN pip3 install -r /tmp/requirements.txt --no-cache-dir
+WORKDIR /app
+ENTRYPOINT /bin/bash

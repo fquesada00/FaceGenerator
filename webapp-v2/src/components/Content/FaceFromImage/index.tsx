@@ -19,6 +19,7 @@ import {
 } from 'forms/faceFromImage';
 import { useCallback, useMemo, useRef } from 'react';
 import useFacesApi from 'hooks/api/useFacesApi';
+import faceFromImageJson from 'assets/data/face_from_image.json';
 
 interface ImagePickerProps {
   imageFile: File | null;
@@ -28,6 +29,10 @@ const FaceFromImage: React.FC = () => {
   const { generateFaceFromImage } = useFacesApi();
 
   const inputRef = useRef<HTMLInputElement | null>(null);
+
+  const renderSubtitle = useMemo(() => {
+    return <div>{faceFromImageJson.subtitle}</div>;
+  }, [faceFromImageJson]);
 
   const {
     mutate: mutateGenerateFaceFromImage,
@@ -90,7 +95,7 @@ const FaceFromImage: React.FC = () => {
     <div>
       <ContentHeader
         title={paths.faceFromImage.title}
-        subtitle='Upload a face image to generate a face from it. The image should be in .jpg or .png format. The generated one is located in the latent space of the NN.'
+        subtitle={renderSubtitle}
       />
       <div className={clsx(inputsClasses.container)}>
         <Grid container>

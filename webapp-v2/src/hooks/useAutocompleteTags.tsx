@@ -10,10 +10,16 @@ type AutocompleteTags = {
   label?: string;
   allowUserInput?: boolean;
   formikAutoCompleteTagsProps?: FormikAutoCompleteTagsProps;
+  removeEmptyTag?: boolean;
 };
 
 const useAutocompleteTags = (props: AutocompleteTags) => {
-  const { label = 'Tags', allowUserInput, formikAutoCompleteTagsProps } = props;
+  const {
+    label = 'Tags',
+    allowUserInput,
+    formikAutoCompleteTagsProps,
+    removeEmptyTag = false
+  } = props;
   const { getAllTags } = useFacesApi();
 
   const {
@@ -38,7 +44,7 @@ const useAutocompleteTags = (props: AutocompleteTags) => {
     });
 
   useEffect(() => {
-    mutateGetAllTags();
+    mutateGetAllTags(removeEmptyTag);
   }, []);
 
   return {

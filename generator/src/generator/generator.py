@@ -21,22 +21,39 @@ import pickle
 from src.generator.align_face import align_face    
 from src.face_image import FaceImage
 
+from src.stylegan2.training import misc
+import src.stylegan2.projector as projector
+import tensorflow as tf
+from src.stylegan2.training import dataset
+
+
+
 @Pyro4.expose
 class Generator:
 
     def __init__(self, network_pkl='gdrive:networks/stylegan2-ffhq-config-f.pkl'):
+    
+        #limit ram usage
+        # import resource
+        # _max = 1024
+        # resource.setrlimit(resource.RLIMIT_AS, (_max, _max))
+
         self.fps = 20
         self.result_size = 640
         self.network_pkl = network_pkl
         self.latent_vectors = self.get_control_latent_vectors('src/generator/stylegan2directions')
 
         self.Gs, self.noise_vars, self.Gs_kwargs = self.load_model()
+        self.truncation_psi = 0.7
+        self.w_avg = self.Gs.get_var('dlatent_avg')
+        self.w_shape = self.Gs.components.synthesis.input_shape[1:]
+        
 
-    def flatten(self, z):
-        return np.ravel(z).tolist()
+    def flatten(self, w):
+        return np.ravel(w).tolist()
 
-    def unravel(self, z):
-        return np.reshape(z, (1, *self.Gs.input_shape[1:]))
+    def unravel(self, w):
+        return np.reshape(w, (1, *self.w_shape))
 
     def load_model(self):
         _G, _D, Gs = pretrained_networks.load_networks(self.network_pkl)
@@ -54,19 +71,11 @@ class Generator:
     def generate_random_image(self, rand_seed):
         '''returns the image and its latent code'''
         z = np.random.RandomState(rand_seed).randn(1, *self.Gs.input_shape[1:]) # [minibatch, component]
-        random_image = self.generate_image_from_z(z)
+        w = self.Gs.components.mapping.run(z, None) # [minibatch, layer, component]
+        w = self.w_avg + (w - self.w_avg) * self.truncation_psi # [minibatch, layer, component]
+        random_image = self.generate_image_from_w(w)
         image = Image.fromarray(random_image)
-        return FaceImage.from_image(image), self.flatten(z)
-
-    def generate_image_from_latent_vector(self, latent_vector):
-        image = self.generate_image_from_z(latent_vector)
-        image = Image.fromarray(image)
-        return FaceImage.from_image(image)
-
-    def generate_image_from_z(self, z):
-        z = self.unravel(z)
-        images = self.Gs.run(z, None, **self.Gs_kwargs)
-        return images[0]
+        return FaceImage.from_image(image), self.flatten(w)
 
     def generate_image_from_w(self, w):
         images = self.Gs.components.synthesis.run(w, **self.Gs_kwargs)
@@ -75,35 +84,52 @@ class Generator:
     def linear_interpolate(self, from_val, to_val, step):
         return from_val * (1 - step) + to_val * step # as steps gets closer to 1, result gets closer to to_val
 
-    def img_to_latent(self, img: FaceImage):
+    
+
+
+    def img_to_latent(self, img: FaceImage, steps=1000):
+        
         img = img.to_image()
         img = img.convert('RGB')
-        aligned_imgs_path = Path('aligned_imgs')
-        if not aligned_imgs_path.exists():
-            aligned_imgs_path.mkdir()
-        img_name = 'image0000'
-        result = align_face(img)
-        if result is None:
-            return None, None
-        result.save(aligned_imgs_path/('aligned_'+img_name+'.png'))
-        dataset_tool.create_from_images('datasets_stylegan2/custom_imgs', aligned_imgs_path, 1)
-        epoching_custom_run_projector.project_real_images(self.Gs, 'custom_imgs', 'datasets_stylegan2', 1, 2)
+        aligned_face = align_face(img)
+        target = aligned_face
         
-        all_result_folders = list(Path('results').iterdir())
-        all_result_folders.sort()
-        last_result_folder = all_result_folders[-1]
-        all_step_pngs = [x for x in last_result_folder.iterdir() if x.name.endswith('png') and 'image{0:04d}'.format(0) in x.name]
-        all_step_pngs.sort()
 
-        target_image = Image.open(all_step_pngs[-1]).resize((self.result_size, self.result_size))
-        best_aproximation = Image.open(all_step_pngs[-2]).resize((self.result_size, self.result_size))
-        latent_code = self.get_final_latents()
+        #create dataset 
+        os.makedirs('dataset', exist_ok=True)
+        target.save('dataset/image0000.png')
+        dataset_tool.create_from_images('datasets_stylegan2/custom_imgs', 'dataset', 1)
 
-        zs, images = face_frame_correction(target_image, latent_code, self.Gs, self.Gs_kwargs)
+        #load images
+        proj= projector.Projector()
+        proj.set_network(self.Gs)
+        proj.num_steps = steps
+        dataset_obj = dataset.load_dataset(data_dir="datasets_stylegan2", tfrecord_dir="custom_imgs", max_label_size=0, repeat=False, shuffle_mb=0)
+        images, _labels = dataset_obj.get_minibatch_np(1)
+        images = misc.adjust_dynamic_range(images, [0, 255], [-1, 1])
+
+        #run projector
+        proj.start(images)
+        while proj.get_cur_step() < proj.num_steps:
+            print('\r%d / %d ... ' % (proj.get_cur_step(), proj.num_steps), end='', flush=True)
+            proj.step()
+            
+                
+        print('\r%-30s\r' % '', end='', flush=True)
         
-        _zs = [self.flatten(z) for z in zs]
+        #get latent vector
+        w = proj.get_dlatents()
+        image = self.generate_image_from_w(w)
 
-        return images, _zs
+        #ws, images =face_frame_correction(image,w,self.Gs, self.Gs_kwargs)
+
+        #free up memory
+        tf.reset_default_graph()
+        tf.keras.backend.clear_session()
+
+
+        image = Image.fromarray(image)
+        return [FaceImage.from_image(image)], [self.flatten(w)]
 
     def get_final_latents(self):
         all_results = list(Path('results/').iterdir())
@@ -122,44 +148,43 @@ class Generator:
     
         return all_final_latents[0]
 
-    def generate_transition(self, z1, z2, num_interps=50):
-        z1 = self.unravel(z1)
-        z2 = self.unravel(z2)
-
+    def generate_transition(self, w1, w2, num_interps=50):
+        w1 = self.unravel(w1)
+        w2 = self.unravel(w2)
     
         all_imgs = []
-        all_zs = []
+        all_ws = []
         
         steps = np.linspace(0, 1, num_interps + 1, endpoint=False)[1::]
         
         for curr_step in steps:
-            interpolated_latent_code = self.linear_interpolate(z1, z2, curr_step)
-            image = self.generate_image_from_z(interpolated_latent_code)
+            interpolated_latent_code = self.linear_interpolate(w1, w2, curr_step)
+            image = self.generate_image_from_w(interpolated_latent_code)
             interp_latent_image = Image.fromarray(image).resize((self.result_size, self.result_size))
             interp_latent_image = FaceImage.from_image(interp_latent_image)
             all_imgs.append(interp_latent_image)
-            all_zs.append(self.flatten(interpolated_latent_code))
-        return all_imgs, all_zs
+            all_ws.append(self.flatten(interpolated_latent_code))
+        return all_imgs, all_ws
         
-    def change_features(self, z, features_amounts_dict: dict):
-        z = self.unravel(z)
-        modified_latent_code = self.Gs.components.mapping.run(z, None)
+    def change_features(self, w, features_amounts_dict: dict):
+        w = self.unravel(w)
         for feature_name, amount in features_amounts_dict.items():
-            modified_latent_code += self.latent_vectors[feature_name] * amount
-        image = self.generate_image_from_w(modified_latent_code)
+            w += self.latent_vectors[feature_name] * amount
+        image = self.generate_image_from_w(w)
         latent_img = Image.fromarray(image).resize((self.result_size, self.result_size))
         latent_img = FaceImage.from_image(latent_img)
-        return latent_img, self.flatten(modified_latent_code)
+        return latent_img, self.flatten(w)
 
-    def mix_styles(self, z1, z2):
-        z1 = self.unravel(z1)
-        z2 = self.unravel(z2)
-        z1_copy = z1.copy()
-        z2_copy = z2.copy()
-        z1[0][6:] = z2_copy[0][6:]
-        z2[0][6:] = z1_copy[0][6:]
-        image1 = Image.fromarray(self.generate_image_from_z(z1)).resize((self.result_size, self.result_size))
-        image2 = Image.fromarray(self.generate_image_from_z(z2)).resize((self.result_size, self.result_size))
+    def mix_styles(self, w1, w2):
+        w1 = self.unravel(w1)
+        w2 = self.unravel(w2)
+        w1_copy = w1.copy()
+        w2_copy = w2.copy()
+        w1[0][6:] = w2_copy[0][6:]
+        w2[0][6:] = w1_copy[0][6:]
+        image1 = Image.fromarray(self.generate_image_from_w(w1)).resize((self.result_size, self.result_size))
+        image2 = Image.fromarray(self.generate_image_from_w(w2)).resize((self.result_size, self.result_size))
         image1 = FaceImage.from_image(image1)
         image2 = FaceImage.from_image(image2)
-        return [image1, image2], [self.flatten(z1), self.flatten(z2)]
+        return [image1, image2], [self.flatten(w1), self.flatten(w2)]
+

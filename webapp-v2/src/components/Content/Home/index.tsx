@@ -5,63 +5,59 @@ import { Link } from 'react-router-dom';
 import paths from 'routes/paths';
 import faces from 'assets/faces.jpg';
 import FeatureListItem from './components/FeatureListItem';
+import homeJson from 'assets/data/home.json';
 
 const Home: React.FC = () => {
   const renderSubtitle = useMemo(
     () => (
       <div>
-        This is a web application that allows you to generate faces using a GAN
-        model. More specifically, it uses a StyleGAN2 model trained on the ...
-        dataset.
+        {homeJson.subtitle}
         <br />
         <br />
         Here is a list of the features that are currently available:
       </div>
     ),
-    []
+    [homeJson]
   );
 
   return (
     <Grid container spacing={2}>
       <Grid item xs={12} sm={12} md={6} lg={6} xl={6}>
-        <ContentHeader
-          title='Welcome to Face Generator'
-          subtitle={renderSubtitle}
-        />
+        <ContentHeader title={homeJson.title} subtitle={renderSubtitle} />
         <ul className='pl-4'>
           <FeatureListItem
             title={paths.randomFaces.title}
-            description='Generate an amount of random faces.'
+            description={homeJson.features.random_faces.description}
             path={paths.randomFaces.path}
           />
           <FeatureListItem
             title={paths.searchFaces.title}
-            description='Search for faces using an id. Also displays all generated images.'
+            description={homeJson.features.search_faces.description}
             path={paths.searchFaces.path}
           />
           <FeatureListItem
             title={paths.transitionFaces.title}
-            description='Generate an amount of faces (transitions) between two faces.'
+            description={homeJson.features.transition_faces.description}
             path={paths.transitionFaces.path}
           />
           <FeatureListItem
             title={paths.faceFromImage.title}
-            description='Generate a face from an image.'
+            description={homeJson.features.face_from_image.description}
             path={paths.faceFromImage.path}
           />
           <FeatureListItem
             title={paths.faceFeaturesModification.title}
-            description='Modify the features of a generated face.'
+            description={homeJson.features.features_modification.description}
             path={paths.faceFeaturesModification.path}
           />
           <FeatureListItem
             title={paths.interchangeFacesFeatures.title}
-            description='Interchange the features of two faces.'
+            description={homeJson.features.interchange_features.description}
             path={paths.interchangeFacesFeatures.path}
           />
           <FeatureListItem
             title={paths.facesSeries.title}
-            description='View all the saved faces series.'
+            description={homeJson.features.faces_series.description}
             path={paths.facesSeries.path}
           />
         </ul>

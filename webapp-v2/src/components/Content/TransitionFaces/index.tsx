@@ -25,12 +25,25 @@ import FormikCustomIdInput from 'components/Inputs/formik/custom/FormikCustomIdI
 import FormikCustomAmountInput from 'components/Inputs/formik/custom/FormikCustomAmountInput';
 import useFacesApi from 'hooks/api/useFacesApi';
 import { Id, toast } from 'react-toastify';
+import { useTranslation } from 'react-i18next';
 
 const TransitionFaces: React.FC = () => {
+  const { t } = useTranslation('transitionFaces');
   const [openMetadataSteps, setOpenMetadataSteps] = useState<boolean>(false);
   const { generateTransitions, saveFaceSerie } = useFacesApi();
   const [isSerieSaved, setIsSerieSaved] = useState<boolean>(false);
   const savingSerieToastId = useRef<Id | null>(null);
+
+  const renderSubtitle = useMemo(
+    () => (
+      <div>
+        {t('subtitle', { min: 1, max: 5 })}
+        <br />
+        The results will be displayed below.
+      </div>
+    ),
+    []
+  );
 
   const {
     mutate: mutateGenerateTransitions,
@@ -53,17 +66,6 @@ const TransitionFaces: React.FC = () => {
     useRenderImages({
       faces: transitionFaces
     });
-
-  const renderSubtitle = useMemo(
-    () => (
-      <div>
-        Generate an amount of transitions between two faces.
-        <br />
-        The results will be displayed below.
-      </div>
-    ),
-    []
-  );
 
   const onSubmit = ({
     firstId,
