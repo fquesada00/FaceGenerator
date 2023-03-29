@@ -1,6 +1,7 @@
 create table if not exists images (
     id varchar(64) primary key,
-    z float[]
+    z float[],
+    serie_id varchar(64)
 );
 
 create index if not exists images_id_idx on images (id);
@@ -23,13 +24,13 @@ create table if not exists image_tags (
     primary key (image_id, tag_id)
 );
 
-create or replace function insert_image(_id varchar(64), _z float[], _tags varchar(64)[])
+create or replace function insert_image(_id varchar(64), _z float[], _tags varchar(64)[], _serie_id varchar(64))
     returns void
     as $$
     declare
         missing_tags varchar(64)[];
     begin
-        insert into images (id, z) values (_id, _z);
+        insert into images (id, z, serie_id) values (_id, _z, _serie_id);
 
         -- if no tags, add 'no tag'
         if array_length(_tags, 1) is null then
@@ -61,6 +62,7 @@ create or replace view image_tags_view as
   from images
   left join image_tags on images.id = image_tags.image_id
   left join tags on image_tags.tag_id = tags.id
+  where images.serie_id is null
   group by images.id;
 
 create table series (
