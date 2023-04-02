@@ -22,7 +22,7 @@ class GeneratorDB:
         self.fs.save_tmp_img(image, id)
         return id
     
-    def save_face(self, id: str, tags: list):
+    def save_face(self, id: str, tags: list, serie_id: str = None):
         z = self.tmp_db.get_z_by_id(id)
         if z == None:
             return None
@@ -34,7 +34,7 @@ class GeneratorDB:
             tags.remove(EMPTY_TAG)
 
         cur = self.db.cursor()
-        cur.execute('SELECT insert_image(%s, %s, %s)', (id, z, tags))
+        cur.execute('SELECT insert_image(%s, %s, %s, %s)', (id, z, tags, serie_id))
         self.db.commit()
         cur.close()        
         
@@ -65,7 +65,7 @@ class GeneratorDB:
 
         for face_id in faces_id:
             if not self.face_exists(face_id):
-              self.save_face(face_id, tags)
+              self.save_face(face_id, tags, id)
 
         self.tmp_db.remove_serie(id)
 
