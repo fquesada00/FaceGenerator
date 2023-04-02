@@ -42,7 +42,7 @@ const FacesSeries = () => {
     data: filteredFacesSeries
   } = useMutation(getFacesSeries, {
     onError: error => {
-      if (error instanceof ApiError) {
+      if (error instanceof ApiError && error.status !== 401) {
         toastError(error.toString());
       }
     }
@@ -64,7 +64,7 @@ const FacesSeries = () => {
     data: allFacesSeries
   } = useMutation(getFacesSeries, {
     onError: error => {
-      if (error instanceof ApiError) {
+      if (error instanceof ApiError && error.status !== 401) {
         toastError(error.toString());
       }
     }

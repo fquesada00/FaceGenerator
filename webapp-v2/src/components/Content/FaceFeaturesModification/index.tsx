@@ -51,7 +51,7 @@ const FaceFeaturesModification: React.FC = () => {
     data: modifiedFace
   } = useMutation(modifyFaceFeatures, {
     onError: error => {
-      if (error instanceof ApiError) {
+      if (error instanceof ApiError && error.status !== 401) {
         toastError(error.toString());
       }
     }
