@@ -38,6 +38,10 @@ const paths = {
   about: {
     path: '/about',
     title: 'About'
+  },
+  settings: {
+    path: '/settings',
+    title: 'Settings'
   }
 };
 

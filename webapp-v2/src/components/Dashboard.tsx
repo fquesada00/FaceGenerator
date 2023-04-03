@@ -6,6 +6,7 @@ import MenuIcon from '@mui/icons-material/Menu';
 import Typography from '@mui/material/Typography';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import LogoutIcon from '@mui/icons-material/Logout';
+import SettingsIcon from '@mui/icons-material/Settings';
 import Divider from '@mui/material/Divider';
 import List from '@mui/material/List';
 import Container from '@mui/material/Container';
@@ -19,6 +20,8 @@ import { ToastContainer } from 'react-toastify';
 import useLogout from 'hooks/useLogout';
 import DrawerContent from './Drawer/DrawerContent';
 import { CustomToastContainer } from './Toast';
+import clsx from 'clsx';
+import useAuth from 'hooks/useAuth';
 
 const Dashboard: React.FC<React.PropsWithChildren> = () => {
   const [open, setOpen] = useState(false);
@@ -33,6 +36,13 @@ const Dashboard: React.FC<React.PropsWithChildren> = () => {
     logout();
     navigate('/login');
   }, [logout, navigate]);
+
+  const auth = useAuth();
+  const { isAdmin } = auth;
+
+  const handleSettings = useCallback(() => {
+    navigate('/settings');
+  }, [navigate]);
 
   return (
     <Box sx={{ display: 'flex' }}>
@@ -76,9 +86,17 @@ const Dashboard: React.FC<React.PropsWithChildren> = () => {
           >
             Face Generator
           </Typography>
-          <IconButton onClick={signOut}>
-            <LogoutIcon />
-          </IconButton>
+          <div className='gap-4 flex'>
+            <IconButton
+              onClick={handleSettings}
+              className={clsx(!isAdmin ? 'hidden' : '')}
+            >
+              <SettingsIcon />
+            </IconButton>
+            <IconButton onClick={signOut}>
+              <LogoutIcon />
+            </IconButton>
+          </div>
         </Toolbar>
       </AppBar>
       <Drawer variant='permanent' open={open}>
