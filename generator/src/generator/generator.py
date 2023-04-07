@@ -11,7 +11,7 @@ import os
 import sys
 from os import getenv
 from pathlib import Path
-# from src.face_frame import face_frame_correction
+from src.face_frame import face_frame_correction
 
 PROJECT_PATH = getenv("PROJECT_PATH")
 sys.path.insert(0, PROJECT_PATH + "/generator/src/stylegan2")
@@ -26,10 +26,11 @@ def get_control_latent_vectors(path):
     latent_vectors = {f.name[:-4]: np.load(f) for f in files}
     return latent_vectors
 
+target_image = Image.open('base.png')
 
 @Pyro4.expose
 class Generator:
-    def __init__(self, network_pkl='http://d36zk2xti64re0.cloudfront.net/stylegan2/networks/stylegan2-ffhq-config-f.pkl'):
+    def __init__(self, network_pkl='https://api.ngc.nvidia.com/v2/models/nvidia/research/stylegan3/versions/1/files/stylegan3-r-ffhqu-256x256.pkl'):
         self.device = torch.device('cuda')
         with dnnlib.util.open_url(network_pkl) as f:
             self.G = legacy.load_network_pkl(f)['G_ema'].to(self.device)
@@ -141,8 +142,3 @@ class Generator:
         projected_image = Image.fromarray(projected_image)
         
         return [FaceImage.from_image(projected_image)], [self.flatten(projected_w.cpu().numpy())]
-
-
-if __name__ == "__main__":
-    gen = Generator()
-    gen.img_to_latent(None, 1000)
