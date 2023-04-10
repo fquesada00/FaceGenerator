@@ -234,6 +234,30 @@ const useFacesApi = () => {
     [api]
   );
 
+  const deleteAllFaces = useCallback(async (): Promise<void> => {
+    try {
+      await api.delete(`${FACES_API_PREFIX}`);
+    } catch (error) {
+      throw new ApiError('Delete all faces', getErrorMessage(error));
+    }
+  }, [api]);
+
+  const deleteAllSeries = useCallback(async (): Promise<void> => {
+    try {
+      await api.delete(`${FACES_API_PREFIX}/series`);
+    } catch (error) {
+      throw new ApiError('Delete all series', getErrorMessage(error));
+    }
+  }, [api]);
+
+  const deleteAllTags = useCallback(async (): Promise<void> => {
+    try {
+      await api.delete(`${FACES_API_PREFIX}/tags`);
+    } catch (error) {
+      throw new ApiError('Delete all tags', getErrorMessage(error));
+    }
+  }, [api]);
+
   return {
     generateFaces,
     searchFaces,
@@ -245,7 +269,10 @@ const useFacesApi = () => {
     modifyFaceFeatures,
     getAllTags,
     saveFaceSerie,
-    getFacesSeries
+    getFacesSeries,
+    deleteAllFaces,
+    deleteAllSeries,
+    deleteAllTags
   };
 };
 

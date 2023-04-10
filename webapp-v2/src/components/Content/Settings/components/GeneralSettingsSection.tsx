@@ -42,6 +42,16 @@ const GeneralSettingsSection = () => {
         actionText={settings?.generator ? 'Turn off' : 'Turn on'}
         action={() => mutateModifySettings({ generator: !settings?.generator })}
         loading={isLoadingModifySettings || !settings}
+        dialogTitle={
+          settings?.generator
+            ? 'Turn off the Generator'
+            : 'Turn on the Generator'
+        }
+        dialogContent={
+          settings?.generator
+            ? 'Are you sure you want to turn off the Generator? You will not be able to generate faces.'
+            : 'Are you sure you want to turn on the Generator? You will be able to generate faces and use the Generator.'
+        }
       />
     </SettingsSection>
   );

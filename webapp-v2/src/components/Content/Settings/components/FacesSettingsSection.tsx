@@ -1,12 +1,12 @@
-import useSettingsApi from 'hooks/api/useSettingsApi';
 import Setting from './Setting';
 import SettingsSection from './SettingsSection';
 import { useMutation } from 'react-query';
 import ApiError from 'services/api/Error';
 import { toastError } from 'components/Toast';
+import useFacesApi from 'hooks/api/useFacesApi';
 
 const FacesSettingsSection = () => {
-  const { deleteAllFaces, deleteAllSeries, deleteAllTags } = useSettingsApi();
+  const { deleteAllFaces, deleteAllSeries, deleteAllTags } = useFacesApi();
 
   const { mutate: mutateDeleteAllFaces, isLoading: isLoadingDeleteAllFaces } =
     useMutation(deleteAllFaces, {
@@ -43,6 +43,9 @@ const FacesSettingsSection = () => {
         actionText='Delete'
         action={() => mutateDeleteAllFaces()}
         loading={isLoadingDeleteAllFaces}
+        dialogTitle='Delete all faces'
+        dialogContent='Are you sure you want to delete all faces? This action will remove all faces except from the series ones.'
+        isIrreversible={true}
       />
       <Setting
         title='Series'
@@ -50,6 +53,9 @@ const FacesSettingsSection = () => {
         actionText='Delete'
         action={() => mutateDeleteAllSeries()}
         loading={isLoadingDeleteAllSeries}
+        dialogTitle='Delete all series'
+        dialogContent='Are you sure you want to delete all series?'
+        isIrreversible={true}
       />
       <Setting
         title='Tags'
@@ -57,6 +63,9 @@ const FacesSettingsSection = () => {
         actionText='Delete'
         action={() => mutateDeleteAllTags()}
         loading={isLoadingDeleteAllTags}
+        dialogTitle='Delete all tags'
+        dialogContent='Are you sure you want to delete all tags?'
+        isIrreversible={true}
       />
     </SettingsSection>
   );
