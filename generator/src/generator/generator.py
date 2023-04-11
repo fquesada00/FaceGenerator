@@ -26,8 +26,6 @@ def get_control_latent_vectors(path):
     latent_vectors = {f.name[:-4]: np.load(f) for f in files}
     return latent_vectors
 
-target_image = Image.open('base.png')
-
 @Pyro4.expose
 class Generator:
     def __init__(self, network_pkl='https://api.ngc.nvidia.com/v2/models/nvidia/research/stylegan3/versions/1/files/stylegan3-r-ffhqu-256x256.pkl'):
