@@ -120,6 +120,11 @@ def getFaces(tags: str = Query(None), current_user: User = Depends(get_current_u
     tags = tags.split(',') if tags else []
     return {'result':service.get_images_from_database(tags)}
 
+@api_router.delete('/faces', status_code=status.HTTP_204_NO_CONTENT)
+def deleteAllFaces(current_user: User = Depends(get_current_user)):
+    service.delete_all_faces()
+
+
 @api_router.get('/faces/transition', response_model=ApiResponse[FaceSerie])
 def generateTransition(from_id: str, to_id: str, amount: int, current_user: User = Depends(get_current_user)):
     faces, serie_id = service.generate_transition(from_id, to_id, amount)
@@ -139,12 +144,20 @@ def getSeries(tags: str = Query(None), current_user: User = Depends(get_current_
     tags = tags.split(',') if tags else []
     return {'result': service.get_series_by_tags(tags)}
 
+@api_router.delete('/faces/series', status_code=status.HTTP_204_NO_CONTENT)
+def deleteAllSeries(current_user: User = Depends(get_current_user)):
+    service.delete_all_series()
+
 class SaveRequest(BaseModel):
     tags: Union[List[str], None]
 @api_router.post('/faces/series/{serie_id}', response_model=ApiResponse[str])
 def saveSerie(serie_id: str, body:SaveRequest, current_user: User = Depends(get_current_user)):
     service.save_serie(serie_id, body.tags)
     return {'result': serie_id}
+
+@api_router.delete('/faces/series/{id}', status_code=status.HTTP_204_NO_CONTENT)
+def deleteSerie(id: str, current_user: User = Depends(get_current_user)):
+    service.delete_serie(id)
 
 @api_router.get('/faces/{id}/image', response_class=ImageResponse)
 def getFace(id: str, response: Response, current_user: User = Depends(get_current_user)):
@@ -162,8 +175,16 @@ def saveFaces(face_id: str, body:SaveRequest, current_user: User = Depends(get_c
 def updateFace(id:str, modifiers: Modifiers, current_user: User = Depends(get_current_user)):
     return {'result':service.change_features(id, vars(modifiers))}
 
+@api_router.delete('/faces/{id}', status_code=status.HTTP_204_NO_CONTENT)
+def deleteFace(id: str, current_user: User = Depends(get_current_user)):
+    service.delete_face(id)
+
 @api_router.get('/tags', response_model=ApiResponse[List[str]])
 def getTags(current_user: User = Depends(get_current_user)):
     return {'result': service.get_tags()}
+
+@api_router.delete('/tags', status_code=status.HTTP_204_NO_CONTENT)
+def deleteAllTags(current_user: User = Depends(get_current_user)):
+    service.delete_all_tags()
 
 app.include_router(api_router)
