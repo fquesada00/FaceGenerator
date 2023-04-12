@@ -106,7 +106,7 @@ class Generator:
     def change_features(self, w, features_amounts_dict: dict):
         w = self.unravel(w)
         for feature_name, amount in features_amounts_dict.items():
-            w += self.latent_vectors[feature_name] * amount
+            w += self.latent_vectors[feature_name] * amount*10
         w = torch.from_numpy(w).to(self.device)
         image = self.generate_image_from_w(w)
         latent_img = Image.fromarray(image)
