@@ -7,10 +7,11 @@ type RenderImagesHookProps = {
   faces: IApiFaceSerie[] | undefined;
   className?: string;
   collapseAll?: boolean;
+  onDelete?: () => void;
 };
 
 const useRenderImages = (props: RenderImagesHookProps) => {
-  const { faces, className, collapseAll = false } = props;
+  const { faces, className, collapseAll = false, onDelete } = props;
 
   const FacesSeries = useMemo(() => {
     if (!faces) {
@@ -24,6 +25,7 @@ const useRenderImages = (props: RenderImagesHookProps) => {
           className={clsx(className)}
           collapse={collapseAll}
           key={serie.id}
+          onDelete={onDelete}
         />
       );
     });

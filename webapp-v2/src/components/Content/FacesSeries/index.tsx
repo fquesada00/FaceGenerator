@@ -22,6 +22,7 @@ const FacesSeries = () => {
   const { getFacesSeries } = useFacesApi();
   const [hideAll, setHideAll] = useState<boolean>(true);
   const [collapseAll, setCollapseAll] = useState<boolean>(false);
+  const [latestSearchedTags, setLatestSearchedTags] = useState<string[]>([]);
 
   const [collapseAllFiltered, setCollapseAllFiltered] =
     useState<boolean>(false);
@@ -48,10 +49,21 @@ const FacesSeries = () => {
     }
   });
 
+  const onDelete = () => {
+    if (!hideAll) {
+      mutateGetAllFacesSeries([]);
+    }
+
+    if (latestSearchedTags.length > 0) {
+      mutateSearchFacesSeries(latestSearchedTags);
+    }
+  };
+
   const { FacesSeries: FilteredFacesSeries } = useRenderFacesSeries({
     faces: filteredFacesSeries,
     className: 'mt-4',
-    collapseAll: collapseAllFiltered
+    collapseAll: collapseAllFiltered,
+    onDelete
   });
 
   const onCollapseAllFiltered = () => {
@@ -73,7 +85,8 @@ const FacesSeries = () => {
   const { FacesSeries } = useRenderFacesSeries({
     faces: allFacesSeries,
     className: 'mt-4',
-    collapseAll
+    collapseAll,
+    onDelete
   });
 
   const onShowAll = () => {
@@ -95,6 +108,7 @@ const FacesSeries = () => {
   const onSubmit = ({ tags }: SearchFacesSeriesValues) => {
     mutateSearchFacesSeries(tags);
     setCollapseAllFiltered(false);
+    setLatestSearchedTags(tags);
   };
 
   return (

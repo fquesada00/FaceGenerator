@@ -8,10 +8,19 @@ type RenderImagesHookProps = {
   className?: string;
   disableDownload?: boolean;
   disableSave?: boolean;
+  onDelete?: () => void;
+  disableDelete?: boolean;
 };
 
 const useRenderImages = (props: RenderImagesHookProps) => {
-  const { faces, className, disableDownload, disableSave } = props;
+  const {
+    faces,
+    className,
+    disableDownload,
+    disableSave,
+    onDelete,
+    disableDelete
+  } = props;
 
   const images = useMemo(() => {
     if (!faces) {
@@ -24,6 +33,8 @@ const useRenderImages = (props: RenderImagesHookProps) => {
           faces={faces}
           disableDownload={disableDownload}
           disableSave={disableSave}
+          onDelete={onDelete}
+          disableDelete={disableDelete}
         />
       </div>
     );

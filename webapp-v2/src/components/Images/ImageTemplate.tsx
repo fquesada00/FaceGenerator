@@ -12,6 +12,9 @@ import AddMetadataSteps from './AddMetadataSteps';
 import { toast, Id } from 'react-toastify';
 import useFaceImgLazyLoading from 'hooks/useFaceImgLazyLoading';
 import { IApiFaceImage } from 'services/api/models';
+import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
+import useAuth from 'hooks/useAuth';
+import DeleteIcon from 'components/Icons/DeleteIcon';
 
 type ImageTemplateProps = {
   alt: string;
@@ -24,10 +27,12 @@ type ImageTemplateProps = {
   disableSave?: boolean;
   placeholderText?: string;
   onLoaded?: (faceImg: IApiFaceImage) => void;
+  disableDelete?: boolean;
+  onDelete?: () => void;
 };
 
 function ImageTemplate(props: ImageTemplateProps) {
-  const { saveFace } = useFacesApi();
+  const { saveFace, deleteFace } = useFacesApi();
   const {
     alt,
     faceId,
@@ -38,8 +43,12 @@ function ImageTemplate(props: ImageTemplateProps) {
     imgHeightClassName,
     cardHeightClassName,
     cardWidthClassName,
-    onLoaded
+    onLoaded,
+    disableDelete,
+    onDelete
   } = props;
+
+  const { isAdmin } = useAuth();
 
   const downloadRef = useRef<HTMLAnchorElement | null>(null);
   const [openMetadataSteps, setOpenMetadataSteps] = useState(false);
@@ -67,6 +76,21 @@ function ImageTemplate(props: ImageTemplateProps) {
       }
     }
   );
+
+  const { mutate: mutateDeleteFace, isLoading: isLoadingDeleteFace } =
+    useMutation(deleteFace, {
+      onSuccess: data => {
+        onDelete?.();
+        toastSuccess(`Face with id ${faceId} deleted successfully`);
+      },
+      onError: error => {
+        if (error instanceof ApiError) {
+          toastError(
+            `Error deleting face with id ${faceId}. ${error.toString()}`
+          );
+        }
+      }
+    });
 
   const onSave = () => {
     if (faceId === undefined) {
@@ -105,6 +129,15 @@ function ImageTemplate(props: ImageTemplateProps) {
 
     return (
       <>
+        <DeleteIcon
+          onClick={() => mutateDeleteFace(faceId!)}
+          className={clsx(
+            'absolute',
+            '-top-3',
+            '-right-3',
+            isAdmin && !disableDelete ? 'visible' : 'invisible'
+          )}
+        />
         <img
           src={faceImage.url}
           alt={alt}
@@ -150,9 +183,11 @@ function ImageTemplate(props: ImageTemplateProps) {
     <>
       <Card
         ref={ref}
+        style={{ overflow: 'visible' }}
         className={clsx(
           cardWidthClassName ?? 'w-48',
           cardHeightClassName ?? 'h-52',
+          'relative',
           className
         )}
       >

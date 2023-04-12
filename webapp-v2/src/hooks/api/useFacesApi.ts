@@ -258,6 +258,28 @@ const useFacesApi = () => {
     }
   }, [api]);
 
+  const deleteFace = useCallback(
+    async (id: string): Promise<void> => {
+      try {
+        await api.delete(`${FACES_API_PREFIX}/${id}`);
+      } catch (error) {
+        throw new ApiError('Delete face', getErrorMessage(error));
+      }
+    },
+    [api]
+  );
+
+  const deleteSerie = useCallback(
+    async (id: string): Promise<void> => {
+      try {
+        await api.delete(`${FACES_API_PREFIX}/series/${id}`);
+      } catch (error) {
+        throw new ApiError('Delete serie', getErrorMessage(error));
+      }
+    },
+    [api]
+  );
+
   return {
     generateFaces,
     searchFaces,
@@ -272,7 +294,9 @@ const useFacesApi = () => {
     getFacesSeries,
     deleteAllFaces,
     deleteAllSeries,
-    deleteAllTags
+    deleteAllTags,
+    deleteFace,
+    deleteSerie
   };
 };
 
