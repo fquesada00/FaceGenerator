@@ -59,7 +59,7 @@ function ImageTemplate(props: ImageTemplateProps) {
         toastSuccess(`Face with id ${faceId} saved successfully`);
       },
       onError: error => {
-        if (error instanceof ApiError) {
+        if (error instanceof ApiError && error.status !== 401) {
           toastError(
             `Error saving face with id ${faceId}. ${error.toString()}`
           );

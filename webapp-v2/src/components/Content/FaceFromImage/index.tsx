@@ -40,7 +40,7 @@ const FaceFromImage: React.FC = () => {
     data: faceFromImage
   } = useMutation(generateFaceFromImage, {
     onError: error => {
-      if (error instanceof ApiError) {
+      if (error instanceof ApiError && error.status !== 401) {
         toastError(error.toString());
       }
     }

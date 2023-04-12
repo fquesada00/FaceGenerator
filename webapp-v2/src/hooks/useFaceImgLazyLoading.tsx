@@ -23,7 +23,7 @@ const useFaceImgLazyLoading = (props: UseFaceImgLazyLoadingProps) => {
     data: faceImage
   } = useMutation(getFaceImage, {
     onError: error => {
-      if (error instanceof ApiError) {
+      if (error instanceof ApiError && error.status !== 401) {
         toastError(
           `Error getting face image with id ${faceId}. ${error.toString()}`
         );

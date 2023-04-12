@@ -70,7 +70,7 @@ const PickImageButton = (props: PickImageButtonProps) => {
     data: allFaces
   } = useMutation(searchFaces, {
     onError: error => {
-      if (error instanceof ApiError) {
+      if (error instanceof ApiError && error.status !== 401) {
         toastError(error.toString());
       }
     }
