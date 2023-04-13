@@ -51,7 +51,7 @@ const TransitionFaces: React.FC = () => {
     data: transitionFacesSerie
   } = useMutation(generateTransitions, {
     onError: error => {
-      if (error instanceof ApiError) {
+      if (error instanceof ApiError && error.status !== 401) {
         toastError(error.toString());
       }
     }
@@ -85,7 +85,7 @@ const TransitionFaces: React.FC = () => {
         );
       },
       onError: error => {
-        if (error instanceof ApiError) {
+        if (error instanceof ApiError && error.status !== 401) {
           toastError(
             `Error saving face serie with id ${transitionFacesSerie!
               .id!}. ${error.toString()}`
