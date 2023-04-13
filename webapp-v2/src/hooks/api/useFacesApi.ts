@@ -126,7 +126,7 @@ const useFacesApi = () => {
           { body: formData, headers: { 'Content-Type': 'multipart/form-data' } }
         );
 
-        return response.result;
+        return response.result[0];
         return datasource.faces[0];
       } catch (error) {
         throw new ApiError(

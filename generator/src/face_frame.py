@@ -1,7 +1,6 @@
 from glob import glob
 from src.generator.align_face import align_face
 import numpy as np
-import cv2
 from PIL import Image
 import torch
 from src.nets.MobileNetV2_unet import MobileNetV2_unet
@@ -10,8 +9,8 @@ from torchvision import transforms
 
 # load pre-trained model and weights
 def load_model():
-    model = MobileNetV2_unet(None).to(torch.device("cpu"))
-    state_dict = torch.load('./src/checkpoints/model.pt', map_location='cpu')
+    model = MobileNetV2_unet(None).to(torch.device("cuda"))
+    state_dict = torch.load('./src/checkpoints/model.pt', map_location='cuda')
     model.load_state_dict(state_dict)
     model.eval()
     return model
@@ -19,7 +18,7 @@ def load_model():
 def segmentate_image(img, transform, model):
     torch_img = transform(img)
     torch_img = torch_img.unsqueeze(0)
-    torch_img = torch_img.to(torch.device("cpu"))
+    torch_img = torch_img.to(torch.device("cuda"))
 
     # Forward Pass
     logits = model(torch_img)
@@ -45,24 +44,32 @@ def face_frame_variation(img1, img2, transform, model):
     result = (result / (224*224)) * 100
     return result, segmentation_1, segmentation_2
 
-def face_frame_correction(target_image, latent_code, Gs, Gs_kwargs):
+
+
+
+def face_frame_correction(target_image, latent_code, G, device):
     model = load_model()
     transform = transforms.Compose([
         transforms.Resize((224, 224)),
         transforms.ToTensor(),
     ])
     steps = 750
-    initial_noise_factor = 0.005
+    initial_noise_factor = 0.002
     noise_ramp_length = 0.75
     dlatent_avg_samples = 10000
-    latent_samples = np.random.RandomState(123).randn(dlatent_avg_samples, *Gs.input_shapes[0][1:])
-    dlatent_samples = Gs.components.mapping.run(latent_samples, None)[:, :1, :] # [N, 1, 512]
+    latent_samples = torch.from_numpy(np.random.RandomState().randn(dlatent_avg_samples, G.z_dim)).to(device)
+    dlatent_samples =G.mapping(z=latent_samples, c=None, truncation_psi=0.5).cpu().numpy()
     dlatent_avg = np.mean(dlatent_samples, axis=0, keepdims=True) # [1, 1, 512]
     dlatent_std = (np.sum((dlatent_samples - dlatent_avg) ** 2) / dlatent_avg_samples) ** 0.5
-
-    image = Gs.components.synthesis.run(latent_code, **Gs_kwargs)
-    image = Image.fromarray(image[0])
+    latent_code = torch.from_numpy(dlatent_avg).to(device)
+    
+    img = G.synthesis(latent_code, noise_mode='const')
+    img = (img.permute(0, 2, 3, 1) * 127.5 +
+            128).clamp(0, 255).to(torch.uint8)
+    image = img[0].cpu().numpy()
+    image = Image.fromarray(image)
     min_frame, _, _ = face_frame_variation(target_image, image, transform, model)
+    latent_code = latent_code.cpu().numpy()
     print('Starting frame', min_frame)
     style = (latent_code.copy())[0][6:]
     latent_codes = []
@@ -75,17 +82,23 @@ def face_frame_correction(target_image, latent_code, Gs, Gs_kwargs):
     for i in range(steps):
         old_code = latent_code.copy()
         t = i/10000
-        noise_strength = dlatent_std * initial_noise_factor * max(0.0, 1.0 - t / noise_ramp_length) ** 2
+        print('Step', i, 'Frame variation', min_frame)
+        noise_strength = dlatent_std * initial_noise_factor #* max(0.0, 1.0 - t / noise_ramp_length) ** 2
         noise = np.random.normal(size=latent_code.shape) * noise_strength
         latent_code += noise
-        latent_code[0][6:] = style
-        image = Gs.components.synthesis.run(latent_code, **Gs_kwargs)
-        image = Image.fromarray(image[0])
+        #latent_code[0][6:] = style
+        latent_code = torch.from_numpy(latent_code).to(device)
+        img = G.synthesis(latent_code, noise_mode='const')
+        latent_code = latent_code.cpu().numpy()
+        img = (img.permute(0, 2, 3, 1) * 127.5 +
+                128).clamp(0, 255).to(torch.uint8)
+        image = img[0].cpu().numpy()
+        image = Image.fromarray(image)
         frame_variation, _, _ = face_frame_variation(target_image, image, transform, model)
         if frame_variation < min_frame:
             print('Correction made', frame_variation)
             min_frame = frame_variation
-            latent_codes.append(latent_code.copy())
+            latent_codes.append(latent_code)
             images.append(image)
         else:
             latent_code = old_code

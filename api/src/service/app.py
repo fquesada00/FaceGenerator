@@ -37,22 +37,22 @@ class ImageResponse(Response):
         return content
 
 class Modifiers(BaseModel):
-    age: int = 0
-    eye_distance: int = 0
-    eye_eyebrow_distance: int = 0
-    eye_ratio: int = 0
-    eyes_open: int = 0
-    gender: int = 0
-    lip_ratio: int = 0
-    mouth_open: int = 0
-    mouth_ratio: int = 0
-    nose_mouth_distance: int = 0
-    nose_ratio: int = 0
-    nose_tip: int = 0
-    pitch: int = 0
-    roll: int = 0
-    smile: int = 0
-    yaw: int = 0
+    age: float = 0
+    eye_distance: float = 0
+    eye_eyebrow_distance: float = 0
+    eye_ratio: float = 0
+    eyes_open: float = 0
+    gender: float = 0
+    lip_ratio: float = 0
+    mouth_open: float = 0
+    mouth_ratio: float = 0
+    nose_mouth_distance: float = 0
+    nose_ratio: float = 0
+    nose_tip: float = 0
+    pitch: float = 0
+    roll: float = 0
+    smile: float = 0
+    yaw: float = 0
 
 service = GeneratorService()
 
@@ -130,7 +130,7 @@ def interchangeFaces(id1: str, id2: str, current_user: User = Depends(get_curren
     return {'result':service.mix_styles(id1, id2)}
 
 @api_router.post('/faces/image', response_model=ApiResponse[List[Face]])
-def generateFaceFromImage(steps:int =1000, image: UploadFile = File(), current_user: User = Depends(get_current_user)):
+def generateFaceFromImage(steps:int = 200, image: UploadFile = File(), current_user: User = Depends(get_current_user)):
     return {'result':service.img_to_latent(image.file.read(), steps)}
 
 @api_router.get('/faces/series', response_model=ApiResponse[List[FaceSerie]])
