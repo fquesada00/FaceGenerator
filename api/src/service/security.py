@@ -16,7 +16,7 @@ ACCESS_TOKEN_EXPIRE_MINUTES = settings.ACCESS_TOKEN_EXPIRE_MINUTES
 REFRESH_TOKEN_EXPIRE_DAYS = settings.REFRESH_TOKEN_EXPIRE_DAYS
 
 
-service = GeneratorService()
+generator_service = GeneratorService()
 
 
 class Token(BaseModel):
@@ -48,7 +48,7 @@ def get_password_hash(password):
 
 
 def authenticate_user(username: str, password: str):
-    user = service.get_user_by_username(username)
+    user = generator_service.get_user_by_username(username)
     if not user:
         return False
     if not verify_password(password, user['password']):
@@ -91,7 +91,7 @@ async def get_current_user(token: str = Depends(oauth2_scheme)):
             raise expiration_exception
     except JWTError:
         raise credentials_exception
-    user = service.get_user_by_username(token_data.username)
+    user = generator_service.get_user_by_username(token_data.username)
     if user is None:
         raise credentials_exception
     return user
