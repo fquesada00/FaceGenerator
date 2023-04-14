@@ -19,11 +19,17 @@ const useFacesApi = () => {
   const api = useMemo(() => apiProvider(client), [client]);
 
   const generateFaces = useCallback(
-    async (amount: number): Promise<IApiFace[]> => {
+    async (data: { amount: number, referenceFace?: File }): Promise<IApiFace[]> => {
+      const { amount, referenceFace } = data;
+      const formData = new FormData();
+      if (referenceFace)
+        formData.append('reference', referenceFace);
+      formData.append('amount', amount.toString());
+      console.log('generateFaces', amount, referenceFace);
       try {
-        const response = await api.get<ApiResponse>(
+        const response = await api.post<ApiResponse>(
           `${FACES_API_PREFIX}/generate`,
-          { query: { amount } }
+          { body: formData, headers: { 'Content-Type': 'multipart/form-data' } }
         );
         return response.result;
       } catch (error: AxiosError | unknown) {

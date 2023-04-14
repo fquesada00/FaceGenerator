@@ -1,5 +1,5 @@
 import clsx from 'clsx';
-import { useMemo } from 'react';
+import { useMemo, useRef } from 'react';
 import { Formik, Form } from 'formik';
 import { MIN_FACES, MAX_FACES } from 'constants/constants';
 import inputsClasses from 'components/Inputs/styles/Inputs.module.scss';
@@ -20,6 +20,13 @@ import useFacesApi from 'hooks/api/useFacesApi';
 import { useTranslation } from 'react-i18next';
 
 const RandomFaces: React.FC = () => {
+
+
+
+  const inputRef = useRef<HTMLInputElement | null>(null);
+
+
+
   const { t } = useTranslation('randomFaces');
   const { generateFaces } = useFacesApi();
 
@@ -35,8 +42,8 @@ const RandomFaces: React.FC = () => {
   );
 
   const {
-    mutate,
-    isLoading,
+    mutate: mutate,
+    isLoading: isLoading,
     data: faces
   } = useMutation(generateFaces, {
     onError: error => {
@@ -48,8 +55,8 @@ const RandomFaces: React.FC = () => {
 
   const { images: FacesImages } = useRenderImages({ faces });
 
-  const onSubmit = ({ randomFaces: amount }: RandomFacesFormValues) => {
-    mutate(amount);
+  const onSubmit = (data: RandomFacesFormValues) => {
+    mutate({ amount: data.randomFaces, referenceFace: data.referenceFace });
   };
 
   return (
@@ -62,10 +69,28 @@ const RandomFaces: React.FC = () => {
         initialValues={initialValues}
         onSubmit={onSubmit}
         validationSchema={randomFacesFormSchema}
-      >
+      >{({ setFieldValue }) => (
         <Form>
           <div className={clsx(inputsClasses.container)}>
             <FormikCustomAmountInput name='randomFaces' />
+            <br />
+            <h2>Select file for face reference (optional)</h2>
+            <input
+              type='file'
+              name='referenceFace'
+              accept='image/jpeg, image/png'
+              required={false}
+              //className='hidden'
+              onChange={() => {
+                if (inputRef?.current?.files?.length === 0) {
+                  return;
+                }
+
+                const file = inputRef?.current?.files?.[0] || null;
+                setFieldValue('referenceFace', file);
+              }}
+              ref={inputRef}
+            />
             <CtaButton
               type='submit'
               label='Generate'
@@ -75,6 +100,7 @@ const RandomFaces: React.FC = () => {
             {!isLoading && FacesImages}
           </div>
         </Form>
+      )}
       </Formik>
     </div>
   );
