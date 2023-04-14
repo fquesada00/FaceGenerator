@@ -94,12 +94,16 @@ class GeneratorService(metaclass=SingletonMeta):
         image = self.generator.generate_image_from_latent_vector(z)
         return FaceImage.to_image(image)
 
-    def generate_random_images(self, qty: int):
+    def generate_random_images(self, qty: int, reference: bytes = None):
         print("Generating random images...")
+        if reference is not None:
+            data = BytesIO(reference)
+            reference = Image.open(data)
+            reference = FaceImage.from_image(reference)
         images = []
         for _ in range(qty):
             seed = np.random.randint(30000)
-            face_image, z = self.generator.generate_random_image(seed)
+            face_image, z = self.generator.generate_random_image(seed, reference)
             image = face_image.to_image()
             id = database.insert_face(image, z)
             face = {

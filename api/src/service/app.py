@@ -1,8 +1,8 @@
-from fastapi import FastAPI, Response, File, UploadFile, Request, status, Query, Depends, Cookie, APIRouter
+from fastapi import FastAPI, Response, File, UploadFile, Request, status, Query, Depends, Cookie, APIRouter, Form
 from fastapi.exceptions import RequestValidationError
 from fastapi.encoders import jsonable_encoder
 from fastapi.responses import JSONResponse, RedirectResponse, FileResponse
-from typing import List, Union, Generic, TypeVar
+from typing import List, Union, Generic, TypeVar, Optional
 import logging
 from pydantic import BaseModel
 from pydantic.generics import GenericModel
@@ -56,7 +56,7 @@ class Modifiers(BaseModel):
 
 service = GeneratorService()
 
-app = FastAPI(responses={422: {"model": Error}}, docs_url="/api/docs", redoc_url="/api/redoc")
+app = FastAPI(responses={422: {"model": Error}}, docs_url="/api/docs", redoc_url="/api/redoc", openapi_url="/api/openapi.json")
 # create a router for /api
 api_router = APIRouter(prefix=settings.API_PATH)
 
@@ -66,8 +66,6 @@ async def assets_middleware(request: Request, call_next):
         # FIXME: improve this as nested routes are not supported
         if request.url.path.startswith("/faces") or request.url.path.startswith("/about"):
             response =  RedirectResponse(url=f'{settings.WEB_PATH}/static/index.html')
-        elif request.url.path.startswith("/openapi.json"):
-            return await call_next(request)
         else:
             response =  RedirectResponse(url=f'{settings.WEB_PATH}/static{request.url.path}')
         return response
@@ -111,9 +109,10 @@ async def refresh_token(response: Response, jwt: str = Cookie(default=None)):
     )
     return {"result":{"access_token": access_token, "token_type": "bearer", "roles": [user['role']]}}
 
-@api_router.get('/faces/generate', response_model=ApiResponse[List[Face]])
-def generateFaces(amount: int = 1, current_user: User = Depends(get_current_user)):
-    return {"result":service.generate_random_images(amount)}
+@api_router.post('/faces/generate', response_model=ApiResponse[List[Face]])
+def generateFaces(amount: int = Form(), reference: Optional[UploadFile] = File(None), current_user: User = Depends(get_current_user)):
+    reference = reference.file.read() if reference else None
+    return {"result":service.generate_random_images(amount, reference)}
 
 @api_router.get('/faces', response_model=ApiResponse[List[Face]])
 def getFaces(tags: str = Query(None), current_user: User = Depends(get_current_user)):
