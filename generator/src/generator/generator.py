@@ -43,14 +43,33 @@ class Generator:
     def unravel(self, w):
         return np.reshape(w, (1, *self.w_shape))
 
-    def generate_random_image(self, rand_seed):
-        '''returns the image and its latent code'''
+    def generate_random_face(self, rand_seed):
         z = torch.from_numpy(np.random.RandomState(
             rand_seed).randn(1, self.G.z_dim)).to(self.device)
         w = self.G.mapping(z=z, c=None, truncation_psi=self.psi)
         random_image = self.generate_image_from_w(w)
         image = Image.fromarray(random_image)
         return FaceImage.from_image(image), self.flatten(w.cpu().numpy())
+
+    def generate_random_face_with_reference(self, rand_seed, reference_image: FaceImage):
+        print("Generating random face with reference")
+        img = reference_image.to_image().convert('RGB')
+        #img = Image.open("/app/test.png")
+        img = align_face(img)
+        target_pil = img.convert('RGB')
+        ws, images = face_frame_correction(target_pil, None, self.G, self.device)
+        w, image = ws[-1], images[-1]
+        return FaceImage.from_image(image), self.flatten(w)
+
+
+
+    def generate_random_image(self, rand_seed, image: FaceImage = None):
+        print("Generating random face")
+
+        '''returns the image and its latent code'''
+        return self.generate_random_face(rand_seed) if image is None else self.generate_random_face_with_reference(rand_seed, image)
+
+       
 
     def generate_image_from_w(self, w):
         img = self.G.synthesis(w, noise_mode='const')

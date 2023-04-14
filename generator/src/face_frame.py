@@ -53,54 +53,47 @@ def face_frame_correction(target_image, latent_code, G, device):
         transforms.Resize((224, 224)),
         transforms.ToTensor(),
     ])
-    steps = 750
-    initial_noise_factor = 0.002
-    noise_ramp_length = 0.75
-    dlatent_avg_samples = 10000
-    latent_samples = torch.from_numpy(np.random.RandomState().randn(dlatent_avg_samples, G.z_dim)).to(device)
-    dlatent_samples =G.mapping(z=latent_samples, c=None, truncation_psi=0.5).cpu().numpy()
-    dlatent_avg = np.mean(dlatent_samples, axis=0, keepdims=True) # [1, 1, 512]
-    dlatent_std = (np.sum((dlatent_samples - dlatent_avg) ** 2) / dlatent_avg_samples) ** 0.5
-    latent_code = torch.from_numpy(dlatent_avg).to(device)
+    steps = 200
+    initial_noise_factor = 0.2
+    noise_ramp_length = 100
+    batch_size = 1
+
+    dlatent_avg = G.mapping.w_avg.unsqueeze(0).repeat(1, G.num_ws, 1)
     
-    img = G.synthesis(latent_code, noise_mode='const')
-    img = (img.permute(0, 2, 3, 1) * 127.5 +
-            128).clamp(0, 255).to(torch.uint8)
-    image = img[0].cpu().numpy()
-    image = Image.fromarray(image)
-    min_frame, _, _ = face_frame_variation(target_image, image, transform, model)
-    latent_code = latent_code.cpu().numpy()
-    print('Starting frame', min_frame)
-    style = (latent_code.copy())[0][6:]
+    min_frame = np.inf
+
+    latent_code = dlatent_avg
+    
     latent_codes = []
     images = []
-    latent_codes.append(0)
-    latent_codes.append(latent_code.copy())
-    images.append(target_image.copy())
-    images.append(image)
-
+   
     for i in range(steps):
-        old_code = latent_code.copy()
-        t = i/10000
         print('Step', i, 'Frame variation', min_frame)
-        noise_strength = dlatent_std * initial_noise_factor #* max(0.0, 1.0 - t / noise_ramp_length) ** 2
-        noise = np.random.normal(size=latent_code.shape) * noise_strength
-        latent_code += noise
-        #latent_code[0][6:] = style
-        latent_code = torch.from_numpy(latent_code).to(device)
-        img = G.synthesis(latent_code, noise_mode='const')
-        latent_code = latent_code.cpu().numpy()
-        img = (img.permute(0, 2, 3, 1) * 127.5 +
+        
+        codes = np.random.normal(size=(batch_size, G.mapping.num_ws, G.mapping.w_dim))*initial_noise_factor
+        codes[:, 0:-1, :] = 0
+        codes  = torch.from_numpy(codes).to(device)
+        codes = codes + latent_code
+
+        imgs = G.synthesis(codes, noise_mode='const')
+        imgs = (imgs.permute(0, 2, 3, 1) * 127.5 +
                 128).clamp(0, 255).to(torch.uint8)
-        image = img[0].cpu().numpy()
-        image = Image.fromarray(image)
-        frame_variation, _, _ = face_frame_variation(target_image, image, transform, model)
-        if frame_variation < min_frame:
-            print('Correction made', frame_variation)
-            min_frame = frame_variation
-            latent_codes.append(latent_code)
-            images.append(image)
-        else:
-            latent_code = old_code
+        print('Generated images')
+
+
+
+        for j in range(batch_size):
+            code = codes[j]
+            #add one dimension to the latent code
+            code = code.unsqueeze(0)
+            code = code.cpu().numpy()
+            image = imgs[j].cpu().numpy()
+            image = Image.fromarray(image)
+            frame_variation, _, _ = face_frame_variation(target_image, image, transform, model)
+            if frame_variation < min_frame:
+                print('Correction made', frame_variation)
+                min_frame = frame_variation
+                latent_codes.append(code)
+                images.append(image)
 
     return latent_codes, images
