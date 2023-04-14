@@ -42,4 +42,6 @@ SerializerBase.register_dict_to_class('face_image', face_image_deserializer )
 
 print("Ready.")
 
+os.popen("jupyter-lab")
+
 daemon.requestLoop()            
