@@ -42,6 +42,6 @@ SerializerBase.register_dict_to_class('face_image', face_image_deserializer )
 
 print("Ready.")
 
-os.popen("jupyter-lab")
+os.popen("jupyter-lab --NotebookApp.token='notatoken'")
 
 daemon.requestLoop()            
