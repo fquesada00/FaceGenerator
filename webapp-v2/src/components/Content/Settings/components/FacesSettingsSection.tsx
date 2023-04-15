@@ -2,7 +2,7 @@ import Setting from './Setting';
 import SettingsSection from './SettingsSection';
 import { useMutation } from 'react-query';
 import ApiError from 'services/api/Error';
-import { toastError } from 'components/Toast';
+import { toastError, toastSuccess } from 'components/Toast';
 import useFacesApi from 'hooks/api/useFacesApi';
 
 const FacesSettingsSection = () => {
@@ -10,6 +10,9 @@ const FacesSettingsSection = () => {
 
   const { mutate: mutateDeleteAllFaces, isLoading: isLoadingDeleteAllFaces } =
     useMutation(deleteAllFaces, {
+      onSuccess(data, variables, context) {
+        toastSuccess('All faces deleted successfully');
+      },
       onError: error => {
         if (error instanceof ApiError) {
           toastError(error.toString());
@@ -19,6 +22,9 @@ const FacesSettingsSection = () => {
 
   const { mutate: mutateDeleteAllSeries, isLoading: isLoadingDeleteAllSeries } =
     useMutation(deleteAllSeries, {
+      onSuccess(data, variables, context) {
+        toastSuccess('All series deleted successfully');
+      },
       onError: error => {
         if (error instanceof ApiError) {
           toastError(error.toString());
@@ -28,6 +34,9 @@ const FacesSettingsSection = () => {
 
   const { mutate: mutateDeleteAllTags, isLoading: isLoadingDeleteAllTags } =
     useMutation(deleteAllTags, {
+      onSuccess(data, variables, context) {
+        toastSuccess('All tags deleted successfully');
+      },
       onError: error => {
         if (error instanceof ApiError) {
           toastError(error.toString());

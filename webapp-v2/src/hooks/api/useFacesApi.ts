@@ -252,7 +252,7 @@ const useFacesApi = () => {
 
   const deleteAllTags = useCallback(async (): Promise<void> => {
     try {
-      await api.delete(`${FACES_API_PREFIX}/tags`);
+      await api.delete(`${API_PREFIX}/tags`);
     } catch (error) {
       throw new ApiError('Delete all tags', getErrorMessage(error));
     }
