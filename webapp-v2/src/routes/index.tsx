@@ -76,7 +76,7 @@ const routes: RouteObject[] = [
             ]
           },
           {
-            path: paths.settings.path,
+            path: paths.adminPanel.path,
             element: <RequireAuth allowedRoles={[ROLES.ADMIN]} />,
             children: [
               {

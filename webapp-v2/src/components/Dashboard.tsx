@@ -22,6 +22,7 @@ import DrawerContent from './Drawer/DrawerContent';
 import { CustomToastContainer } from './Toast';
 import clsx from 'clsx';
 import useAuth from 'hooks/useAuth';
+import paths from 'routes/paths';
 
 const Dashboard: React.FC<React.PropsWithChildren> = () => {
   const [open, setOpen] = useState(false);
@@ -41,7 +42,7 @@ const Dashboard: React.FC<React.PropsWithChildren> = () => {
   const { isAdmin } = auth;
 
   const handleSettings = useCallback(() => {
-    navigate('/settings');
+    navigate(paths.adminPanel.path);
   }, [navigate]);
 
   return (
