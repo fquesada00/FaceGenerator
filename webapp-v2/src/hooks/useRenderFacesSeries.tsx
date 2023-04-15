@@ -29,7 +29,7 @@ const useRenderImages = (props: RenderImagesHookProps) => {
         />
       );
     });
-  }, [faces, className, collapseAll]);
+  }, [faces, className, collapseAll, onDelete]);
 
   return { FacesSeries, count: faces?.length || 0 };
 };

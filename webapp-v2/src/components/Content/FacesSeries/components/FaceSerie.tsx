@@ -49,6 +49,7 @@ const FaceSerie = (props: FaceSerieProps) => {
   const { mutate: mutateDeleteSerie, isLoading: isLoadingDeleteSerie } =
     useMutation(deleteSerie, {
       onSuccess: data => {
+        onDelete?.();
         toastSuccess(`Serie with id ${serie.id} deleted successfully`);
       },
       onError: error => {
@@ -79,7 +80,7 @@ const FaceSerie = (props: FaceSerieProps) => {
         </Grid>
       );
     });
-  }, [serie.faces]);
+  }, [serie.faces, onDelete]);
 
   const handleDownload = useCallback(() => {
     const zip = new JSZip();

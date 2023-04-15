@@ -50,6 +50,7 @@ const FacesSeries = () => {
   });
 
   const onDelete = () => {
+    console.log('onDelete');
     if (!hideAll) {
       mutateGetAllFacesSeries([]);
     }

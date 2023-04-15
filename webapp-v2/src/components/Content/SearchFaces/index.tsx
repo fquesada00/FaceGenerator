@@ -90,6 +90,7 @@ const SearchFaces: React.FC = () => {
 
   const onSubmit = ({ tags }: SearchFacesValues) => {
     mutateSearchFaces({ tags });
+    setLatestSearchedTags(tags);
   };
 
   return (
