@@ -8,14 +8,10 @@ import torch.nn.functional as F
 import torch.nn as nn
 
 
-num_steps                  = 100
+num_steps                  = 300
 w_avg_samples              = 10000
-initial_learning_rate      = 0.1
-initial_noise_factor       = 0.05
-lr_rampdown_length         = 0.25
-lr_rampup_length           = 0.05
-noise_ramp_length          = 0.75
-regularize_noise_weight    = 1e5
+initial_noise_factor       = 0.001
+noise_ramp_length          = 1
 FACE = 2
 HAIR = 1
 BACKGROUND = 0
@@ -46,10 +42,15 @@ def create_segmentation_mask(model, image):
     image = transform(image).unsqueeze(0)
     image = image.to(torch.device("cuda"))
     logits = model(image)
-    mask = torch.softmax(logits, dim=1)
-    return logits
+    mask = torch.argmax(logits, dim=1)
+    return mask
 
-import matplotlib.pyplot as plt
+
+def create_segmentation_mask_from_network(model, arr):
+    arr = F.interpolate(arr, size=(224, 224), mode='bilinear', align_corners=False)
+    logits = model(arr)
+    mask = torch.argmax(logits, dim=1)
+    return mask
 
 def custom_loss_builder(target_mask, model):
     class CustomLoss(nn.Module):
@@ -57,25 +58,28 @@ def custom_loss_builder(target_mask, model):
             super(CustomLoss, self).__init__()
 
         def forward(self, output):
-            #scale output to 224x224
-            output.squeeze(0)
-            output = F.interpolate(output, size=(224, 224), mode='bilinear', align_corners=False)
-            logits = model(output)
-            mask = torch.softmax(logits, dim=1)
-
-
+            mask = create_segmentation_mask_from_network(model, output)  
             #replace nan for background
             mask = torch.where(torch.isnan(mask), torch.full_like(mask,0 ), mask)
-            abs = torch.abs(mask.squeeze(0) - target_mask.squeeze(0))
+            scores = torch.zeros_like(mask)
+            scores = torch.where((mask == FACE) & (target_mask == BACKGROUND), torch.full_like(mask, 1), scores)
+            #change all scores to te format above
+            scores = torch.where((mask == HAIR) & (target_mask == BACKGROUND), torch.full_like(mask, 1), scores)
+            scores = torch.where((mask == BACKGROUND) & (target_mask == FACE), torch.full_like(mask, 1), scores)
+            scores = torch.where((mask == BACKGROUND) & (target_mask == HAIR), torch.full_like(mask, 1), scores)
+
+            scores = torch.where((mask == FACE) & (target_mask == HAIR), torch.full_like(mask, 0.2), scores)
+            scores = torch.where((mask == HAIR) & (target_mask == FACE), torch.full_like(mask, 0.2), scores)
+
+            return scores.sum().float()
+            #abs = torch.abs(mask.squeeze(0) - target_mask.squeeze(0))
             
             #downscale hair and face difference to 0.2
-            abs[HAIR] = abs[HAIR] * 0.2
-            abs[FACE] = abs[FACE] * 0.2
-            dist = torch.sum(abs)
-
-
-
-            return dist
+            #abs[HAIR] = abs[HAIR] * 0.2
+            #abs[FACE] = abs[FACE] * 0.2
+            #dist = torch.sum(abs)
+            #return dist.float()
+        
     return CustomLoss()
 
 def face_frame_correction(target_image, latent_code, G, device):
@@ -87,68 +91,37 @@ def face_frame_correction(target_image, latent_code, G, device):
 
     w_avg, w_std = compute_w_stats(G, device)    
 
-     # Setup noise inputs.
-    noise_bufs = { name: buf for (name, buf) in G.synthesis.named_buffers() if 'noise_const' in name }
-
-    w_opt = torch.tensor(w_avg, dtype=torch.float32, device=device, requires_grad=True) # pylint: disable=not-callable
-    w_out = torch.zeros([num_steps] + list(w_opt.shape[1:]), dtype=torch.float32, device=device)
-    optimizer = torch.optim.Adam([w_opt] + list(noise_bufs.values()), betas=(0.9, 0.999), lr=initial_learning_rate)
-
-    # Init noise.
-    for buf in noise_bufs.values():
-        buf[:] = torch.randn_like(buf)
-        buf.requires_grad = True
-
     target_mask = create_segmentation_mask(model, target_image)
 
     #define loss function
-
-
     loss_fn = custom_loss_builder(target_mask, model)
+    w_opt = torch.tensor(w_avg, dtype=torch.float32, device=device, requires_grad=False)
+    w_out = torch.zeros([num_steps] + list(w_opt.shape[1:]), dtype=torch.float32, device=device)
 
+    min_loss = np.inf
+    output_size = 0
     for step in range(num_steps):
         # Learning rate schedule.
         t = step / num_steps
         w_noise_scale = w_std * initial_noise_factor * max(0.0, 1.0 - t / noise_ramp_length) ** 2
-        lr_ramp = min(1.0, (1.0 - t) / lr_rampdown_length)
-        lr_ramp = 0.5 - 0.5 * np.cos(lr_ramp * np.pi)
-        lr_ramp = lr_ramp * min(1.0, t / lr_rampup_length)
-        lr = initial_learning_rate * lr_ramp
-        for param_group in optimizer.param_groups:
-            param_group['lr'] = lr
-
+        
         # Synth images from opt_w.
         w_noise = torch.randn_like(w_opt) * w_noise_scale
         ws = (w_opt + w_noise).repeat([1, G.mapping.num_ws, 1])
         synth_images = G.synthesis(ws, noise_mode='const')
 
         dist = loss_fn(synth_images)
+        loss = dist/(224*224)*100
+       
 
-        # Noise regularization.
-        reg_loss = 0.0
-        for v in noise_bufs.values():
-            noise = v[None,None,:,:] # must be [1,1,H,W] for F.avg_pool2d()
-            while True:
-                reg_loss += (noise*torch.roll(noise, shifts=1, dims=3)).mean()**2
-                reg_loss += (noise*torch.roll(noise, shifts=1, dims=2)).mean()**2
-                if noise.shape[2] <= 8:
-                    break
-                noise = F.avg_pool2d(noise, kernel_size=2)
-        loss = dist + reg_loss * regularize_noise_weight
+        # Save projected W if it's the best so far.
+        if loss < min_loss:
+            min_loss = loss
+            w_out[output_size] = ws.detach()[0][0] #[1, num_ws, dim_z]
+            output_size += 1
+            print(f'step {step+1:>4d}/{num_steps}: dist {dist:<4.2f} loss {float(loss):<5.2f}')
 
-        # Step
-        optimizer.zero_grad(set_to_none=True)
-        loss.backward(retain_graph=True)
-        optimizer.step()
-        print(f'step {step+1:>4d}/{num_steps}: dist {dist:<4.2f} loss {float(loss):<5.2f}')
 
-        # Save projected W for each optimization step.
-        w_out[step] = w_opt.detach()[0]
-
-        # Normalize noise.
-        with torch.no_grad():
-            for buf in noise_bufs.values():
-                buf -= buf.mean()
-                buf *= buf.square().mean().rsqrt()
-
+    #trim w_out to remove empty rows
+    w_out = w_out[:output_size]
     return w_out.repeat([1, G.mapping.num_ws, 1])
