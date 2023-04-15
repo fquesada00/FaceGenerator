@@ -175,7 +175,7 @@ class GeneratorDB:
         self.db.commit()
         cur.close()
 
-        self.tmp_db.delete_all_imgs()
+        self.fs.delete_all_imgs()
 
     def delete_face_by_id(self, id: str):
         cur = self.db.cursor()
@@ -183,10 +183,10 @@ class GeneratorDB:
         self.db.commit()
         cur.close()
 
-        self.tmp_db.delete_img(id)
+        self.fs.delete_img(id)
 
     def delete_all_tags(self):
         cur = self.db.cursor()
-        cur.execute('DELETE FROM tags')
+        cur.execute('DELETE FROM tags WHERE tag != %s', (EMPTY_TAG,))
         self.db.commit()
         cur.close()
