@@ -156,3 +156,37 @@ class GeneratorDB:
             return None
         res = {'username': res[0], 'password': res[1], 'role': res[2]}
         return res
+
+    def delete_all_series(self):
+        cur = self.db.cursor()
+        cur.execute('DELETE FROM series')
+        self.db.commit()
+        cur.close()
+
+    def delete_serie_by_id(self, id: str):
+        cur = self.db.cursor()
+        cur.execute('DELETE FROM series WHERE id = %s', (id,))
+        self.db.commit()
+        cur.close()
+
+    def delete_all_faces(self):
+        cur = self.db.cursor()
+        cur.execute('DELETE FROM images')
+        self.db.commit()
+        cur.close()
+
+        self.fs.delete_all_imgs()
+
+    def delete_face_by_id(self, id: str):
+        cur = self.db.cursor()
+        cur.execute('DELETE FROM images WHERE id = %s', (id,))
+        self.db.commit()
+        cur.close()
+
+        self.fs.delete_img(id)
+
+    def delete_all_tags(self):
+        cur = self.db.cursor()
+        cur.execute('DELETE FROM tags WHERE tag != %s', (EMPTY_TAG,))
+        self.db.commit()
+        cur.close()

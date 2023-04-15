@@ -51,7 +51,7 @@ const FaceFeaturesModification: React.FC = () => {
     data: modifiedFace
   } = useMutation(modifyFaceFeatures, {
     onError: error => {
-      if (error instanceof ApiError) {
+      if (error instanceof ApiError && error.status !== 401) {
         toastError(error.toString());
       }
     }
@@ -77,30 +77,22 @@ const FaceFeaturesModification: React.FC = () => {
     noseTip
   }: ModifyFaceFeaturesFormValues) => {
     const faceFeatures: IApiFaceFeatures = {
-      age,
-      gender,
-      orientation: {
-        vertical: faceOrientationVertical,
-        horizontal: faceOrientationHorizontal
-      },
-      eyes: {
-        distance: eyeDistance,
-        distanceToEyeBrows: eyebrowsDistance,
-        ratio: eyesRatio,
-        open: eyesOpen,
-        roll: eyesRoll
-      },
-      mouth: {
-        lipRatio: mouthLipRatio,
-        open: mouthOpen,
-        ratio: mouthRatio,
-        smile: mouthSmile
-      },
-      nose: {
-        distanceToMouth: noseDistance,
-        ratio: noseRatio,
-        tip: noseTip
-      }
+      age: age,
+      gender: gender,
+      pitch: faceOrientationVertical,
+      yaw: faceOrientationHorizontal,
+      roll: eyesRoll,
+      eyeDistance: eyeDistance,
+      eyeEyebrowDistance: eyebrowsDistance,
+      eyeRatio: eyesRatio,
+      eyesOpen: eyesOpen,
+      lipRatio: mouthLipRatio,
+      mouthOpen: mouthOpen,
+      mouthRatio: mouthRatio,
+      noseMouthDistance: noseDistance,
+      noseRatio: noseRatio,
+      noseTip: noseTip,
+      smile: mouthSmile
     };
 
     mutateModifyFaceFeatures({ id, faceFeatures });

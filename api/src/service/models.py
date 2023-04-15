@@ -2,6 +2,7 @@ from typing import List,  Union, TypeVar, Generic
 from fastapi import Response
 from pydantic import BaseModel
 from pydantic.generics import GenericModel
+
 #models
 T = TypeVar('T')
 class ApiResponse(GenericModel, Generic[T]):
@@ -11,9 +12,12 @@ class Error(BaseModel):
     error: str
 
 class Face(BaseModel):
-    z: List[float]
     image: str
-    id: Union[int, None]
+    id: Union[str, None]
+
+class FaceSerie(BaseModel):
+    id: str
+    faces: List[Face]
 
 
 class ImageResponse(Response):
@@ -22,20 +26,22 @@ class ImageResponse(Response):
         return content
 
 class Modifiers(BaseModel):
-    age: int = 0
-    eye_distance: int = 0
-    eye_eyebrow_distance: int = 0
-    eye_ratio: int = 0
-    eyes_open: int = 0
-    gender: int = 0
-    lip_ratio: int = 0
-    mouth_open: int = 0
-    mouth_ratio: int = 0
-    nose_mouth_distance: int = 0
-    nose_ratio: int = 0
-    nose_tip: int = 0
-    pitch: int = 0
-    roll: int = 0
-    smile: int = 0
-    yaw: int = 0
-   
+    age: float = 0
+    eye_distance: float = 0
+    eye_eyebrow_distance: float = 0
+    eye_ratio: float = 0
+    eyes_open: float = 0
+    gender: float = 0
+    lip_ratio: float = 0
+    mouth_open: float = 0
+    mouth_ratio: float = 0
+    nose_mouth_distance: float = 0
+    nose_ratio: float = 0
+    nose_tip: float = 0
+    pitch: float = 0
+    roll: float = 0
+    smile: float = 0
+    yaw: float = 0
+
+class AdminSettings(BaseModel):
+    generator: str = 'ON'

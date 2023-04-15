@@ -7,14 +7,15 @@ services:
       dockerfile: Dockerfile
     volumes:
       - .:/app
+      - .cache:/root/.cache/dnnlib
     environment:
         - PROJECT_PATH=/app
-    entrypoint: python /app/server.py
+    entrypoint: python /app/manager_server.py
     deploy:
         resources:
           limits:
-            cpus: '0.50'
-            memory: '4G'
+            cpus: '0.75'
+            memory: '8G'
           reservations:
             devices:
               - driver: nvidia

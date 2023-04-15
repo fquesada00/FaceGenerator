@@ -41,7 +41,7 @@ const SearchFaces: React.FC = () => {
     data: filteredFaces
   } = useMutation(searchFaces, {
     onError: error => {
-      if (error instanceof ApiError) {
+      if (error instanceof ApiError && error.status !== 401) {
         toastError(error.toString());
       }
     }
@@ -69,7 +69,7 @@ const SearchFaces: React.FC = () => {
     data: allFaces
   } = useMutation(searchFaces, {
     onError: error => {
-      if (error instanceof ApiError) {
+      if (error instanceof ApiError && error.status !== 401) {
         toastError(error.toString());
       }
     }
