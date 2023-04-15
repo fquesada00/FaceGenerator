@@ -64,7 +64,8 @@ const TransitionFaces: React.FC = () => {
 
   const { images: TransitionFacesImages, count: transitionFacesCount } =
     useRenderImages({
-      faces: transitionFaces
+      faces: transitionFaces,
+      disableDelete: true
     });
 
   const onSubmit = ({

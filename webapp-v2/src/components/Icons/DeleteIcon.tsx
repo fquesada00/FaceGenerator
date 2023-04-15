@@ -1,5 +1,5 @@
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
-import { IconButton } from '@mui/material';
+import { Box, IconButton } from '@mui/material';
 import clsx from 'clsx';
 
 type DeleteIconProps = {
@@ -11,9 +11,12 @@ const DeleteIcon = (props: DeleteIconProps) => {
   const { onClick, className } = props;
 
   return (
-    <div
-      className={clsx('bg-rose-500', className)}
-      style={{ borderRadius: '50%' }}
+    <Box
+      className={clsx(className)}
+      sx={{
+        backgroundColor: 'error.main',
+        borderRadius: '50%'
+      }}
       onClick={onClick}
     >
       <IconButton
@@ -23,7 +26,7 @@ const DeleteIcon = (props: DeleteIconProps) => {
       >
         <DeleteForeverIcon />
       </IconButton>
-    </div>
+    </Box>
   );
 };
 

@@ -129,15 +129,12 @@ function ImageTemplate(props: ImageTemplateProps) {
 
     return (
       <>
-        <DeleteIcon
-          onClick={() => mutateDeleteFace(faceId!)}
-          className={clsx(
-            'absolute',
-            '-top-3',
-            '-right-3',
-            isAdmin && !disableDelete ? 'visible' : 'invisible'
-          )}
-        />
+        {isAdmin && !disableDelete && (
+          <DeleteIcon
+            onClick={() => mutateDeleteFace(faceId!)}
+            className={clsx('absolute', '-top-3', '-right-3')}
+          />
+        )}
         <img
           src={faceImage.url}
           alt={alt}

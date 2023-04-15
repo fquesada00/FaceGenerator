@@ -81,6 +81,7 @@ const Setting = (props: SettingProps) => {
               label={actionText}
               onClick={onOpenDialog}
               loading={loading}
+              color='error'
             />
           </Grid>
         </Grid>

@@ -48,7 +48,8 @@ const InterchangeFacesFeatures: React.FC = () => {
   });
 
   const { images: InterchangedFacesImages } = useRenderImages({
-    faces: interchangedFaces
+    faces: interchangedFaces,
+    disableDelete: true
   });
 
   const onSubmit = ({
