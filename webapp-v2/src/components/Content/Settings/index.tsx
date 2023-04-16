@@ -7,7 +7,7 @@ import FacesSettingsSection from './components/FacesSettingsSection';
 const Settings: React.FC = () => {
   return (
     <div>
-      <ContentHeader title={paths.settings.title} />
+      <ContentHeader title={paths.adminPanel.title} />
       <div className='mt-4 justify-center flex'>
         <Box
           sx={{

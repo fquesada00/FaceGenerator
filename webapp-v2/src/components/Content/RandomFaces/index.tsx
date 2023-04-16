@@ -46,7 +46,10 @@ const RandomFaces: React.FC = () => {
     }
   });
 
-  const { images: FacesImages } = useRenderImages({ faces });
+  const { images: FacesImages } = useRenderImages({
+    faces,
+    disableDelete: true
+  });
 
   const onSubmit = ({ randomFaces: amount }: RandomFacesFormValues) => {
     mutate(amount);

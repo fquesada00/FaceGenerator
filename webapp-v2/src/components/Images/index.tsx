@@ -6,10 +6,13 @@ type ImagesProps = {
   faces: IApiFace[];
   disableDownload?: boolean;
   disableSave?: boolean;
+  onDelete?: () => void;
+  disableDelete?: boolean;
 };
 
 function Images(props: ImagesProps) {
-  const { faces, disableDownload, disableSave } = props;
+  const { faces, disableDownload, disableSave, onDelete, disableDelete } =
+    props;
 
   return (
     <Grid container spacing={2} alignItems='center' justifyContent='center'>
@@ -20,6 +23,8 @@ function Images(props: ImagesProps) {
             faceId={face.id}
             disableDownload={disableDownload}
             disableSave={disableSave}
+            onDelete={onDelete}
+            disableDelete={disableDelete}
           />
         </Grid>
       ))}

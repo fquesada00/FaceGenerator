@@ -19,30 +19,6 @@ const useSettingsApi = () => {
 
   const api = useMemo(() => apiProvider(client), [client]);
 
-  const deleteAllFaces = useCallback(async (): Promise<void> => {
-    try {
-      await api.delete(`${FACES_API_PREFIX}`);
-    } catch (error) {
-      throw new ApiError('Delete all faces', getErrorMessage(error));
-    }
-  }, [api]);
-
-  const deleteAllSeries = useCallback(async (): Promise<void> => {
-    try {
-      await api.delete(`${FACES_API_PREFIX}/series`);
-    } catch (error) {
-      throw new ApiError('Delete all series', getErrorMessage(error));
-    }
-  }, [api]);
-
-  const deleteAllTags = useCallback(async (): Promise<void> => {
-    try {
-      await api.delete(`${FACES_API_PREFIX}/tags`);
-    } catch (error) {
-      throw new ApiError('Delete all tags', getErrorMessage(error));
-    }
-  }, [api]);
-
   const getSettings = useCallback(async (): Promise<IApiSettings> => {
     try {
       const response = await api.get<ApiResponse>(`${API_PREFIX}/settings`);
@@ -74,9 +50,6 @@ const useSettingsApi = () => {
   );
 
   return {
-    deleteAllFaces,
-    deleteAllSeries,
-    deleteAllTags,
     getSettings,
     modifySettings
   };

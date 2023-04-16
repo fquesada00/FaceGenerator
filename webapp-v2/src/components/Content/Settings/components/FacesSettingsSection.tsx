@@ -1,15 +1,18 @@
-import useSettingsApi from 'hooks/api/useSettingsApi';
 import Setting from './Setting';
 import SettingsSection from './SettingsSection';
 import { useMutation } from 'react-query';
 import ApiError from 'services/api/Error';
-import { toastError } from 'components/Toast';
+import { toastError, toastSuccess } from 'components/Toast';
+import useFacesApi from 'hooks/api/useFacesApi';
 
 const FacesSettingsSection = () => {
-  const { deleteAllFaces, deleteAllSeries, deleteAllTags } = useSettingsApi();
+  const { deleteAllFaces, deleteAllSeries, deleteAllTags } = useFacesApi();
 
   const { mutate: mutateDeleteAllFaces, isLoading: isLoadingDeleteAllFaces } =
     useMutation(deleteAllFaces, {
+      onSuccess(data, variables, context) {
+        toastSuccess('All faces deleted successfully');
+      },
       onError: error => {
         if (error instanceof ApiError) {
           toastError(error.toString());
@@ -19,6 +22,9 @@ const FacesSettingsSection = () => {
 
   const { mutate: mutateDeleteAllSeries, isLoading: isLoadingDeleteAllSeries } =
     useMutation(deleteAllSeries, {
+      onSuccess(data, variables, context) {
+        toastSuccess('All series deleted successfully');
+      },
       onError: error => {
         if (error instanceof ApiError) {
           toastError(error.toString());
@@ -28,6 +34,9 @@ const FacesSettingsSection = () => {
 
   const { mutate: mutateDeleteAllTags, isLoading: isLoadingDeleteAllTags } =
     useMutation(deleteAllTags, {
+      onSuccess(data, variables, context) {
+        toastSuccess('All tags deleted successfully');
+      },
       onError: error => {
         if (error instanceof ApiError) {
           toastError(error.toString());
@@ -43,6 +52,9 @@ const FacesSettingsSection = () => {
         actionText='Delete'
         action={() => mutateDeleteAllFaces()}
         loading={isLoadingDeleteAllFaces}
+        dialogTitle='Delete all faces'
+        dialogContent='Are you sure you want to delete all faces? This action will remove all faces except from the series ones.'
+        isIrreversible={true}
       />
       <Setting
         title='Series'
@@ -50,6 +62,9 @@ const FacesSettingsSection = () => {
         actionText='Delete'
         action={() => mutateDeleteAllSeries()}
         loading={isLoadingDeleteAllSeries}
+        dialogTitle='Delete all series'
+        dialogContent='Are you sure you want to delete all series?'
+        isIrreversible={true}
       />
       <Setting
         title='Tags'
@@ -57,6 +72,9 @@ const FacesSettingsSection = () => {
         actionText='Delete'
         action={() => mutateDeleteAllTags()}
         loading={isLoadingDeleteAllTags}
+        dialogTitle='Delete all tags'
+        dialogContent='Are you sure you want to delete all tags?'
+        isIrreversible={true}
       />
     </SettingsSection>
   );
