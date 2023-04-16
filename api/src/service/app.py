@@ -147,9 +147,13 @@ def getTags(current_user: User = Depends(get_current_user)):
 def deleteAllTags(current_user: User = Depends(get_current_user)):
     generator_service.delete_all_tags()
 
-@api_router.patch('/settings', status_code=status.HTTP_204_NO_CONTENT)
+@api_router.patch('/settings', response_model=ApiResponse[AdminSettings])
 def updateSettings(settings: AdminSettings, current_user: User = Depends(get_current_user)):
-    manager_service.update_settings(settings)
+    return {'result' : {'generator': manager_service.update_settings(settings)}}
+
+@api_router.get('/settings', response_model=ApiResponse[AdminSettings])
+def getSettings(current_user: User = Depends(get_current_user)):
+    return {'result' : {'generator': manager_service.get_settings()}}
     
 
 app.include_router(api_router)

@@ -6,17 +6,21 @@ import subprocess
 host = os.environ.get("MANAGER_HOST", "127.0.0.1")
 port = int(os.environ.get("MANAGER_PORT", "8888"))
 
+generator_status = 'ON'
+
 generator_pid = None
 
 def start_generator():
-    global generator_pid 
+    global generator_pid, generator_status
     if generator_pid is None:
+        generator_status = 'ON'
         process = subprocess.Popen(["python", "/app/server.py"])
         generator_pid = process.pid
 
 def stop_generator():
-    global generator_pid
+    global generator_pid, generator_status
     if generator_pid is not None:
+        generator_status = 'OFF'
         os.kill(generator_pid, signal.SIGKILL)
         generator_pid = None
 
@@ -39,17 +43,19 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
                 
                 data_str = data.decode('utf-8')
                 
-
-                if data_str == 'ON':
+                if data_str == 'GET':
+                    print("get settings")
+                    data = bytes(generator_status, 'utf-8')
+                elif data_str == 'ON':
                     # Turn ON
                     print("ON")
                     start_generator()
-                    pass
                 elif data_str == 'OFF':
                     # Turn OFF
                     print("OFF")
                     stop_generator()
-                    pass
+                else:
+                    data = bytes(' ', 'utf-8')
                 conn.sendall(data)
 
 

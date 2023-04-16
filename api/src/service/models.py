@@ -1,3 +1,4 @@
+from enum import Enum
 from typing import List,  Union, TypeVar, Generic
 from fastapi import Response
 from pydantic import BaseModel
@@ -43,5 +44,10 @@ class Modifiers(BaseModel):
     smile: float = 0
     yaw: float = 0
 
+class GeneratorStatus(Enum):
+    ON = 'ON'
+    OFF = 'OFF'
+
 class AdminSettings(BaseModel):
-    generator: str = 'ON'
+    generator: GeneratorStatus = GeneratorStatus.ON
+    
