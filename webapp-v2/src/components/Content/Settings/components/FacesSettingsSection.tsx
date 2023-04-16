@@ -48,12 +48,12 @@ const FacesSettingsSection = () => {
     <SettingsSection title='Faces and tags'>
       <Setting
         title='Faces'
-        description='Delete all faces.'
+        description='Delete all faces including series.'
         actionText='Delete'
         action={() => mutateDeleteAllFaces()}
         loading={isLoadingDeleteAllFaces}
         dialogTitle='Delete all faces'
-        dialogContent='Are you sure you want to delete all faces? This action will remove all faces except from the series ones.'
+        dialogContent='Are you sure you want to delete all faces? This action will remove all faces including the series ones.'
         isIrreversible={true}
       />
       <Setting

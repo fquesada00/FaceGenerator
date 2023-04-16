@@ -73,6 +73,7 @@ const TransitionFaces: React.FC = () => {
     secondId,
     amount
   }: TransitionFacesFormValues) => {
+    setIsSerieSaved(false);
     mutateGenerateTransitions({ fromId: firstId, toId: secondId, amount });
   };
 
