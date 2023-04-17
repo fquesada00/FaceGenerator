@@ -81,7 +81,7 @@ def getFaces(tags: str = Query(None), current_user: User = Depends(get_current_u
     return {'result':generator_service.get_images_from_database(tags)}
 
 @api_router.delete('/faces', status_code=status.HTTP_204_NO_CONTENT)
-def deleteAllFaces(current_user: User = Depends(get_current_user)):
+def deleteAllFaces(current_user: User = Depends(verify_admin)):
     generator_service.delete_all_faces()
 
 
@@ -105,7 +105,7 @@ def getSeries(tags: str = Query(None), current_user: User = Depends(get_current_
     return {'result': generator_service.get_series_by_tags(tags)}
 
 @api_router.delete('/faces/series', status_code=status.HTTP_204_NO_CONTENT)
-def deleteAllSeries(current_user: User = Depends(get_current_user)):
+def deleteAllSeries(current_user: User = Depends(verify_admin)):
     generator_service.delete_all_series()
 
 class SaveRequest(BaseModel):
@@ -116,7 +116,7 @@ def saveSerie(serie_id: str, body:SaveRequest, current_user: User = Depends(get_
     return {'result': serie_id}
 
 @api_router.delete('/faces/series/{id}', status_code=status.HTTP_204_NO_CONTENT)
-def deleteSerie(id: str, current_user: User = Depends(get_current_user)):
+def deleteSerie(id: str, current_user: User = Depends(verify_admin)):
     generator_service.delete_serie(id)
 
 @api_router.get('/faces/{id}/image', response_class=ImageResponse)
@@ -136,7 +136,7 @@ def updateFace(id:str, modifiers: Modifiers, current_user: User = Depends(get_cu
     return {'result':generator_service.change_features(id, vars(modifiers))}
 
 @api_router.delete('/faces/{id}', status_code=status.HTTP_204_NO_CONTENT)
-def deleteFace(id: str, current_user: User = Depends(get_current_user)):
+def deleteFace(id: str, current_user: User = Depends(verify_admin)):
     generator_service.delete_face(id)
 
 @api_router.get('/tags', response_model=ApiResponse[List[str]])
@@ -144,15 +144,15 @@ def getTags(current_user: User = Depends(get_current_user)):
     return {'result': generator_service.get_tags()}
 
 @api_router.delete('/tags', status_code=status.HTTP_204_NO_CONTENT)
-def deleteAllTags(current_user: User = Depends(get_current_user)):
+def deleteAllTags(current_user: User = Depends(verify_admin)):
     generator_service.delete_all_tags()
 
 @api_router.patch('/settings', response_model=ApiResponse[AdminSettings])
-def updateSettings(settings: AdminSettings, current_user: User = Depends(get_current_user)):
+def updateSettings(settings: AdminSettings, current_user: User = Depends(verify_admin)):
     return {'result' : {'generator': manager_service.update_settings(settings)}}
 
 @api_router.get('/settings', response_model=ApiResponse[AdminSettings])
-def getSettings(current_user: User = Depends(get_current_user)):
+def getSettings(current_user: User = Depends(verify_admin)):
     return {'result' : {'generator': manager_service.get_settings()}}
     
 
