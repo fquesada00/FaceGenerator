@@ -11,7 +11,7 @@ import Divider from '@mui/material/Divider';
 import List from '@mui/material/List';
 import Container from '@mui/material/Container';
 
-import { useCallback, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { Outlet, useNavigate } from 'react-router-dom';
 
 import AppBar from 'components/AppBar';
@@ -44,6 +44,18 @@ const Dashboard: React.FC<React.PropsWithChildren> = () => {
   const handleSettings = useCallback(() => {
     navigate(paths.adminPanel.path);
   }, [navigate]);
+
+  const SettingsButton = useMemo(() => {
+    return (
+      <IconButton
+        onClick={handleSettings}
+        style={{ display: isAdmin ? '' : 'none' }}
+        color='inherit'
+      >
+        <SettingsIcon />
+      </IconButton>
+    );
+  }, [isAdmin, handleSettings]);
 
   return (
     <Box sx={{ display: 'flex' }}>
@@ -88,13 +100,8 @@ const Dashboard: React.FC<React.PropsWithChildren> = () => {
             Face Generator
           </Typography>
           <div className='gap-4 flex'>
-            <IconButton
-              onClick={handleSettings}
-              className={clsx(!isAdmin ? 'hidden' : '')}
-            >
-              <SettingsIcon />
-            </IconButton>
-            <IconButton onClick={signOut}>
+            {SettingsButton}
+            <IconButton onClick={signOut} color='inherit'>
               <LogoutIcon />
             </IconButton>
           </div>

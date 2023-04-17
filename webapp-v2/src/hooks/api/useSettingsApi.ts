@@ -33,7 +33,7 @@ const useSettingsApi = () => {
   }, [api]);
 
   const modifySettings = useCallback(
-    async (settings: Partial<IApiSettings>): Promise<void> => {
+    async (settings: Partial<IApiSettings>): Promise<IApiSettings> => {
       try {
         const body = {
           generator: settings.generator
@@ -41,7 +41,14 @@ const useSettingsApi = () => {
             : ApiSettingStatus.OFF
         } satisfies ApiSettings;
 
-        await api.patch(`${API_PREFIX}/settings`, { body });
+        const response = await api.patch<ApiResponse>(
+          `${API_PREFIX}/settings`,
+          { body }
+        );
+        return {
+          generator:
+            response.result.generator === ApiSettingStatus.ON ? true : false
+        } satisfies IApiSettings;
       } catch (error) {
         throw new ApiError('Modify settings', getErrorMessage(error));
       }

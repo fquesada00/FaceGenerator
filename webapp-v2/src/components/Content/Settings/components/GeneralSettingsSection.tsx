@@ -52,6 +52,7 @@ const GeneralSettingsSection = () => {
             ? 'Are you sure you want to turn off the Generator? You will not be able to generate faces.'
             : 'Are you sure you want to turn on the Generator? You will be able to generate faces and use the Generator.'
         }
+        ctaColor={settings?.generator ? 'error' : 'primary'}
       />
     </SettingsSection>
   );

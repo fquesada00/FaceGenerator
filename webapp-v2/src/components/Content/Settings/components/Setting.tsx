@@ -21,6 +21,7 @@ type SettingProps = {
   dialogTitle: string;
   dialogContent: string;
   isIrreversible?: boolean;
+  ctaColor?: 'primary' | 'secondary' | 'success' | 'error';
 };
 
 const Setting = (props: SettingProps) => {
@@ -33,7 +34,8 @@ const Setting = (props: SettingProps) => {
     loading,
     dialogTitle,
     dialogContent,
-    isIrreversible
+    isIrreversible,
+    ctaColor
   } = props;
 
   const [open, setOpen] = useState<boolean>(false);
@@ -81,7 +83,7 @@ const Setting = (props: SettingProps) => {
               label={actionText}
               onClick={onOpenDialog}
               loading={loading}
-              color='error'
+              color={ctaColor || 'error'}
             />
           </Grid>
         </Grid>
