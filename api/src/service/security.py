@@ -9,6 +9,8 @@ from pydantic import BaseModel
 from src.service.service import GeneratorService
 from src.service.settings import settings
 
+from enum import Enum
+
 #security
 SECRET_KEY = settings.SECRET_KEY
 ALGORITHM = settings.TOKEN_ALGORITHM
@@ -33,6 +35,9 @@ class User(BaseModel):
     username: str
     role: int
 
+class UserRole(Enum):
+    ADMIN = 0
+    USER = 1
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
@@ -95,3 +100,8 @@ async def get_current_user(token: str = Depends(oauth2_scheme)):
     if user is None:
         raise credentials_exception
     return user
+
+async def verify_admin(current_user: User = Depends(get_current_user)):
+    if current_user['role'] != UserRole.ADMIN.value:
+        raise HTTPException(status_code=403, detail="Not enough permissions")
+    return current_user
