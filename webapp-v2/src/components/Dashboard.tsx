@@ -6,11 +6,12 @@ import MenuIcon from '@mui/icons-material/Menu';
 import Typography from '@mui/material/Typography';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import LogoutIcon from '@mui/icons-material/Logout';
+import SettingsIcon from '@mui/icons-material/Settings';
 import Divider from '@mui/material/Divider';
 import List from '@mui/material/List';
 import Container from '@mui/material/Container';
 
-import { useCallback, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { Outlet, useNavigate } from 'react-router-dom';
 
 import AppBar from 'components/AppBar';
@@ -19,6 +20,9 @@ import { ToastContainer } from 'react-toastify';
 import useLogout from 'hooks/useLogout';
 import DrawerContent from './Drawer/DrawerContent';
 import { CustomToastContainer } from './Toast';
+import clsx from 'clsx';
+import useAuth from 'hooks/useAuth';
+import paths from 'routes/paths';
 
 const Dashboard: React.FC<React.PropsWithChildren> = () => {
   const [open, setOpen] = useState(false);
@@ -33,6 +37,25 @@ const Dashboard: React.FC<React.PropsWithChildren> = () => {
     logout();
     navigate('/login');
   }, [logout, navigate]);
+
+  const auth = useAuth();
+  const { isAdmin } = auth;
+
+  const handleSettings = useCallback(() => {
+    navigate(paths.adminPanel.path);
+  }, [navigate]);
+
+  const SettingsButton = useMemo(() => {
+    return (
+      <IconButton
+        onClick={handleSettings}
+        style={{ display: isAdmin ? '' : 'none' }}
+        color='inherit'
+      >
+        <SettingsIcon />
+      </IconButton>
+    );
+  }, [isAdmin, handleSettings]);
 
   return (
     <Box sx={{ display: 'flex' }}>
@@ -76,9 +99,12 @@ const Dashboard: React.FC<React.PropsWithChildren> = () => {
           >
             Face Generator
           </Typography>
-          <IconButton onClick={signOut}>
-            <LogoutIcon />
-          </IconButton>
+          <div className='gap-4 flex'>
+            {SettingsButton}
+            <IconButton onClick={signOut} color='inherit'>
+              <LogoutIcon />
+            </IconButton>
+          </div>
         </Toolbar>
       </AppBar>
       <Drawer variant='permanent' open={open}>

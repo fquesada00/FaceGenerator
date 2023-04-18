@@ -45,3 +45,7 @@ export interface IApiFaceImage {
   url: string;
   blob: Blob;
 }
+
+export interface IApiSettings {
+  generator: boolean;
+}

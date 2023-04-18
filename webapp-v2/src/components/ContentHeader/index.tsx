@@ -2,11 +2,11 @@ import { Typography } from '@mui/material';
 
 type ContentHeaderProps = {
   title: string;
-  subtitle: React.ReactNode;
+  subtitle?: React.ReactNode;
 };
 
 function ContentHeader(props: ContentHeaderProps) {
-  const { title, subtitle } = props;
+  const { title, subtitle = null } = props;
 
   return (
     <div className='flex flex-col items-start justify-start w-full'>

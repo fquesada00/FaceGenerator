@@ -1,0 +1,32 @@
+{
+  "title": "Faces and tags",
+  "settings": {
+    "faces": {
+      "title": "Faces",
+      "description": "Delete all faces including series",
+      "actionText": "Delete",
+      "dialog": {
+        "title": "Delete all faces",
+        "content": "Are you sure you want to delete all faces? This action will remove all faces including the series ones."
+      }
+    },
+    "series": {
+      "title": "Series",
+      "description": "Delete all series",
+      "actionText": "Delete",
+      "dialog": {
+        "title": "Delete all series",
+        "content": "Are you sure you want to delete all series?"
+      }
+    },
+    "tags": {
+      "title": "Tags",
+      "description": "Delete all tags",
+      "actionText": "Delete",
+      "dialog": {
+        "title": "Delete all tags",
+        "content": "Are you sure you want to delete all tags?"
+      }
+    }
+  }
+}

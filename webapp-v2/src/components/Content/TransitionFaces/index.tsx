@@ -64,7 +64,8 @@ const TransitionFaces: React.FC = () => {
 
   const { images: TransitionFacesImages, count: transitionFacesCount } =
     useRenderImages({
-      faces: transitionFaces
+      faces: transitionFaces,
+      disableDelete: true
     });
 
   const onSubmit = ({
@@ -72,6 +73,7 @@ const TransitionFaces: React.FC = () => {
     secondId,
     amount
   }: TransitionFacesFormValues) => {
+    setIsSerieSaved(false);
     mutateGenerateTransitions({ fromId: firstId, toId: secondId, amount });
   };
 

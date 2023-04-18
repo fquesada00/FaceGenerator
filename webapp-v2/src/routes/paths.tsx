@@ -38,6 +38,10 @@ const paths = {
   about: {
     path: '/about',
     title: 'About'
+  },
+  adminPanel: {
+    path: '/admin-panel',
+    title: 'Admin Panel'
   }
 };
 

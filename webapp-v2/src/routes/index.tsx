@@ -13,11 +13,8 @@ import RequireAuth from 'components/RequireAuth';
 import PersistentLogin from 'components/PersistentLogin';
 import paths from './paths';
 import FacesSeries from 'components/Content/FacesSeries';
-
-const ROLES = {
-  USER: 0,
-  ADMIN: 1
-};
+import Settings from 'components/Content/Settings';
+import { ROLES } from 'context/AuthProvider';
 
 const routes: RouteObject[] = [
   {
@@ -28,7 +25,7 @@ const routes: RouteObject[] = [
     element: <PersistentLogin />,
     children: [
       {
-        element: <RequireAuth allowedRoles={[ROLES.USER]} />,
+        element: <RequireAuth allowedRoles={[ROLES.USER, ROLES.ADMIN]} />,
         children: [
           {
             path: paths.home.path,
@@ -75,6 +72,21 @@ const routes: RouteObject[] = [
               {
                 element: <About />,
                 index: true
+              }
+            ]
+          },
+          {
+            path: paths.adminPanel.path,
+            element: <RequireAuth allowedRoles={[ROLES.ADMIN]} />,
+            children: [
+              {
+                element: <Root />,
+                children: [
+                  {
+                    element: <Settings />,
+                    index: true
+                  }
+                ]
               }
             ]
           }
