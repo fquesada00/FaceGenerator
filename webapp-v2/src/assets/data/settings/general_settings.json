@@ -1,0 +1,24 @@
+{
+  "title": "General",
+  "settings": {
+    "generator": {
+      "title": "Generator",
+      "description": "Turn on and off the Generator",
+      "tooltip": "The Generator is the feature that generates faces. If you turn it off, you will not be able to generate faces.",
+      "actionText": {
+        "on": "Turn on",
+        "off": "Turn off"
+      },
+      "dialog": {
+        "title": {
+          "on": "Turn on the Generator",
+          "off": "Turn off the Generator"
+        },
+        "content": {
+          "on": "Are you sure you want to turn off the Generator? You will not be able to generate faces.",
+          "off": "Are you sure you want to turn on the Generator? You will be able to generate faces and use the Generator."
+        }
+      }
+    }
+  }
+}

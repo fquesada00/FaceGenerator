@@ -4,6 +4,8 @@ import { useMutation } from 'react-query';
 import ApiError from 'services/api/Error';
 import { toastError, toastSuccess } from 'components/Toast';
 import useFacesApi from 'hooks/api/useFacesApi';
+import facesSettingsJson from 'assets/data/settings/faces_settings.json';
+import { useMemo } from 'react';
 
 const FacesSettingsSection = () => {
   const { deleteAllFaces, deleteAllSeries, deleteAllTags } = useFacesApi();
@@ -44,36 +46,51 @@ const FacesSettingsSection = () => {
       }
     });
 
+  const facesData = useMemo(
+    () => facesSettingsJson.settings.faces,
+    [facesSettingsJson]
+  );
+
+  const seriesData = useMemo(
+    () => facesSettingsJson.settings.series,
+    [facesSettingsJson]
+  );
+
+  const tagsData = useMemo(
+    () => facesSettingsJson.settings.tags,
+    [facesSettingsJson]
+  );
+
   return (
-    <SettingsSection title='Faces and tags'>
+    <SettingsSection title={facesSettingsJson.title}>
       <Setting
-        title='Faces'
-        description='Delete all faces including series.'
-        actionText='Delete'
+        title={facesData.title}
+        description={facesData.description}
+        actionText={facesData.actionText}
         action={() => mutateDeleteAllFaces()}
         loading={isLoadingDeleteAllFaces}
-        dialogTitle='Delete all faces'
-        dialogContent='Are you sure you want to delete all faces? This action will remove all faces including the series ones.'
+        dialogTitle={facesData.dialog.title}
+        dialogContent={facesData.dialog.content}
         isIrreversible={true}
       />
       <Setting
-        title='Series'
-        description='Delete all series.'
-        actionText='Delete'
+        title={seriesData.title}
+        description={seriesData.description}
+        actionText={seriesData.actionText}
         action={() => mutateDeleteAllSeries()}
         loading={isLoadingDeleteAllSeries}
-        dialogTitle='Delete all series'
-        dialogContent='Are you sure you want to delete all series?'
+        dialogTitle={seriesData.dialog.title}
+        dialogContent={seriesData.dialog.content}
         isIrreversible={true}
       />
       <Setting
-        title='Tags'
-        description='Delete all tags.'
-        actionText='Delete'
+        title={tagsData.title}
+        description={tagsData.description}
+        actionText={tagsData.actionText}
         action={() => mutateDeleteAllTags()}
         loading={isLoadingDeleteAllTags}
-        dialogTitle='Delete all tags'
-        dialogContent='Are you sure you want to delete all tags?'
+        dialogTitle={tagsData.dialog.title}
+        dialogContent={tagsData.dialog.content}
         isIrreversible={true}
       />
     </SettingsSection>
