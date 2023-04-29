@@ -73,7 +73,7 @@ def custom_loss_builder(target_mask, model):
 
             #intersection hair-face, weight 0.2
             intersection_hair_face = torch.mean(target_face * output_hair) + torch.mean(target_hair * output_face)
-            intersection_hair_face = intersection_hair_face * 0.2
+            intersection_hair_face = intersection_hair_face * 0.8
 
             #intersection face-background, weight 1
             intersection_face_background = torch.mean(target_face * output_background) + torch.mean(target_background * output_face)

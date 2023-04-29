@@ -57,9 +57,12 @@ class Generator:
         #img = Image.open("/app/test.png")
         img = align_face(img)
         target_pil = img.convert('RGB')
-        ws, images = face_frame_correction(target_pil, None, self.G, self.device)
-        w, image = ws[-1], images[-1]
-        return FaceImage.from_image(image), self.flatten(w)
+        ws = face_frame_correction(reference_image, None, self.G, self.device)
+        w = ws[-1]
+        w = w.unsqueeze(0)
+        random_image = self.generate_image_from_w(w)
+        ra = Image.fromarray(random_image)
+        return FaceImage.from_image(ra), self.flatten(w)
 
 
 
