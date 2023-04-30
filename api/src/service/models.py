@@ -44,10 +44,11 @@ class Modifiers(BaseModel):
     smile: float = 0
     yaw: float = 0
 
-class GeneratorStatus(Enum):
+class ServiceStatus(Enum):
     ON = 'ON'
     OFF = 'OFF'
 
 class AdminSettings(BaseModel):
-    generator: GeneratorStatus = GeneratorStatus.ON
+    generator: ServiceStatus = ServiceStatus.ON
+    stable_diffusion: ServiceStatus = ServiceStatus.OFF
     

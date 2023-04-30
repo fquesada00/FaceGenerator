@@ -10,7 +10,7 @@ services:
       - .cache:/root/.cache/dnnlib
     environment:
         - PROJECT_PATH=/app
-    entrypoint: python /app/manager_server.py
+    entrypoint: python /app/server.py
     deploy:
         resources:
           limits:
