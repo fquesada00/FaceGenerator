@@ -3,4 +3,4 @@ from src.service.settings import settings
 import uvicorn
 
 if __name__ == "__main__":
-    uvicorn.run(app, host=settings.HOST_IP, port=5000)
+    uvicorn.run(app, host=settings.HOST_IP, port=3000)

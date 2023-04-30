@@ -1,7 +1,13 @@
-from src.service.models import AdminSettings
+from src.service.models import AdminSettings, ServiceStatus
 from src.service.utils import SingletonMeta
 
 import socket
+
+settings_map = {
+        'OFF' : AdminSettings(generator=ServiceStatus.OFF, stable_diffusion=ServiceStatus.OFF),
+        'GENERATOR_ON' : AdminSettings(generator=ServiceStatus.ON, stable_diffusion=ServiceStatus.OFF),
+        'STABLE_DIFFUSION_ON' : AdminSettings(generator=ServiceStatus.OFF, stable_diffusion=ServiceStatus.ON)
+    }
 
 class ManagerService(metaclass=SingletonMeta):
 
@@ -29,13 +35,20 @@ class ManagerService(metaclass=SingletonMeta):
                 print(str(e))
                 retries += 1
         return data
-            
+               
+    
 
-    def update_settings(self, settings: AdminSettings):
-        ret = self.send_and_receive_from_socket(settings.generator.value)
-        print(ret)
-        return ret
+    def update_settings(self, settings: AdminSettings):        
+        if settings.generator==ServiceStatus.ON and settings.stable_diffusion == ServiceStatus.ON:
+            return settings_map[self.get_settings()]
+        elif settings.generator==ServiceStatus.OFF and settings.stable_diffusion == ServiceStatus.OFF:
+            return settings_map[self.send_and_receive_from_socket('OFF')]
+        elif settings.generator==ServiceStatus.ON and settings.stable_diffusion == ServiceStatus.OFF:
+            return settings_map[self.send_and_receive_from_socket('GENERATOR_ON')]
+        elif settings.generator==ServiceStatus.OFF and settings.stable_diffusion == ServiceStatus.ON:
+            return settings_map[self.send_and_receive_from_socket('STABLE_DIFFUSION_ON')]
+        
 
     def get_settings(self):
-        return self.send_and_receive_from_socket('GET')
+        return settings_map[self.send_and_receive_from_socket('GET')]
 
