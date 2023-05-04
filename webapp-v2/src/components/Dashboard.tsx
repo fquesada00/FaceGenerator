@@ -19,6 +19,7 @@ import Drawer from 'components/Drawer';
 import useLogout from 'hooks/useLogout';
 import DrawerContent from './Drawer/DrawerContent';
 import { CustomToastContainer } from './Toast';
+import clsx from 'clsx';
 import useAuth from 'hooks/useAuth';
 import paths from 'routes/paths';
 
