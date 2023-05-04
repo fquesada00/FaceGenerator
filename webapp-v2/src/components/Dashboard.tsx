@@ -16,7 +16,6 @@ import { Outlet, useNavigate } from 'react-router-dom';
 
 import AppBar from 'components/AppBar';
 import Drawer from 'components/Drawer';
-import { ToastContainer } from 'react-toastify';
 import useLogout from 'hooks/useLogout';
 import DrawerContent from './Drawer/DrawerContent';
 import { CustomToastContainer } from './Toast';
