@@ -8,6 +8,7 @@ import ApiError from 'services/api/Error';
 import { IApiSettings } from 'services/api/models';
 import generalSettingsJson from 'assets/data/settings/general_settings.json';
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
+import colors from 'tailwindcss/colors';
 
 const GeneralSettingsSection = () => {
   const { getSettings, modifySettings } = useSettingsApi();
@@ -104,8 +105,9 @@ const GeneralSettingsSection = () => {
             : stableDiffusionData.dialog.content.on
         }
         ctaColor={settings?.stableDiffusion ? 'error' : 'primary'}
-        complimentaryAction={() => console.log('Try it out')}
-        complimentaryActionIcon={<OpenInNewIcon />}
+        complimentaryAction={() => window.open(`${window.location.host}${import.meta.env.VITE_APP_BASE_PATH}stable-diffusion`, '_blank')}
+        complimentaryActionIcon={<OpenInNewIcon fontSize='small' sx={{ color: settings?.stableDiffusion ? colors.blue[600] : undefined}} />}
+        complimentaryActionDisabled={!settings?.stableDiffusion}
       />
     </SettingsSection>
   );

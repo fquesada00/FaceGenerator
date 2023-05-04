@@ -24,6 +24,7 @@ type SettingProps = {
   ctaColor?: 'primary' | 'secondary' | 'success' | 'error';
   complimentaryAction?: () => void;
   complimentaryActionIcon?: React.ReactNode;
+  complimentaryActionDisabled?: boolean;
 };
 
 const Setting = (props: SettingProps) => {
@@ -39,7 +40,8 @@ const Setting = (props: SettingProps) => {
     isIrreversible,
     ctaColor,
     complimentaryAction,
-    complimentaryActionIcon
+    complimentaryActionIcon,
+    complimentaryActionDisabled
   } = props;
 
   const [open, setOpen] = useState<boolean>(false);
@@ -72,7 +74,11 @@ const Setting = (props: SettingProps) => {
                 </Tooltip>
               )}
               {complimentaryAction && complimentaryActionIcon && (
-                <IconButton onClick={complimentaryAction}>
+                <IconButton
+                  onClick={complimentaryAction}
+                  sx={{ marginLeft: '0px !important'}}
+                  disabled={complimentaryActionDisabled}
+                >
                   {complimentaryActionIcon}
                 </IconButton>
               )}
