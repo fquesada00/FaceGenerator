@@ -15,8 +15,27 @@
           "off": "Turn off the Generator"
         },
         "content": {
-          "on": "Are you sure you want to turn off the Generator? You will not be able to generate faces.",
-          "off": "Are you sure you want to turn on the Generator? You will be able to generate faces and use the Generator."
+          "off": "Are you sure you want to turn off the Generator? You will not be able to generate faces.",
+          "on": "Are you sure you want to turn on the Generator? You will be able to generate faces and use the Generator. If Stable Diffusion is on, it will be turned off."
+        }
+      }
+    },
+    "stableDiffusion": {
+      "title": "Stable Diffusion",
+      "description": "Turn on and off Stable Diffusion",
+      "tooltip": "Stable Diffusion is a text-to-image model, it allows you to apply different modifications to the generated faces.",
+      "actionText": {
+        "on": "Turn on",
+        "off": "Turn off"
+      },
+      "dialog": {
+        "title": {
+          "on": "Turn on Stable Diffusion",
+          "off": "Turn off Stable Diffusion"
+        },
+        "content": {
+          "off": "Are you sure you want to turn off Stable Diffusion?",
+          "on": "Are you sure you want to turn on Stable Diffusion? If the Generator is on, it will be turned off."
         }
       }
     }

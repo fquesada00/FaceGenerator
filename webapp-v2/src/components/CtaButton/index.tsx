@@ -18,10 +18,11 @@ type CtaButtonProps = {
     | 'success'
     | 'warning'
     | undefined;
+  size?: 'small' | 'medium' | 'large' | undefined;
 };
 
 function CtaButton(props: CtaButtonProps) {
-  const { onClick, label, className, loading, type, color } = props;
+  const { onClick, label, className, loading, type, color, size } = props;
 
   return (
     <div className={clsx(contentClasses.cta, className)}>
@@ -32,6 +33,7 @@ function CtaButton(props: CtaButtonProps) {
         fullWidth
         onClick={onClick}
         type={type}
+        size={size || 'large'}
       >
         {label}
       </LoadingButton>

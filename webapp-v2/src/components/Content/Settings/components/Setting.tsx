@@ -22,6 +22,8 @@ type SettingProps = {
   dialogContent: string;
   isIrreversible?: boolean;
   ctaColor?: 'primary' | 'secondary' | 'success' | 'error';
+  complimentaryAction?: () => void;
+  complimentaryActionIcon?: React.ReactNode;
 };
 
 const Setting = (props: SettingProps) => {
@@ -35,7 +37,9 @@ const Setting = (props: SettingProps) => {
     dialogTitle,
     dialogContent,
     isIrreversible,
-    ctaColor
+    ctaColor,
+    complimentaryAction,
+    complimentaryActionIcon
   } = props;
 
   const [open, setOpen] = useState<boolean>(false);
@@ -66,6 +70,11 @@ const Setting = (props: SettingProps) => {
                     <InfoIcon fontSize='small' />
                   </IconButton>
                 </Tooltip>
+              )}
+              {complimentaryAction && complimentaryActionIcon && (
+                <IconButton onClick={complimentaryAction}>
+                  {complimentaryActionIcon}
+                </IconButton>
               )}
             </Stack>
             <Typography variant='body1'>{description}</Typography>

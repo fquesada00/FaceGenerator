@@ -48,4 +48,5 @@ export interface IApiFaceImage {
 
 export interface IApiSettings {
   generator: boolean;
+  stableDiffusion: boolean;
 }

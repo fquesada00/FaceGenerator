@@ -7,10 +7,11 @@ import { useMutation } from 'react-query';
 import ApiError from 'services/api/Error';
 import { IApiSettings } from 'services/api/models';
 import generalSettingsJson from 'assets/data/settings/general_settings.json';
+import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 
 const GeneralSettingsSection = () => {
   const { getSettings, modifySettings } = useSettingsApi();
-  const [settings, setSettings] = useState<IApiSettings | null>(null);
+  const [settings, setSettings] = useState<IApiSettings>();
 
   useEffect(() => {
     getSettings().then(setSettings);
@@ -39,6 +40,11 @@ const GeneralSettingsSection = () => {
     [generalSettingsJson]
   );
 
+  const stableDiffusionData = useMemo(
+    () => generalSettingsJson.settings.stableDiffusion,
+    [generalSettingsJson]
+  );
+
   return (
     <SettingsSection title={generalSettingsJson.title}>
       <Setting
@@ -50,7 +56,14 @@ const GeneralSettingsSection = () => {
             ? generatorData.actionText.off
             : generatorData.actionText.on
         }
-        action={() => mutateModifySettings({ generator: !settings?.generator })}
+        action={() =>
+          mutateModifySettings({
+            generator: !settings?.generator,
+            stableDiffusion: !settings?.generator
+              ? false
+              : settings?.stableDiffusion
+          })
+        }
         loading={isLoadingModifySettings || !settings}
         dialogTitle={
           settings?.generator
@@ -63,6 +76,36 @@ const GeneralSettingsSection = () => {
             : generatorData.dialog.content.on
         }
         ctaColor={settings?.generator ? 'error' : 'primary'}
+      />
+      <Setting
+        title={stableDiffusionData.title}
+        description={stableDiffusionData.description}
+        tooltip={stableDiffusionData.tooltip}
+        actionText={
+          settings?.stableDiffusion
+            ? stableDiffusionData.actionText.off
+            : stableDiffusionData.actionText.on
+        }
+        action={() =>
+          mutateModifySettings({
+            stableDiffusion: !settings?.stableDiffusion,
+            generator: !settings?.stableDiffusion ? false : settings?.generator
+          })
+        }
+        loading={isLoadingModifySettings || !settings}
+        dialogTitle={
+          settings?.stableDiffusion
+            ? stableDiffusionData.dialog.title.off
+            : stableDiffusionData.dialog.title.on
+        }
+        dialogContent={
+          settings?.stableDiffusion
+            ? stableDiffusionData.dialog.content.off
+            : stableDiffusionData.dialog.content.on
+        }
+        ctaColor={settings?.stableDiffusion ? 'error' : 'primary'}
+        complimentaryAction={() => console.log('Try it out')}
+        complimentaryActionIcon={<OpenInNewIcon />}
       />
     </SettingsSection>
   );

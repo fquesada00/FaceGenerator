@@ -1,6 +1,6 @@
 import useAxiosPrivate from 'hooks/useAxiosPrivate';
 import { useCallback, useMemo } from 'react';
-import apiProvider, { API_PREFIX, FACES_API_PREFIX } from 'services/api';
+import apiProvider, { API_PREFIX } from 'services/api';
 import ApiError, { getErrorMessage } from 'services/api/Error';
 import { ApiResponse, IApiSettings } from 'services/api/models';
 
@@ -12,6 +12,14 @@ const ApiSettingStatus = {
 
 type ApiSettings = {
   generator: IApiSettingStatus;
+  stableDiffusion: IApiSettingStatus;
+};
+
+const assignSetting = (setting: keyof ApiSettings, value: boolean | undefined, result: Partial<ApiSettings>) => {
+  if (value === undefined) {
+    return;
+  }
+  result[setting] = value ? ApiSettingStatus.ON : ApiSettingStatus.OFF;
 };
 
 const useSettingsApi = () => {
@@ -25,7 +33,9 @@ const useSettingsApi = () => {
 
       return {
         generator:
-          response.result.generator === ApiSettingStatus.ON ? true : false
+          response.result.generator === ApiSettingStatus.ON,
+        stableDiffusion:
+          response.result.stableDiffusion === ApiSettingStatus.ON
       } satisfies IApiSettings;
     } catch (error) {
       throw new ApiError('Get settings', getErrorMessage(error));
@@ -35,11 +45,9 @@ const useSettingsApi = () => {
   const modifySettings = useCallback(
     async (settings: Partial<IApiSettings>): Promise<IApiSettings> => {
       try {
-        const body = {
-          generator: settings.generator
-            ? ApiSettingStatus.ON
-            : ApiSettingStatus.OFF
-        } satisfies ApiSettings;
+        const body: ApiSettings = {} as ApiSettings;
+        assignSetting('generator', settings.generator, body);
+        assignSetting('stableDiffusion', settings.stableDiffusion, body);
 
         const response = await api.patch<ApiResponse>(
           `${API_PREFIX}/settings`,
@@ -47,7 +55,9 @@ const useSettingsApi = () => {
         );
         return {
           generator:
-            response.result.generator === ApiSettingStatus.ON ? true : false
+            response.result.generator === ApiSettingStatus.ON,
+          stableDiffusion:
+            response.result.stableDiffusion === ApiSettingStatus.ON
         } satisfies IApiSettings;
       } catch (error) {
         throw new ApiError('Modify settings', getErrorMessage(error));
