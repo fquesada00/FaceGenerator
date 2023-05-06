@@ -45,10 +45,9 @@ function FormikCustomIdInput(props: FormikCustomIdInputProps) {
           onClick={() => setOpenPreview(false)}
           sx={{
             backgroundColor: 'white',
-            position: 'absolute',
             borderRadius: '50%'
           }}
-          className='right-0 m-1 inline-flex'
+          className='right-0 m-1 inline-flex absolute'
         >
           <IconButton
             color='primary'
