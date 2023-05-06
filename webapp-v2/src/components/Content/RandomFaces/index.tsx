@@ -72,7 +72,7 @@ const RandomFaces: React.FC = () => {
             <CtaButton
               type='submit'
               label='Generate'
-              className='mt-8'
+              className='mt-12'
               loading={isLoading}
             />
             {!isLoading && FacesImages}

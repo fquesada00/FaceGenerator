@@ -9,7 +9,7 @@ type SelectableImageProps = {
   alt: string;
   faceId: string;
   selected: boolean;
-  onClick: () => void;
+  onClick: (url?: string) => void;
   className?: string;
 };
 
@@ -56,7 +56,10 @@ function SelectableImage(props: SelectableImageProps) {
         className
       )}
     >
-      <Card className='w-32 h-36' onClick={selected ? undefined : onClick}>
+      <Card
+        className='w-32 h-36'
+        onClick={selected ? undefined : () => onClick(faceImage?.url)}
+      >
         {Content}
       </Card>
     </div>
