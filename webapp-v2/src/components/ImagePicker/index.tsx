@@ -1,12 +1,11 @@
 import { Grid } from '@mui/material';
 import SelectableImage from 'components/Images/SelectableImage';
-import { Fragment } from 'react';
 import { IApiFace } from 'services/api/models';
 
 type ImagePickerProps = {
   faces: IApiFace[];
   selectedFaceId: string | null;
-  onPick: (faceId: string) => void;
+  onPick: (faceId: string, url?: string) => void;
 };
 
 function ImagePicker(props: ImagePickerProps) {
@@ -21,7 +20,7 @@ function ImagePicker(props: ImagePickerProps) {
           alt={`Face ${face.id}`}
           faceId={face.id}
           selected={selectedFaceId === face.id}
-          onClick={() => onPick(face.id)}
+          onClick={(url) => onPick(face.id, url)}
           className='m-1'
         />
       ))}

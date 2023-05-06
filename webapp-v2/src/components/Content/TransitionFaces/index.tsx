@@ -1,12 +1,10 @@
 import { useRef, useState } from 'react';
-import { toastInfo, toastSuccess } from 'components/Toast';
+import { toastSuccess } from 'components/Toast';
 import AddMetadataSteps from 'components/Images/AddMetadataSteps';
-
 import { Grid } from '@mui/material';
 import clsx from 'clsx';
 import { useMemo } from 'react';
 import { Formik, Form } from 'formik';
-
 import inputsClasses from 'components/Inputs/styles/Inputs.module.scss';
 import CtaButton from 'components/CtaButton';
 import ContentHeader from 'components/ContentHeader';
@@ -27,12 +25,18 @@ import useFacesApi from 'hooks/api/useFacesApi';
 import { Id, toast } from 'react-toastify';
 import { useTranslation } from 'react-i18next';
 
+type SelectedFacesUrls = {
+  firstUrl?: string;
+  secondUrl?: string;
+};
+
 const TransitionFaces: React.FC = () => {
   const { t } = useTranslation('transitionFaces');
   const [openMetadataSteps, setOpenMetadataSteps] = useState<boolean>(false);
   const { generateTransitions, saveFaceSerie } = useFacesApi();
   const [isSerieSaved, setIsSerieSaved] = useState<boolean>(false);
   const savingSerieToastId = useRef<Id | null>(null);
+  const [selectedUrls, setSelectedUrls] = useState<SelectedFacesUrls>({});
 
   const renderSubtitle = useMemo(
     () => (
@@ -137,15 +141,22 @@ const TransitionFaces: React.FC = () => {
         {({ setFieldValue, values }) => (
           <Form>
             <div className={clsx(inputsClasses.container)}>
-              <Grid container style={{ width: '25rem' }} rowSpacing={4}>
+              <Grid container style={{ width: '35rem' }} rowSpacing={8}>
                 <Grid item xs={12} sm={6} md={6} lg={6} xl={6}>
                   <FormikCustomIdInput
                     required
                     label='First ID'
                     name='firstId'
+                    url={selectedUrls.firstUrl}
                   />
                   <PickImageButton
-                    onDone={faceId => setFieldValue('firstId', faceId ?? '0')}
+                    onDone={selectedFace => {
+                      setFieldValue('firstId', selectedFace.id ?? '0');
+                      setSelectedUrls({
+                        ...selectedUrls,
+                        firstUrl: selectedFace.url
+                      });
+                    }}
                     pickedFaceId={values.firstId}
                   />
                 </Grid>
@@ -154,9 +165,16 @@ const TransitionFaces: React.FC = () => {
                     required
                     label='Second ID'
                     name='secondId'
+                    url={selectedUrls.secondUrl}
                   />
                   <PickImageButton
-                    onDone={faceId => setFieldValue('secondId', faceId ?? '0')}
+                    onDone={selectedFace => {
+                      setFieldValue('secondId', selectedFace.id ?? '0');
+                      setSelectedUrls({
+                        ...selectedUrls,
+                        secondUrl: selectedFace.url
+                      });
+                    }}
                     pickedFaceId={values.secondId}
                   />
                 </Grid>
@@ -166,7 +184,7 @@ const TransitionFaces: React.FC = () => {
                 <CtaButton
                   type='submit'
                   label='Generate'
-                  className='mt-8'
+                  className='mt-12'
                   loading={isLoadingTransitions}
                 />
                 {!isLoadingTransitions && TransitionFacesImages}
