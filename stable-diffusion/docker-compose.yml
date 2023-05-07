@@ -9,6 +9,9 @@ x-base_service: &base_service
     stop_signal: SIGINT
     deploy:
       resources:
+        limits:
+          cpus: '0.75'
+          memory: '14G'
         reservations:
           devices:
               - driver: nvidia
@@ -28,7 +31,7 @@ services:
     <<: *base_service
     profiles: ["auto"]
     build: ./services/AUTOMATIC1111
-    image: sd-auto:55
+    image: sd-auto:51
     environment:
       - CLI_ARGS=--allow-code --medvram --xformers --enable-insecure-extension-access --api
 
@@ -39,21 +42,15 @@ services:
     environment:
       - CLI_ARGS=--no-half --precision full --allow-code --enable-insecure-extension-access --api
 
-  invoke: &invoke
+  invoke:
     <<: *base_service
     profiles: ["invoke"]
     build: ./services/invoke/
-    image: sd-invoke:28
+    image: sd-invoke:26
     environment:
       - PRELOAD=true
-      - CLI_ARGS=--xformers
+      - CLI_ARGS=
 
-  # invoke-cpu:
-  #   <<: *invoke
-  #   profiles: ["invoke-cpu"]
-  #   environment:
-  #     - PRELOAD=true
-  #     - CLI_ARGS=--always_use_cpu
 
   sygil: &sygil
     <<: *base_service
@@ -69,20 +66,3 @@ services:
     profiles: ["sygil-sl"]
     environment:
       - USE_STREAMLIT=1
-
-  comfy: &comfy
-    <<: *base_service
-    profiles: ["comfy"]
-    build: ./services/comfy/
-    image: sd-comfy:1
-    tty: true
-    environment:
-      - CLI_ARGS=
-
-
-  comfy-cpu:
-    <<: *comfy
-    profiles: ["comfy-cpu"]
-    deploy: {}
-    environment:
-      - CLI_ARGS=--cpu
