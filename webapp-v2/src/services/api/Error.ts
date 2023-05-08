@@ -3,10 +3,13 @@ class ApiError extends Error {
 
   private _detail: string;
 
-  constructor(title: string, message: string) {
+  private _status: number | undefined;
+
+  constructor(title: string, message: string, status?: number) {
     super(message);
     this._title = title;
     this._detail = message;
+    this._status = status;
   }
 
   get title() {
@@ -15,6 +18,10 @@ class ApiError extends Error {
 
   get detail() {
     return this._detail;
+  }
+
+  get status() {
+    return this._status;
   }
 
   toString() {

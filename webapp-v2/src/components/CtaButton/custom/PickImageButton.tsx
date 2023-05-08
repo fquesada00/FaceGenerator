@@ -9,7 +9,7 @@ import clsx from 'clsx';
 import ImagePicker from 'components/ImagePicker';
 import { toastError } from 'components/Toast';
 import useAutocompleteTags from 'hooks/useAutocompleteTags';
-import { Fragment, useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useMutation } from 'react-query';
 import ApiError from 'services/api/Error';
 import { IApiFaceFilters } from 'services/api/models';
@@ -17,9 +17,14 @@ import CtaButton from '..';
 import useFacesApi from 'hooks/api/useFacesApi';
 import CenteredCircularLoader from 'components/Loaders/CenteredCircularLoader';
 
+type SelectedFace = {
+  id?: string;
+  url?: string;
+};
+
 type PickImageButtonProps = {
-  onPick?: (faceId: string) => void;
-  onDone?: (faceId: string | null) => void;
+  onPick?: (selectedFace: SelectedFace) => void;
+  onDone?: (selectedFace: SelectedFace) => void;
   onClose?: () => void;
   className?: string;
   pickedFaceId?: string;
@@ -27,7 +32,7 @@ type PickImageButtonProps = {
 
 const PickImageButton = (props: PickImageButtonProps) => {
   const { searchFaces } = useFacesApi();
-  const { onPick, onDone, onClose, className, pickedFaceId = null } = props;
+  const { onPick, onDone, onClose, className, pickedFaceId } = props;
 
   const [open, setOpen] = useState(false);
 
@@ -46,21 +51,19 @@ const PickImageButton = (props: PickImageButtonProps) => {
   };
 
   const reset = () => {
-    setSelectedFaceId(null);
+    setSelectedFace({});
     handleClose();
   };
 
-  const [selectedFaceId, setSelectedFaceId] = useState<string | null>(
-    pickedFaceId
-  );
+  const [selectedFace, setSelectedFace] = useState<SelectedFace>({ id: pickedFaceId});
 
-  const handlePick = (faceId: string) => {
-    onPick?.(faceId);
-    setSelectedFaceId(faceId);
+  const handlePick = (id: string, url?: string) => {
+    onPick?.({ id, url });
+    setSelectedFace({ id, url });
   };
 
   const handleDone = () => {
-    onDone?.(selectedFaceId);
+    onDone?.(selectedFace);
     handleClose();
   };
 
@@ -70,7 +73,7 @@ const PickImageButton = (props: PickImageButtonProps) => {
     data: allFaces
   } = useMutation(searchFaces, {
     onError: error => {
-      if (error instanceof ApiError) {
+      if (error instanceof ApiError && error.status !== 401) {
         toastError(error.toString());
       }
     }
@@ -85,7 +88,7 @@ const PickImageButton = (props: PickImageButtonProps) => {
   }, [open, selectedTags]);
 
   useEffect(() => {
-    setSelectedFaceId(pickedFaceId);
+    setSelectedFace({...selectedFace, id: pickedFaceId});
   }, [pickedFaceId]);
 
   const MemoizedImagePicker = useMemo(() => {
@@ -95,10 +98,10 @@ const PickImageButton = (props: PickImageButtonProps) => {
       <ImagePicker
         faces={allFaces}
         onPick={handlePick}
-        selectedFaceId={selectedFaceId}
+        selectedFaceId={selectedFace?.id ?? null}
       />
     );
-  }, [allFaces, selectedFaceId]);
+  }, [allFaces, selectedFace?.id]);
 
   return (
     <>

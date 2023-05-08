@@ -1,6 +1,6 @@
 import { Grid } from '@mui/material';
 import clsx from 'clsx';
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import { Formik, Form } from 'formik';
 
 import inputsClasses from 'components/Inputs/styles/Inputs.module.scss';
@@ -21,8 +21,15 @@ import {
 import useFacesApi from 'hooks/api/useFacesApi';
 import interchangeFeaturesJson from 'assets/data/interchange_features.json';
 
+type SelectedFacesUrls = {
+  firstUrl?: string;
+  secondUrl?: string;
+};
+
 const InterchangeFacesFeatures: React.FC = () => {
   const { interchangeFacesFeatures } = useFacesApi();
+
+  const [selectedUrls, setSelectedUrls] = useState<SelectedFacesUrls>({});
 
   const renderSubtitle = useMemo(
     () => (
@@ -41,14 +48,15 @@ const InterchangeFacesFeatures: React.FC = () => {
     data: interchangedFaces
   } = useMutation(interchangeFacesFeatures, {
     onError: error => {
-      if (error instanceof ApiError) {
+      if (error instanceof ApiError && error.status !== 401) {
         toastError(error.toString());
       }
     }
   });
 
   const { images: InterchangedFacesImages } = useRenderImages({
-    faces: interchangedFaces
+    faces: interchangedFaces,
+    disableDelete: true
   });
 
   const onSubmit = ({
@@ -72,15 +80,22 @@ const InterchangeFacesFeatures: React.FC = () => {
         {({ setFieldValue, values }) => (
           <Form>
             <div className={clsx(inputsClasses.container)}>
-              <Grid container style={{ width: '25rem' }} rowSpacing={4}>
+              <Grid container style={{ width: '35rem' }} rowSpacing={8}>
                 <Grid item xs={12} sm={6} md={6} lg={6} xl={6}>
                   <FormikCustomIdInput
                     required
                     label='First ID'
                     name='firstId'
+                    url={selectedUrls.firstUrl}
                   />
                   <PickImageButton
-                    onDone={faceId => setFieldValue('firstId', faceId ?? '0')}
+                    onDone={selectedFace => {
+                      setFieldValue('firstId', selectedFace.id ?? '0');
+                      setSelectedUrls({
+                        ...selectedUrls,
+                        firstUrl: selectedFace.url
+                      });
+                    }}
                     pickedFaceId={values.firstId}
                   />
                 </Grid>
@@ -89,9 +104,16 @@ const InterchangeFacesFeatures: React.FC = () => {
                     required
                     label='Second ID'
                     name='secondId'
+                    url={selectedUrls.secondUrl}
                   />
                   <PickImageButton
-                    onDone={faceId => setFieldValue('secondId', faceId ?? '0')}
+                    onDone={selectedFace => {
+                      setFieldValue('secondId', selectedFace.id ?? '0');
+                      setSelectedUrls({
+                        ...selectedUrls,
+                        secondUrl: selectedFace.url
+                      });
+                    }}
                     pickedFaceId={values.secondId}
                   />
                 </Grid>
@@ -99,7 +121,7 @@ const InterchangeFacesFeatures: React.FC = () => {
               <CtaButton
                 type='submit'
                 label='Generate'
-                className='mt-8'
+                className='mt-12'
                 loading={isLoadingInterchange}
               />
               {!isLoadingInterchange && InterchangedFacesImages}

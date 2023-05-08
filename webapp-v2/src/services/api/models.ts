@@ -10,29 +10,21 @@ export interface IApiFace {
 
 export interface IApiFaceFeatures {
   age?: number;
+  eyeDistance?: number;
+  eyeEyebrowDistance?: number;
+  eyeRatio?: number;
+  eyesOpen?: number;
   gender?: number;
-  orientation: {
-    vertical?: number;
-    horizontal?: number;
-  };
-  eyes: {
-    distance?: number;
-    distanceToEyeBrows?: number;
-    ratio?: number;
-    open?: number;
-    roll?: number;
-  };
-  mouth: {
-    open?: number;
-    smile?: number;
-    ratio?: number;
-    lipRatio?: number;
-  };
-  nose: {
-    distanceToMouth?: number;
-    ratio?: number;
-    tip?: number;
-  };
+  lipRatio?: number;
+  mouthOpen?: number;
+  mouthRatio?: number;
+  noseMouthDistance?: number;
+  noseRatio?: number;
+  noseTip?: number;
+  pitch?: number;
+  roll?: number;
+  smile?: number;
+  yaw?: number;
 }
 
 export interface IApiFaceFilters {
@@ -52,4 +44,9 @@ export interface IApiAuth {
 export interface IApiFaceImage {
   url: string;
   blob: Blob;
+}
+
+export interface IApiSettings {
+  generator: boolean;
+  stableDiffusion: boolean;
 }

@@ -1,3 +1,4 @@
+import { AxiosError } from 'axios';
 import useAxiosPrivate from 'hooks/useAxiosPrivate';
 import { useCallback, useMemo } from 'react';
 import apiProvider, { API_PREFIX, FACES_API_PREFIX } from 'services/api';
@@ -25,8 +26,12 @@ const useFacesApi = () => {
           { query: { amount } }
         );
         return response.result;
-      } catch (error) {
-        throw new ApiError('Generate faces', getErrorMessage(error));
+      } catch (error: AxiosError | unknown) {
+        throw new ApiError(
+          'Generate faces',
+          getErrorMessage(error),
+          (error as AxiosError)?.response?.status
+        );
       }
     },
     [api]
@@ -45,7 +50,11 @@ const useFacesApi = () => {
         });
         return response.result;
       } catch (error) {
-        throw new ApiError('Search faces', getErrorMessage(error));
+        throw new ApiError(
+          'Search faces',
+          getErrorMessage(error),
+          (error as AxiosError)?.response?.status
+        );
       }
     },
     [api]
@@ -67,7 +76,11 @@ const useFacesApi = () => {
           blob: response
         };
       } catch (error) {
-        throw new ApiError('Get face', getErrorMessage(error));
+        throw new ApiError(
+          'Get face',
+          getErrorMessage(error),
+          (error as AxiosError)?.response?.status
+        );
       }
     },
     [api]
@@ -90,7 +103,11 @@ const useFacesApi = () => {
         );
         return response.result;
       } catch (error) {
-        throw new ApiError('Generate transitions', getErrorMessage(error));
+        throw new ApiError(
+          'Generate transitions',
+          getErrorMessage(error),
+          (error as AxiosError)?.response?.status
+        );
       }
     },
     [api]
@@ -109,10 +126,14 @@ const useFacesApi = () => {
           { body: formData, headers: { 'Content-Type': 'multipart/form-data' } }
         );
 
-        return response.result;
+        return response.result[0];
         return datasource.faces[0];
       } catch (error) {
-        throw new ApiError('Generate face from image', getErrorMessage(error));
+        throw new ApiError(
+          'Generate face from image',
+          getErrorMessage(error),
+          (error as AxiosError)?.response?.status
+        );
       }
     },
     [api]
@@ -131,7 +152,8 @@ const useFacesApi = () => {
       } catch (error) {
         throw new ApiError(
           'Interchange faces features',
-          getErrorMessage(error)
+          getErrorMessage(error),
+          (error as AxiosError)?.response?.status
         );
       }
     },
@@ -148,7 +170,11 @@ const useFacesApi = () => {
           }
         );
       } catch (error) {
-        throw new ApiError('Save face', getErrorMessage(error));
+        throw new ApiError(
+          'Save face',
+          getErrorMessage(error),
+          (error as AxiosError)?.response?.status
+        );
       }
     },
     [api]
@@ -176,7 +202,11 @@ const useFacesApi = () => {
         return response.result;
         return datasource.faces[0];
       } catch (error) {
-        throw new ApiError('Modify face', getErrorMessage(error));
+        throw new ApiError(
+          'Modify face',
+          getErrorMessage(error),
+          (error as AxiosError)?.response?.status
+        );
       }
     },
     [api]
@@ -192,7 +222,11 @@ const useFacesApi = () => {
 
         return response.result;
       } catch (error) {
-        throw new ApiError('Get all tags', getErrorMessage(error));
+        throw new ApiError(
+          'Get all tags',
+          getErrorMessage(error),
+          (error as AxiosError)?.response?.status
+        );
       }
     },
     [api]
@@ -208,7 +242,11 @@ const useFacesApi = () => {
           }
         );
       } catch (error) {
-        throw new ApiError('Save face serie', getErrorMessage(error));
+        throw new ApiError(
+          'Save face serie',
+          getErrorMessage(error),
+          (error as AxiosError)?.response?.status
+        );
       }
     },
     [api]
@@ -228,7 +266,57 @@ const useFacesApi = () => {
         );
         return response.result;
       } catch (error) {
-        throw new ApiError('Get faces series', getErrorMessage(error));
+        throw new ApiError(
+          'Get faces series',
+          getErrorMessage(error),
+          (error as AxiosError)?.response?.status
+        );
+      }
+    },
+    [api]
+  );
+
+  const deleteAllFaces = useCallback(async (): Promise<void> => {
+    try {
+      await api.delete(`${FACES_API_PREFIX}`);
+    } catch (error) {
+      throw new ApiError('Delete all faces', getErrorMessage(error));
+    }
+  }, [api]);
+
+  const deleteAllSeries = useCallback(async (): Promise<void> => {
+    try {
+      await api.delete(`${FACES_API_PREFIX}/series`);
+    } catch (error) {
+      throw new ApiError('Delete all series', getErrorMessage(error));
+    }
+  }, [api]);
+
+  const deleteAllTags = useCallback(async (): Promise<void> => {
+    try {
+      await api.delete(`${API_PREFIX}/tags`);
+    } catch (error) {
+      throw new ApiError('Delete all tags', getErrorMessage(error));
+    }
+  }, [api]);
+
+  const deleteFace = useCallback(
+    async (id: string): Promise<void> => {
+      try {
+        await api.delete(`${FACES_API_PREFIX}/${id}`);
+      } catch (error) {
+        throw new ApiError('Delete face', getErrorMessage(error));
+      }
+    },
+    [api]
+  );
+
+  const deleteSerie = useCallback(
+    async (id: string): Promise<void> => {
+      try {
+        await api.delete(`${FACES_API_PREFIX}/series/${id}`);
+      } catch (error) {
+        throw new ApiError('Delete serie', getErrorMessage(error));
       }
     },
     [api]
@@ -245,7 +333,12 @@ const useFacesApi = () => {
     modifyFaceFeatures,
     getAllTags,
     saveFaceSerie,
-    getFacesSeries
+    getFacesSeries,
+    deleteAllFaces,
+    deleteAllSeries,
+    deleteAllTags,
+    deleteFace,
+    deleteSerie
   };
 };
 

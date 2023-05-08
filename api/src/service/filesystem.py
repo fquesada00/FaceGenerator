@@ -50,3 +50,12 @@ class FileSystem:
 
     def get_img_path(self, id):
         return self.__get_img_path(id)
+
+    def delete_all_imgs(self):
+        files = os.listdir(self.directory)
+        for file in files:
+            if file != 'tmp':
+                os.remove(self.directory + '/' + file)
+
+    def delete_img(self, id):
+        os.remove(self.__build_img_path(self.directory, id))

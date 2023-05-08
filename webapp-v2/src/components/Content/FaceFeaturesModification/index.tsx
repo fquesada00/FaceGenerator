@@ -33,6 +33,7 @@ const FaceFeaturesModification: React.FC = () => {
   const { modifyFaceFeatures } = useFacesApi();
 
   const submitButtonRef = useRef<HTMLButtonElement>(null);
+  const [selectedUrl, setSelectedUrl] = useState<string>();
 
   const renderSubtitle = useMemo(
     () => (
@@ -51,7 +52,7 @@ const FaceFeaturesModification: React.FC = () => {
     data: modifiedFace
   } = useMutation(modifyFaceFeatures, {
     onError: error => {
-      if (error instanceof ApiError) {
+      if (error instanceof ApiError && error.status !== 401) {
         toastError(error.toString());
       }
     }
@@ -77,30 +78,22 @@ const FaceFeaturesModification: React.FC = () => {
     noseTip
   }: ModifyFaceFeaturesFormValues) => {
     const faceFeatures: IApiFaceFeatures = {
-      age,
-      gender,
-      orientation: {
-        vertical: faceOrientationVertical,
-        horizontal: faceOrientationHorizontal
-      },
-      eyes: {
-        distance: eyeDistance,
-        distanceToEyeBrows: eyebrowsDistance,
-        ratio: eyesRatio,
-        open: eyesOpen,
-        roll: eyesRoll
-      },
-      mouth: {
-        lipRatio: mouthLipRatio,
-        open: mouthOpen,
-        ratio: mouthRatio,
-        smile: mouthSmile
-      },
-      nose: {
-        distanceToMouth: noseDistance,
-        ratio: noseRatio,
-        tip: noseTip
-      }
+      age: age,
+      gender: gender,
+      pitch: faceOrientationVertical,
+      yaw: faceOrientationHorizontal,
+      roll: eyesRoll,
+      eyeDistance: eyeDistance,
+      eyeEyebrowDistance: eyebrowsDistance,
+      eyeRatio: eyesRatio,
+      eyesOpen: eyesOpen,
+      lipRatio: mouthLipRatio,
+      mouthOpen: mouthOpen,
+      mouthRatio: mouthRatio,
+      noseMouthDistance: noseDistance,
+      noseRatio: noseRatio,
+      noseTip: noseTip,
+      smile: mouthSmile
     };
 
     mutateModifyFaceFeatures({ id, faceFeatures });
@@ -124,9 +117,12 @@ const FaceFeaturesModification: React.FC = () => {
         {({ setFieldValue, values }) => (
           <Form>
             <div className={clsx(inputsClasses.container)}>
-              <FormikCustomIdInput name='id' required />
+              <FormikCustomIdInput name='id' required url={selectedUrl} />
               <PickImageButton
-                onDone={faceId => setFieldValue('id', faceId ?? 0)}
+                onDone={selectedFace => {
+                  setFieldValue('id', selectedFace.id ?? 0);
+                  setSelectedUrl(selectedFace.url);
+                }}
                 pickedFaceId={values.id}
               />
               <Grid container spacing={2} sx={{ marginTop: '1rem' }}>
@@ -290,6 +286,7 @@ const FaceFeaturesModification: React.FC = () => {
                         cardHeightClassName='h-full'
                         cardWidthClassName='w-full'
                         imgHeightClassName='h-5/6'
+                        disableDelete
                       />
                     </Box>
                   </div>

@@ -40,13 +40,16 @@ const RandomFaces: React.FC = () => {
     data: faces
   } = useMutation(generateFaces, {
     onError: error => {
-      if (error instanceof ApiError) {
+      if (error instanceof ApiError && error.status !== 401) {
         toastError(error.toString());
       }
     }
   });
 
-  const { images: FacesImages } = useRenderImages({ faces });
+  const { images: FacesImages } = useRenderImages({
+    faces,
+    disableDelete: true
+  });
 
   const onSubmit = ({ randomFaces: amount }: RandomFacesFormValues) => {
     mutate(amount);
@@ -69,7 +72,7 @@ const RandomFaces: React.FC = () => {
             <CtaButton
               type='submit'
               label='Generate'
-              className='mt-8'
+              className='mt-12'
               loading={isLoading}
             />
             {!isLoading && FacesImages}

@@ -1,4 +1,4 @@
-import { Box, Card, Typography, useTheme } from '@mui/material';
+import { Box, Card } from '@mui/material';
 import clsx from 'clsx';
 import CenteredCircularLoader from 'components/Loaders/CenteredCircularLoader';
 import useFaceImgLazyLoading from 'hooks/useFaceImgLazyLoading';
@@ -9,14 +9,13 @@ type SelectableImageProps = {
   alt: string;
   faceId: string;
   selected: boolean;
-  onClick: () => void;
+  onClick: (url?: string) => void;
   className?: string;
 };
 
 function SelectableImage(props: SelectableImageProps) {
   const { src, alt, selected, onClick, className, faceId } = props;
 
-  const theme = useTheme();
   const { ref, faceImage, isLoadingGetFaceImage } = useFaceImgLazyLoading({
     faceId
   });
@@ -52,12 +51,15 @@ function SelectableImage(props: SelectableImageProps) {
       ref={ref}
       className={clsx(
         selected
-          ? `shadow-[${theme.palette.success.main}] shadow-xl`
+          ? `shadow-xl shadow-[#64b5f6]`
           : 'cursor-pointer hover:scale-105 hover:shadow-xl transition duration-200 ease-in-out transform',
         className
       )}
     >
-      <Card className='w-32 h-36' onClick={selected ? undefined : onClick}>
+      <Card
+        className='w-32 h-36'
+        onClick={selected ? undefined : () => onClick(faceImage?.url)}
+      >
         {Content}
       </Card>
     </div>

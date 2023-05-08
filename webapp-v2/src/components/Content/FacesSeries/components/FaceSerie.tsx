@@ -14,15 +14,25 @@ import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import CtaButton from 'components/CtaButton';
 import JSZip from 'jszip';
+import DeleteIcon from 'components/Icons/DeleteIcon';
+import useAuth from 'hooks/useAuth';
+import useFacesApi from 'hooks/api/useFacesApi';
+import { useMutation } from 'react-query';
+import { toastError, toastSuccess } from 'components/Toast';
+import ApiError from 'services/api/Error';
 
 type FaceSerieProps = {
   serie: IApiFaceSerie;
   className?: string;
   collapse?: boolean;
+  onDelete?: () => void;
 };
 
 const FaceSerie = (props: FaceSerieProps) => {
-  const { serie, className, collapse = false } = props;
+  const { serie, className, collapse = false, onDelete } = props;
+
+  const { deleteSerie } = useFacesApi();
+  const { isAdmin } = useAuth();
 
   const [open, setOpen] = useState<boolean>(!collapse);
   const blobs = useMemo(() => new Map<number, Blob>(), []);
@@ -35,6 +45,21 @@ const FaceSerie = (props: FaceSerieProps) => {
   const handleAddBlob = ({ index, blob }: { index: number; blob: Blob }) => {
     blobs.set(index, blob);
   };
+
+  const { mutate: mutateDeleteSerie, isLoading: isLoadingDeleteSerie } =
+    useMutation(deleteSerie, {
+      onSuccess: data => {
+        onDelete?.();
+        toastSuccess(`Serie with id ${serie.id} deleted successfully`);
+      },
+      onError: error => {
+        if (error instanceof ApiError) {
+          toastError(
+            `Error deleting serie with id ${serie.id}. ${error.toString()}`
+          );
+        }
+      }
+    });
 
   const Faces = useMemo(() => {
     return serie.faces.map((face, index) => {
@@ -50,11 +75,12 @@ const FaceSerie = (props: FaceSerieProps) => {
                 blob: faceImg.blob
               })
             }
+            onDelete={onDelete}
           />
         </Grid>
       );
     });
-  }, [serie.faces]);
+  }, [serie.faces, onDelete]);
 
   const handleDownload = useCallback(() => {
     const zip = new JSZip();
@@ -73,11 +99,29 @@ const FaceSerie = (props: FaceSerieProps) => {
 
   return (
     <Card
+      style={{
+        overflow: 'visible'
+      }}
       className={clsx(className, !open ? 'cursor-pointer' : '')}
       onClick={() => !open && setOpen(true)}
       sx={{ backgroundColor: 'rgba(0, 0, 0, 0.075)' }}
     >
-      <CardContent style={{ paddingBottom: '0.5rem', paddingTop: '0.5rem' }}>
+      <CardContent
+        style={{
+          paddingBottom: '0.5rem',
+          paddingTop: '0.5rem'
+        }}
+        className='relative'
+      >
+        <DeleteIcon
+          onClick={() => mutateDeleteSerie(serie.id!)}
+          className={clsx(
+            'absolute',
+            '-top-3',
+            '-right-3',
+            isAdmin ? 'visible' : 'invisible'
+          )}
+        />
         <div className='flex justify-between px-8'>
           <Typography variant='h5' component='h2' className='flex'>
             <strong className='flex items-center'>ID: {serie.id}</strong>

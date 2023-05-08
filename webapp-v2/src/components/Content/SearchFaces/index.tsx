@@ -22,6 +22,7 @@ const SearchFaces: React.FC = () => {
   const { searchFaces } = useFacesApi();
 
   const [hideAll, setHideAll] = useState<boolean>(true);
+  const [latestSearchedTags, setLatestSearchedTags] = useState<string[]>([]);
 
   const renderSubtitle = useMemo(
     () => (
@@ -40,15 +41,26 @@ const SearchFaces: React.FC = () => {
     data: filteredFaces
   } = useMutation(searchFaces, {
     onError: error => {
-      if (error instanceof ApiError) {
+      if (error instanceof ApiError && error.status !== 401) {
         toastError(error.toString());
       }
     }
   });
 
+  const onDelete = () => {
+    if (!hideAll) {
+      mutateGetAllFaces({});
+    }
+
+    if (latestSearchedTags.length > 0) {
+      mutateSearchFaces({ tags: latestSearchedTags });
+    }
+  };
+
   const { images: SearchFacesImages } = useRenderImages({
     faces: filteredFaces,
-    disableSave: true
+    disableSave: true,
+    onDelete
   });
 
   const {
@@ -57,7 +69,7 @@ const SearchFaces: React.FC = () => {
     data: allFaces
   } = useMutation(searchFaces, {
     onError: error => {
-      if (error instanceof ApiError) {
+      if (error instanceof ApiError && error.status !== 401) {
         toastError(error.toString());
       }
     }
@@ -65,7 +77,8 @@ const SearchFaces: React.FC = () => {
 
   const { images: AllFacesImages } = useRenderImages({
     faces: allFaces,
-    disableSave: true
+    disableSave: true,
+    onDelete
   });
 
   const onShowAll = () => {
@@ -77,6 +90,7 @@ const SearchFaces: React.FC = () => {
 
   const onSubmit = ({ tags }: SearchFacesValues) => {
     mutateSearchFaces({ tags });
+    setLatestSearchedTags(tags);
   };
 
   return (

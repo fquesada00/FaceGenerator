@@ -22,7 +22,7 @@ class GeneratorDB:
         self.fs.save_tmp_img(image, id)
         return id
     
-    def save_face(self, id: str, tags: list):
+    def save_face(self, id: str, tags: list, serie_id: str = None):
         z = self.tmp_db.get_z_by_id(id)
         if z == None:
             return None
@@ -34,7 +34,7 @@ class GeneratorDB:
             tags.remove(EMPTY_TAG)
 
         cur = self.db.cursor()
-        cur.execute('SELECT insert_image(%s, %s, %s)', (id, z, tags))
+        cur.execute('SELECT insert_image(%s, %s, %s, %s)', (id, z, tags, serie_id))
         self.db.commit()
         cur.close()        
         
@@ -65,7 +65,7 @@ class GeneratorDB:
 
         for face_id in faces_id:
             if not self.face_exists(face_id):
-              self.save_face(face_id, tags)
+              self.save_face(face_id, tags, id)
 
         self.tmp_db.remove_serie(id)
 
@@ -156,3 +156,59 @@ class GeneratorDB:
             return None
         res = {'username': res[0], 'password': res[1], 'role': res[2]}
         return res
+
+    def delete_all_series(self):
+        cur = self.db.cursor()
+        cur.execute('SELECT id FROM series')
+        res = cur.fetchall()
+        cur.close()
+
+        for serie in res:
+            self.delete_serie_by_id(serie[0])
+
+    def delete_serie_by_id(self, id: str):
+        cur = self.db.cursor()
+        cur.execute('SELECT images_id FROM series WHERE id = %s', (id,))
+        res = cur.fetchone()[0]
+        cur.close()
+
+        if res is None:
+            return
+
+        # exclude first and last image as they are not part of the serie, we want to keep them
+        for img_id in res[1:-1]:
+            self.delete_face_by_id(img_id)
+
+        cur = self.db.cursor()
+        cur.execute('DELETE FROM series WHERE id = %s', (id,))
+        self.db.commit()
+        cur.close()
+
+    def delete_all_faces(self):
+        cur = self.db.cursor()
+        cur.execute('DELETE FROM images')
+        cur.execute('DELETE FROM series')
+        self.db.commit()
+        cur.close()
+
+        self.fs.delete_all_imgs()
+
+    def delete_face_by_id(self, id: str):
+        cur = self.db.cursor()
+        cur.execute('DELETE FROM images WHERE id = %s', (id,))
+        self.db.commit()
+        cur.close()
+
+        # remove image from every serie that contains it
+        cur = self.db.cursor()
+        cur.execute('UPDATE series SET images_id = array_remove(images_id, %s)', (id,))
+        self.db.commit()
+        cur.close()
+
+        self.fs.delete_img(id)
+
+    def delete_all_tags(self):
+        cur = self.db.cursor()
+        cur.execute('DELETE FROM tags WHERE tag != %s', (EMPTY_TAG,))
+        self.db.commit()
+        cur.close()
