@@ -2,6 +2,7 @@ import signal
 import socket
 import os
 import subprocess
+import time
 
 host = os.environ.get("MANAGER_HOST", "127.0.0.1")
 port = int(os.environ.get("MANAGER_PORT", "8888"))
@@ -67,6 +68,14 @@ def start_stable_diffusion():
     if not get_container_status('sd'):
         stop_container('generator')
         start_container('sd')
+        #while port 7860 is not open sleep 1 second, check with curl
+        command = ["curl", "localhost:7860"]
+        result = subprocess.run(command, capture_output=True, text=True)
+        while result.returncode != 0:
+            result = subprocess.run(command, capture_output=True, text=True)
+            #sleep 1 second
+            time.sleep(1)
+
     return "STABLE_DIFFUSION_ON"
 
 def stop():
