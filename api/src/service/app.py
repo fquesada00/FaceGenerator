@@ -16,27 +16,10 @@ import os
 generator_service = GeneratorService()
 manager_service = ManagerService()
 
-app = FastAPI(responses={422: {"model": Error}},
-              docs_url="/api/docs", redoc_url="/api/redoc")
+app = FastAPI(responses={422: {"model": Error}})
 # create a router for /api
-api_router = APIRouter(prefix=settings.API_PATH)
+api_router = APIRouter()
 
-
-@app.middleware("http")
-async def assets_middleware(request: Request, call_next):
-    if not request.url.path.startswith(settings.API_PATH) and not request.url.path.startswith("/static"):
-        # FIXME: improve this as nested routes are not supported
-        if request.url.path.startswith("/faces") or request.url.path.startswith("/about"):
-            response = RedirectResponse(
-                url=f'{settings.WEB_PATH}/static/index.html')
-        elif request.url.path.startswith("/openapi.json"):
-            return await call_next(request)
-        else:
-            response = RedirectResponse(
-                url=f'{settings.WEB_PATH}/static{request.url.path}')
-        return response
-    response = await call_next(request)
-    return response
 
 
 @app.exception_handler(RequestValidationError)
@@ -45,9 +28,6 @@ async def validation_exception_handler(request: Request, exc: RequestValidationE
         status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
         content=jsonable_encoder({"error": exc.errors()}),
     )
-
-os.makedirs('dist', exist_ok=True)
-app.mount('/static', StaticFiles(directory='dist/', html=True), name="static")
 
 # routes
 

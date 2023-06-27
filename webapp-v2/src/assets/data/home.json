@@ -1,6 +1,6 @@
 {
   "title": "Welcome to Face Generator",
-  "subtitle": "This is a web application that allows you to generate faces using a GAN model. More specifically, it uses a StyleGAN2 model trained on the ... dataset.",
+  "subtitle": "This is a web application that allows you to generate faces using a GAN model. More specifically, it uses a StyleGAN3 model trained on the FFHQ dataset.",
   "features": {
     "random_faces": {
       "description": "Generate an amount of random faces."

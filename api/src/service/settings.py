@@ -24,9 +24,8 @@ class Settings(BaseSettings):
     # Host
     HOST_IP: str = None
     HOST: str = 'http://pf-2022-deepmind.it.itba.edu.ar'
-    WEB_PATH: str = '/web'
-    API_PATH: str = '/api'
-    FULL_HOST: str = HOST + WEB_PATH
+    CONTEXT_PATH: str = '/web/api'
+    FULL_HOST: str = HOST + CONTEXT_PATH
 
     # Security
     SECRET_KEY: str = None
@@ -34,4 +33,4 @@ class Settings(BaseSettings):
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 30
     REFRESH_TOKEN_EXPIRE_DAYS: int = 7
 
-settings = Settings(_env_file=os.environ.get("PROJECT_PATH") + '/api/.env.' + Environment.DEVELOPMENT, _env_file_encoding='utf-8')
+settings = Settings(_env_file=os.environ.get("PROJECT_PATH") + '/api/.env', _env_file_encoding='utf-8')

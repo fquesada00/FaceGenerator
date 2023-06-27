@@ -105,7 +105,7 @@ const GeneralSettingsSection = () => {
             : stableDiffusionData.dialog.content.on
         }
         ctaColor={settings?.stableDiffusion ? 'error' : 'primary'}
-        complimentaryAction={() => window.open(`${window.location.origin}${import.meta.env.VITE_APP_BASE_PATH}stable-diffusion/`, '_blank')}
+        complimentaryAction={() => window.open(`${window.location.origin}${import.meta.env.VITE_APP_BASE_PATH}/stable-diffusion/`, '_blank')}
         complimentaryActionIcon={<OpenInNewIcon fontSize='small' sx={{ color: settings?.stableDiffusion ? colors.blue[600] : undefined}} />}
         complimentaryActionDisabled={!settings?.stableDiffusion}
       />
