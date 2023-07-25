@@ -251,3 +251,18 @@ class GeneratorService(metaclass=SingletonMeta):
 
     def save_serie(self, id: str, tags: list):
         return database.save_serie(id, tags)
+
+    def delete_all_series(self):
+        return database.delete_all_series()
+
+    def delete_serie(self, id: str):
+        return database.delete_serie_by_id(id)
+
+    def delete_all_faces(self):
+        return database.delete_all_faces()
+
+    def delete_face(self, id: str):
+        return database.delete_face_by_id(id)
+
+    def delete_all_tags(self):
+        return database.delete_all_tags()

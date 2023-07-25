@@ -33,6 +33,7 @@ const FaceFeaturesModification: React.FC = () => {
   const { modifyFaceFeatures } = useFacesApi();
 
   const submitButtonRef = useRef<HTMLButtonElement>(null);
+  const [selectedUrl, setSelectedUrl] = useState<string>();
 
   const renderSubtitle = useMemo(
     () => (
@@ -116,9 +117,12 @@ const FaceFeaturesModification: React.FC = () => {
         {({ setFieldValue, values }) => (
           <Form>
             <div className={clsx(inputsClasses.container)}>
-              <FormikCustomIdInput name='id' required />
+              <FormikCustomIdInput name='id' required url={selectedUrl} />
               <PickImageButton
-                onDone={faceId => setFieldValue('id', faceId ?? 0)}
+                onDone={selectedFace => {
+                  setFieldValue('id', selectedFace.id ?? 0);
+                  setSelectedUrl(selectedFace.url);
+                }}
                 pickedFaceId={values.id}
               />
               <Grid container spacing={2} sx={{ marginTop: '1rem' }}>
@@ -282,6 +286,7 @@ const FaceFeaturesModification: React.FC = () => {
                         cardHeightClassName='h-full'
                         cardWidthClassName='w-full'
                         imgHeightClassName='h-5/6'
+                        disableDelete
                       />
                     </Box>
                   </div>

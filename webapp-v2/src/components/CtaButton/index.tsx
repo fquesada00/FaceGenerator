@@ -9,20 +9,31 @@ type CtaButtonProps = {
   className?: string;
   loading?: boolean;
   type?: 'button' | 'submit' | 'reset' | undefined;
+  color?:
+    | 'inherit'
+    | 'primary'
+    | 'secondary'
+    | 'error'
+    | 'info'
+    | 'success'
+    | 'warning'
+    | undefined;
+  size?: 'small' | 'medium' | 'large' | undefined;
 };
 
 function CtaButton(props: CtaButtonProps) {
-  const { onClick, label, className, loading, type } = props;
+  const { onClick, label, className, loading, type, color, size } = props;
 
   return (
     <div className={clsx(contentClasses.cta, className)}>
       <LoadingButton
         loading={loading}
         variant='contained'
-        color='primary'
+        color={color || 'primary'}
         fullWidth
         onClick={onClick}
         type={type}
+        size={size || 'large'}
       >
         {label}
       </LoadingButton>

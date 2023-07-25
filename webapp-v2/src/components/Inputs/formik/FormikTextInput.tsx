@@ -4,12 +4,13 @@ import { useField, FieldHookConfig } from 'formik';
 type FormikTextInputProps = {
   label: string;
   required: boolean;
+  endAdornment?: React.ReactNode;
 } & FieldHookConfig<any>;
 
 function FormikTextInput(props: FormikTextInputProps) {
   const [field, meta] = useField(props);
 
-  const { label, required = false } = props;
+  const { label, required = false, endAdornment } = props;
 
   return (
     <TextField
@@ -26,6 +27,9 @@ function FormikTextInput(props: FormikTextInputProps) {
       required={required}
       error={meta.touched && !!meta.error}
       helperText={meta.touched && meta.error}
+      InputProps={{
+        endAdornment
+      }}
     />
   );
 }

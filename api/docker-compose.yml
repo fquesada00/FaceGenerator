@@ -7,10 +7,10 @@ services:
       dockerfile: Dockerfile
     container_name: facegenerator_api
     ports:
-      - 5000:5000
+      - 3000:3000
     volumes:
       - .:/api
-    entrypoint: uvicorn --host 0.0.0.0 --port 5000 --workers 1 --reload --log-level info --use-colors  face_generator:app
+    entrypoint: uvicorn --host 0.0.0.0 --port 3000 --workers 1 --reload --log-level info --use-colors  face_generator:app
     environment:
       - PROJECT_PATH=
     network_mode: host

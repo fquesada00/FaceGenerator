@@ -53,7 +53,10 @@ const RandomFaces: React.FC = () => {
     }
   });
 
-  const { images: FacesImages } = useRenderImages({ faces });
+  const { images: FacesImages } = useRenderImages({
+    faces,
+    disableDelete: true
+  });
 
   const onSubmit = (data: RandomFacesFormValues) => {
     mutate({ amount: data.randomFaces, referenceFace: data.referenceFace });
@@ -94,7 +97,7 @@ const RandomFaces: React.FC = () => {
             <CtaButton
               type='submit'
               label='Generate'
-              className='mt-8'
+              className='mt-12'
               loading={isLoading}
             />
             {!isLoading && FacesImages}

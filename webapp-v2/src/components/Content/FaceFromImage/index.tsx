@@ -209,6 +209,7 @@ const FaceFromImage: React.FC = () => {
                 cardHeightClassName='h-full'
                 cardWidthClassName='w-full'
                 imgHeightClassName='h-5/6'
+                disableDelete
               />
             </Box>
           </Grid>
